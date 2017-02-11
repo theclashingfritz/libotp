@@ -7,7 +7,7 @@
 
 class CMover;
 
-class EXPCL_LIBMOVEMENT CMover : public TypedObject
+class EXPCL_LIBOTP CMover : public TypedObject
 {
     PUBLISHED:
         CMover(NodePath m_nodepath);
@@ -23,4 +23,6 @@ class EXPCL_LIBMOVEMENT CMover : public TypedObject
         int32_t m_fwdSpeed;
         int32_t m_rotSpeed;
         NodePath m_nodepath;
+        
+    TYPE_HANDLE(CMover, TypedObject);
 };
