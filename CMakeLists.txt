@@ -31,6 +31,8 @@ set(BASE_FILES
 set(COMPONENTS_FILES
     src/components/CMover.cxx
     src/components/CMover.h
+    src/components/CImpulse.cxx
+    src/components/CImpulse.h
 )
 
 set(IGATE_FILES

@@ -2,7 +2,7 @@
 
 TypeHandle CMover::_type_handle;
 
-CMover::CMover(NodePath m_nodepath): m_fwdSpeed(0), m_rotSpeed(0) {
+CMover::CMover(NodePath m_nodepath): m_fwdSpeed(0.0), m_rotSpeed(0.0) {
 
 }
 
@@ -24,6 +24,22 @@ void CMover::set_dt(float dt) {
 
 void CMover::reset_dt() {
     m_dt = 0.0;
+}
+
+void CMover::add_force(LVecBase3f force){
+    return;
+}
+
+void CMover::add_rot_force(LVecBase3f force){
+    return;
+}
+
+void CMover::add_shove(LVecBase3f shove){
+    return;
+}
+
+void CMover::add_rot_shove(LVecBase3f shove){
+    return;
 }
 
 void CMover::set_node_path(NodePath np) {
