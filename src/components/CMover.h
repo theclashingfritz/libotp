@@ -1,5 +1,4 @@
-#ifndef _H_CMOVER_
-#define _H_CMOVER_
+#pragma once
 
 #include "util.h"
 
@@ -17,5 +16,3 @@ class EXPCL_LIBMOVEMENT CMover
     private:
         int32_t fwdSpeed;
 };
-
-#endif

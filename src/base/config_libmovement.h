@@ -1,5 +1,4 @@
-#ifndef _H_LIBMOVEMENT_CONFIG_
-#define _H_LIBMOVEMENT_CONFIG_
+#pragma once
 
 #ifdef NDEBUG
 #undef NDEBUG
@@ -21,5 +20,3 @@
  
 NotifyCategoryDecl(libmovement, EXPCL_LIBMOVEMENT, EXPTP_LIBMOVEMENT);
 extern void init_libmovement();
-
-#endif

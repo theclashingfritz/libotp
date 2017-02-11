@@ -1,5 +1,4 @@
-#ifndef _H_UTIL_
-#define _H_UTIL_
+#pragma once
 
 #include "config_libmovement.h"
 #include <pandabase.h>
@@ -33,5 +32,3 @@
                                     virtual TypeHandle get_type() const { return get_class_type(); }; \
                                     static void init_type() { PARENT :: init_type(); register_type(_type_handle, #NAME, PARENT :: get_class_type()); }; \
                                   private: static TypeHandle _type_handle;
-                                  
-#endif
