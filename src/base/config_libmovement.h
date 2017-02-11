@@ -18,5 +18,5 @@
     #define EXPTP_LIBMOVEMENT IMPORT_TEMPL 
 #endif 
  
-NotifyCategoryDecl(libmovement, EXPCL_LIBMOVEMENT, EXPTP_LIBMOVEMENT);
+//NotifyCategoryDecl(libmovement, EXPCL_LIBMOVEMENT, EXPTP_LIBMOVEMENT);
 extern void init_libmovement();
