@@ -3,8 +3,8 @@ libotp
 _libotp_ 
 
 ### Features ###
-> A CMover remake from Toontown Online so Doodles will work! Woopie! 
-> More Features are to be decided.
+> * A **CMover** remake from Toontown Online so Doodles will work! Woopie! 
+> * More Features are to be decided.
 
 ### The Team ###
 The main people behind _libotp_ are listed below:
