@@ -10,24 +10,36 @@ CMover::~CMover() {
     
 }
 
-void CMover::set_fwd_speed(int32_t speed) {
+void CMover::set_fwd_speed(float speed) {
     m_fwdSpeed = speed;
 }
 
-void CMover::set_rot_speed(int32_t speed) {
+void CMover::set_rot_speed(float speed) {
     m_rotSpeed = speed;
+}
+
+void CMover::set_dt(float dt) {
+    m_dt = dt;
+}
+
+void CMover::reset_dt() {
+    m_dt = 0.0;
 }
 
 void CMover::set_node_path(NodePath np) {
     m_nodepath = np;
 }
 
-int32_t CMover::get_fwd_speed() {
+float CMover::get_fwd_speed() {
     return m_fwdSpeed;
 }
 
-int32_t CMover::get_rot_speed() {
+float CMover::get_rot_speed() {
     return m_rotSpeed;
+}
+
+float CMover::get_dt() {
+    return m_dt;
 }
 
 NodePath CMover::get_node_path() {
