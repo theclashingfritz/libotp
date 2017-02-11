@@ -8,11 +8,12 @@ class CMover;
 
 class EXPCL_LIBMOVEMENT CMover
 {
-    PUBLISHED:
+    public:
         CMover();
         ~CMover();
         void set_fwd_speed(int32_t speed);
+        int32_t get_fwd_speed();
         
     private:
-        int32_t fwdSpeed;
+        int32_t m_fwdSpeed;
 };
