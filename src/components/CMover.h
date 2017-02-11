@@ -12,16 +12,20 @@ class EXPCL_LIBOTP CMover : public TypedObject
     PUBLISHED:
         CMover(NodePath m_nodepath);
         ~CMover();
-        void set_fwd_speed(int32_t speed);
-        void set_rot_speed(int32_t speed);
+        void set_fwd_speed(float speed);
+        void set_rot_speed(float speed);
         void set_node_path(NodePath np);
-        int32_t get_fwd_speed();
-        int32_t get_rot_speed();
+        void set_dt(float dt);
+        void reset_dt();
+        float get_fwd_speed();
+        float get_rot_speed();
+        float get_dt();
         NodePath get_node_path();
         
     private:
-        int32_t m_fwdSpeed;
-        int32_t m_rotSpeed;
+        float m_fwdSpeed;
+        float m_rotSpeed;
+        float m_dt;
         NodePath m_nodepath;
         
     TYPE_HANDLE(CMover, TypedObject);
