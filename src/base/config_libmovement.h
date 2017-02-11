@@ -9,14 +9,12 @@
 
 #pragma warning (disable : 4273)
 #pragma warning (disable : 4275)
+#pragma warning (disable : 4217)
 
-#ifdef BUILDING_LIBOTP 
-    #define EXPCL_LIBOTP EXPORT_CLASS 
-    #define EXPTP_LIBOTP EXPORT_TEMPL 
-#else 
-    #define EXPCL_LIBOTP IMPORT_CLASS 
-    #define EXPTP_LIBOTP IMPORT_TEMPL 
-#endif 
+#define EXPCL_LIBOTP EXPORT_CLASS 
+#define EXPTP_LIBOTP EXPORT_TEMPL 
+#define IMPCL_LIBOTP IMPORT_CLASS 
+#define IMPTP_LIBOTP IMPORT_TEMPL 
  
 //NotifyCategoryDecl(libmovement, EXPCL_LIBMOVEMENT, EXPTP_LIBMOVEMENT);
 extern void init_libmovement();
