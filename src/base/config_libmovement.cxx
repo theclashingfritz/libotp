@@ -5,7 +5,7 @@
 #include <pandabase.h>
 
 Configure(config_libmovement);
-NotifyCategoryDef(libmovement, ":libmovement");
+//NotifyCategoryDef(libmovement, ":libmovement");
 
 ConfigureFn(config_libmovement)
 {
@@ -20,5 +20,5 @@ void init_libmovement()
 
     initialized = true;
     
-    //CMover::init_type();
+    CMover::init_type();
 }
