@@ -1,8 +1,7 @@
 #include "config_libmovement.h"
 
 #include "CMover.h"
-
-#include <pandabase.h>
+#include "CImpulse.h"
 
 Configure(config_libmovement);
 //NotifyCategoryDef(libmovement, ":libmovement");
@@ -21,4 +20,5 @@ void init_libmovement()
     initialized = true;
     
     CMover::init_type();
+    CImpulse::init_type();
 }
