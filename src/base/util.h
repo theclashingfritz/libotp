@@ -1,12 +1,9 @@
 #pragma once
 
+#include "config_libotp.h"
 #include <pandabase.h>
 #include <luse.h>
 
-#define EXPCL_LIBOTP EXPORT_CLASS 
-#define EXPTP_LIBOTP EXPORT_TEMPL 
-#define IMPCL_LIBOTP IMPORT_CLASS 
-#define IMPTP_LIBOTP IMPORT_TEMPL 
  
 // PROPERTY MACRO (TYPE, NAME)
 // This is a helper for classes
