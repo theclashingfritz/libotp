@@ -19,7 +19,7 @@ def interrogate(module):
     print 'Interrogating', module
     cmd = os.path.join(pandadir, 'bin', 'interrogate')
     cmd += ' -D__inline -DCPPPARSER -DP3_INTERROGATE=1 -D__cplusplus -fnames -string -refcount -assert'
-    cmd += ' -S %(pandadir)s/include/parser-inc -S %(pandadir)s/include -I %(pandadir)s/include -I%(srcdir)s/base -I%(srcdir)s/components'
+    cmd += ' -S %(pandadir)s/include/parser-inc -S %(pandadir)s/include -I %(pandadir)s/include -I%(srcdir)s/base -I%(srcdir)s/components -I%(srcdir)s/nametag'
     cmd += ' -srcdir %(srcdir)s/%(module)s -oc %(srcdir)s/%(module)s_igate.cxx -od %(srcdir)s/%(module)s.in -python-native -DCPPPARSER -D__STDC__=1'
     cmd += ' -D__cplusplus -D__inline -longlong __int64 -D_X86_ -DWIN32_VC -DWIN32 -module libotp -library %(module)s -Dvolatile='
 
@@ -30,10 +30,10 @@ def interrogate(module):
 
     run_command(cmd)
 
-for module in ('base', 'components'):
+for module in ('base', 'components', 'nametag'):
     interrogate(module)
 
 os.chdir(srcdir)
 cmd = os.path.join(pandadir, 'bin', 'interrogate_module') + ' -python-native -oc libotp_module.cxx'
-cmd += ' -library libotp -module libotp base.in components.in'
+cmd += ' -library libotp -module libotp base.in components.in nametag.in'
 run_command(cmd)
