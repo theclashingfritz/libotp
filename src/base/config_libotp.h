@@ -11,5 +11,10 @@
 #pragma warning (disable : 4275)
 #pragma warning (disable : 4217)
 
+#define EXPCL_LIBOTP EXPORT_CLASS 
+#define EXPTP_LIBOTP EXPORT_TEMPL 
+#define IMPCL_LIBOTP IMPORT_CLASS 
+#define IMPTP_LIBOTP IMPORT_TEMPL 
+
 //NotifyCategoryDecl(libotp, EXPCL_LIBOTP, EXPTP_LIBOTP);
 extern void init_libotp();
