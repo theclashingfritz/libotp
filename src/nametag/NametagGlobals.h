@@ -17,9 +17,13 @@ class EXPCL_LIBOTP NametagGlobals : public TypedObject
         void set_me(NodePath me);
         void set_want_active_nametags(bool want);
         void set_force_onscreen_chat(bool want);
+        void set_force_2d_nametags(bool want);
+        NodePath get_me();
+        bool get_want_active_nametags();
+        bool get_force_onscreen_chat();
+        bool get_force_2d_nametags();
         
-        
-    private:   
+    public:   
         uint8_t CFSpeech;
         uint8_t CFThought;
         uint8_t CFQuicktalker;
@@ -32,7 +36,9 @@ class EXPCL_LIBOTP NametagGlobals : public TypedObject
         
         bool m_want_active_nametags;
         bool m_force_onscreen_chat;
+        bool m_force_2d_nametags;
         
+    private:
         NodePath m_nodepath; 
         
     TYPE_HANDLE(NametagGlobals, TypedObject);
