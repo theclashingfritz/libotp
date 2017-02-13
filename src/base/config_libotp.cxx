@@ -5,7 +5,7 @@
 #include "NametagGlobals.h"
 
 Configure(config_libotp);
-//NotifyCategoryDef(libotp, ":libotp");
+NotifyCategoryDef(libotp, ":libotp");
 
 ConfigureFn(config_libotp) 
 {
