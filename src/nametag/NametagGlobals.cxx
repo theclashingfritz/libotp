@@ -18,13 +18,15 @@ NametagGlobals::NametagGlobals() {
     m_force_2d_nametags = 0;
     m_force_onscreen_chat = 0;
     
+    m_click_sound = NULL;
+    
     LVecBase4f CCSuit[] = {LVecBase4f(0.2, 0.2, 0.2, 1.0), LVecBase4f(0.8, 0.8, 0.8, 0.375), LVecBase4f(0.2, 0.2, 0.2, 1.0), 
                 LVecBase4f(0.2, 0.2, 0.2, 0.1875), LVecBase4f(0.4, 0.4, 0.4, 1.0), LVecBase4f(1.0, 1.0, 1.0, 0.5625),
                 LVecBase4f(0.2, 0.2, 0.2, 1.0), LVecBase4f(0.8, 0.8, 0.8, 0.375)};
 }
 
 NametagGlobals::~NametagGlobals() {
-
+    delete m_click_sound;
 }
 
 void NametagGlobals::set_me(NodePath me) {
@@ -41,6 +43,10 @@ void NametagGlobals::set_force_onscreen_chat(bool want) {
 
 void NametagGlobals::set_force_2d_nametags(bool want) {
     m_force_2d_nametags = want;
+}
+
+void NametagGlobals::set_click_sound(PT(AudioSound) sound) {
+    m_click_sound = sound;
 }
 
 NodePath NametagGlobals::get_me() {
