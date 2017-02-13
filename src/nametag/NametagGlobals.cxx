@@ -2,7 +2,6 @@
 
 TypeHandle NametagGlobals::_type_handle;
 
-
 NametagGlobals::NametagGlobals() {
     CFSpeech = 1;
     CFThought = 2;
@@ -18,11 +17,15 @@ NametagGlobals::NametagGlobals() {
     m_force_2d_nametags = 0;
     m_force_onscreen_chat = 0;
     
-    m_click_sound = NULL;
-    
-    LVecBase4f CCSuit[] = {LVecBase4f(0.2, 0.2, 0.2, 1.0), LVecBase4f(0.8, 0.8, 0.8, 0.375), LVecBase4f(0.2, 0.2, 0.2, 1.0), 
-                LVecBase4f(0.2, 0.2, 0.2, 0.1875), LVecBase4f(0.4, 0.4, 0.4, 1.0), LVecBase4f(1.0, 1.0, 1.0, 0.5625),
-                LVecBase4f(0.2, 0.2, 0.2, 1.0), LVecBase4f(0.8, 0.8, 0.8, 0.375)};
+    LVecBase4f CCSuit[] = {
+        LVecBase4f(0.2, 0.2, 0.2, 1.0), 
+        LVecBase4f(0.8, 0.8, 0.8, 0.375), 
+        LVecBase4f(0.2, 0.2, 0.2, 1.0), 
+        LVecBase4f(0.2, 0.2, 0.2, 0.1875), 
+        LVecBase4f(0.4, 0.4, 0.4, 1.0), 
+        LVecBase4f(1.0, 1.0, 1.0, 0.5625),
+        LVecBase4f(0.2, 0.2, 0.2, 1.0), 
+        LVecBase4f(0.8, 0.8, 0.8, 0.375)};
 }
 
 NametagGlobals::~NametagGlobals() {
@@ -64,5 +67,3 @@ bool NametagGlobals::get_force_onscreen_chat() {
 bool NametagGlobals::get_force_2d_nametags() {
     return m_force_2d_nametags;
 }
-
-
