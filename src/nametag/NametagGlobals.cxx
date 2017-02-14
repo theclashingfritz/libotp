@@ -16,6 +16,7 @@ NametagGlobals::NametagGlobals() {
     m_want_active_nametags = 1;
     m_force_2d_nametags = 0;
     m_force_onscreen_chat = 0;
+    m_click_sound = NULL;
     
     LVecBase4f CCSuit[] = {
         LVecBase4f(0.2, 0.2, 0.2, 1.0), 
