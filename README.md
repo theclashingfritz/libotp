@@ -4,6 +4,8 @@ _libotp_
 
 ### Features ###
 > * A **CMover** remake from Toontown Online so Doodles will work! Woopie! 
+> * A remake of the Nametag and Margin system!
+> * A C++ Settings system just like in Toontown Online!
 > * More Features are to be decided.
 
 ### The Team ###
