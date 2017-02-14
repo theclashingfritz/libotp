@@ -7,13 +7,11 @@
 Configure(config_libotp);
 NotifyCategoryDef(libotp, ":libotp");
 
-ConfigureFn(config_libotp) 
-{
+ConfigureFn(config_libotp) {
     init_libotp();
 }
 
-void init_libotp()
-{
+void init_libotp() {
     static bool initialized = false;
     if (initialized)
         return;
