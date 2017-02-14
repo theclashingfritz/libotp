@@ -12,6 +12,7 @@ _libotp_
 The main people behind _libotp_ are listed below:
 * **ponyboy837** - Founder and a Head Developer of the project. 
 * **SkippsDev** - The other Head Developer of the project along with ponyboy837. They both head the project. 
+* **CodeAnGo** - Former Head of Project Altis and a spectacular Developer. 
 
 ### Contributing ###
 We welcome all potential contributors.
