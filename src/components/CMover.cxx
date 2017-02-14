@@ -26,6 +26,14 @@ void CMover::reset_dt() {
     m_dt = 0.0;
 }
 
+void CMover::add_c_impulse(string name, CImpulse impulse) {
+    return;
+}
+
+void CMover::remove_c_impulse(string name) {
+    return;
+}
+
 void CMover::add_force(LVecBase3f force){
     return;
 }
