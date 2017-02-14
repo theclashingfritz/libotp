@@ -6,8 +6,7 @@
 
 class CImpulse;
 
-class EXPCL_LIBOTP CImpulse : public TypedObject
-{
+class EXPCL_LIBOTP CImpulse : public TypedObject {
     PUBLISHED:
         CImpulse();
         ~CImpulse();

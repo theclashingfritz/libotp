@@ -1,6 +1,6 @@
 #pragma once
 
-#include "config_libmovement.h"
+#include "config_libotp.h"
 #include <pandabase.h>
 #include <luse.h>
 

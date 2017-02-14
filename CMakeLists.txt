@@ -23,8 +23,8 @@ execute_process(COMMAND ${PYTHON2_EXECUTABLE} "${CMAKE_SOURCE_DIR}/src/run_inter
 
 ### Define core components ###
 set(BASE_FILES
-    src/base/config_libmovement.h
-    src/base/config_libmovement.cxx
+    src/base/config_libotp.h
+    src/base/config_libotp.cxx
     src/base/util.h
 )
 
@@ -35,13 +35,24 @@ set(COMPONENTS_FILES
     src/components/CImpulse.h
 )
 
+set(NAMETAG_FILES
+    src/nametag/NametagGlobals.cxx
+    src/nametag/NametagGlobals.h
+    src/nametag/NametagGroup.cxx
+    src/nametag/NametagGroup.h
+    src/nametag/Nametag.cxx
+    src/nametag/Nametag.h
+)
+
 set(IGATE_FILES
     src/base_igate.cxx
     src/components_igate.cxx
+    src/nametag_igate.cxx
     src/libotp_module.cxx
 )
 
 include_directories(src/base)
+include_directories(src/nametag)
 include_directories(src/components)
 include_directories(${PANDA_DIR}/include)
 include_directories(${PYTHON_INCLUDE_DIR})
@@ -91,6 +102,7 @@ endif()
 add_library(libotp SHARED
     ${BASE_FILES}
     ${COMPONENTS_FILES}
+    ${NAMETAG_FILES}
     ${IGATE_FILES}
 )
 
@@ -108,4 +120,5 @@ add_custom_command(TARGET libotp
 ### Setup source groups and defines for configurables ###
 source_group("base" FILES ${BASE_FILES})
 source_group("components" FILES ${COMPONENTS_FILES})
+source_group("nametag" FILES ${NAMETAG_FILES})
 source_group("interrogate_files" FILES ${IGATE_FILES})

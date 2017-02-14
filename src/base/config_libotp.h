@@ -3,8 +3,9 @@
 #ifdef NDEBUG
 #undef NDEBUG
 #endif
-
+ 
 #include <pandabase.h>
+#include <dconfig.h>
 #include <notifyCategoryProxy.h>
 
 #pragma warning (disable : 4273)
@@ -15,6 +16,6 @@
 #define EXPTP_LIBOTP EXPORT_TEMPL 
 #define IMPCL_LIBOTP IMPORT_CLASS 
 #define IMPTP_LIBOTP IMPORT_TEMPL 
- 
-//NotifyCategoryDecl(libmovement, EXPCL_LIBMOVEMENT, EXPTP_LIBMOVEMENT);
-extern void init_libmovement();
+
+NotifyCategoryDecl(libotp, EXPCL_LIBOTP, EXPTP_LIBOTP);
+extern void init_libotp();
