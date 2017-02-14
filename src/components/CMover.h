@@ -1,18 +1,19 @@
 #pragma once
 
 #include "util.h"
-#include <typedObject.h>
+#include <typedReferenceCount.h>
 #include <pandabase.h>
 
 #include <nodePath.h>
 
 class CMover;
 
-class EXPCL_LIBOTP CMover : public TypedObject
-{
+class EXPCL_LIBOTP CMover : public TypedReferenceCount {
+    
     PUBLISHED:
         CMover(NodePath m_nodepath);
         ~CMover();
+        
         void set_fwd_speed(float speed);
         void set_rot_speed(float speed);
         void set_node_path(NodePath np);

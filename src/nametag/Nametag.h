@@ -4,13 +4,12 @@
 #include <nodepath.h>
 #include <pandanode.h>
 #include <mouseWatcher.h>
-#include <typedObject.h>
-#include <pandaNode.h>
+#include <typedReferenceCount.h>
 #include <pandabase.h>
 
 class Nametag;
 
-class EXPCL_LIBOTP Nametag : public TypedObject {
+class EXPCL_LIBOTP Nametag : public TypedReferenceCount {
     
     PUBLISHED:
         Nametag();
