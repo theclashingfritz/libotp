@@ -45,8 +45,8 @@ class EXPCL_LIBOTP NametagGlobals : public TypedObject {
         bool m_force_onscreen_chat;
         bool m_force_2d_nametags;
 
-        AudioSound *m_click_sound;
-        AudioSound *m_rollover_sound;
+        PT(AudioSound) m_click_sound;
+        PT(AudioSound) m_rollover_sound;
         
     private:
         NodePath m_nodepath; 
