@@ -2,7 +2,7 @@
 
 TypeHandle Nametag::_type_handle;
 
-Nametag::Nametag(PandaNode m_pandaNode) {
+Nametag::Nametag() {
     CSpeech = 2;
     CThought = 4;
     CName = 1;
@@ -54,11 +54,11 @@ uint16_t Nametag::get_chat_wordwrap() {
     return m_chat_wordwrap;
 }
 
-void Nametag::set_avatar(NodePath avatar) {
+void Nametag::set_avatar(NodePath * avatar) {
     m_avatar = avatar;
 }
 
-NodePath Nametag::get_avatar() {
+NodePath * Nametag::get_avatar() {
     return m_avatar;
 }
 

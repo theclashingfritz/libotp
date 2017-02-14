@@ -38,6 +38,10 @@ set(COMPONENTS_FILES
 set(NAMETAG_FILES
     src/nametag/NametagGlobals.cxx
     src/nametag/NametagGlobals.h
+    src/nametag/NametagGroup.cxx
+    src/nametag/NametagGroup.h
+    src/nametag/Nametag.cxx
+    src/nametag/Nametag.h
 )
 
 set(IGATE_FILES
