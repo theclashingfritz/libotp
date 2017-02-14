@@ -33,8 +33,16 @@ NametagGlobals::~NametagGlobals() {
     delete[] m_click_sound;
 }
 
-void NametagGlobals::set_me(NodePath me) {
-    m_nodepath = me;
+void NametagGlobals::set_toon(NodePath toon) {
+    m_nodepath = toon;
+}
+
+void NametagGlobals::set_arrow_model(NodePath node) {
+    m_arrow_nodepath = node;
+}
+
+void NametagGlobals::set_camera(NodePath node) {
+    m_camera_nodepath = node;
 }
 
 void NametagGlobals::set_want_active_nametags(bool want) {
@@ -53,8 +61,20 @@ void NametagGlobals::set_click_sound(PT(AudioSound) sound) {
     m_click_sound = sound;
 }
 
-NodePath NametagGlobals::get_me() {
+void NametagGlobals::set_rollover_sound(PT(AudioSound) sound) {
+    m_rollover_sound = sound;
+}
+
+NodePath NametagGlobals::get_toon() {
     return m_nodepath;
+}
+
+NodePath NametagGlobals::get_arrow_model() {
+    return m_arrow_nodepath;
+}
+
+NodePath NametagGlobals::get_camera() {
+    return m_camera_nodepath;
 }
 
 bool NametagGlobals::get_want_active_nametags() {
