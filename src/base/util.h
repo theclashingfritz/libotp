@@ -4,7 +4,6 @@
 #include <pandabase.h>
 #include <luse.h>
 
- 
 // PROPERTY MACRO (TYPE, NAME)
 // This is a helper for classes
 // Declares protected m_NAME variable of type TYPE

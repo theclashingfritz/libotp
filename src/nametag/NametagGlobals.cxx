@@ -30,7 +30,7 @@ NametagGlobals::NametagGlobals() {
 }
 
 NametagGlobals::~NametagGlobals() {
-    delete m_click_sound;
+    delete[] m_click_sound;
 }
 
 void NametagGlobals::set_me(NodePath me) {

@@ -11,8 +11,7 @@
 
 class NametagGlobals;
 
-class EXPCL_LIBOTP NametagGlobals : public TypedObject
-{
+class EXPCL_LIBOTP NametagGlobals : public TypedObject {
     PUBLISHED:
         NametagGlobals();
         ~NametagGlobals();
