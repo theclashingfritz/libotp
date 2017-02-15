@@ -44,15 +44,22 @@ set(NAMETAG_FILES
     src/nametag/Nametag.h
 )
 
+set(SETTINGS_FILES
+    src/settings/Settings.cxx
+    src/settings/Settings.h
+)
+
 set(IGATE_FILES
     src/base_igate.cxx
     src/components_igate.cxx
     src/nametag_igate.cxx
+    src/settings_igate.cxx
     src/libotp_module.cxx
 )
 
 include_directories(src/base)
 include_directories(src/nametag)
+include_directories(src/settings)
 include_directories(src/components)
 include_directories(${PANDA_DIR}/include)
 include_directories(${PYTHON_INCLUDE_DIR})
@@ -103,6 +110,7 @@ add_library(libotp SHARED
     ${BASE_FILES}
     ${COMPONENTS_FILES}
     ${NAMETAG_FILES}
+    ${SETTINGS_FILES}
     ${IGATE_FILES}
 )
 
@@ -121,4 +129,5 @@ add_custom_command(TARGET libotp
 source_group("base" FILES ${BASE_FILES})
 source_group("components" FILES ${COMPONENTS_FILES})
 source_group("nametag" FILES ${NAMETAG_FILES})
+source_group("settings" FILES ${SETTINGS_FILES})
 source_group("interrogate_files" FILES ${IGATE_FILES})
