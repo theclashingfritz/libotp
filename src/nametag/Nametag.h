@@ -42,5 +42,5 @@ class EXPCL_LIBOTP Nametag : public TypedReferenceCount {
     private:
         //PandaNode m_pandaNode;
 
-    TYPE_HANDLE(NametagGlobals, TypedObject);
+    TYPE_HANDLE(Nametag, TypedObject);
 };
