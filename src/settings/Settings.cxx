@@ -49,7 +49,7 @@ void Settings::read_settings() {
     DatagramIterator dgi(dg);
     m_data = "";
     if (dgi.get_string() != m_version) {
-        libotp_cat.warning() << "Outdated settings version detected! Resetting settings...." << std::endl;
+        libotp_cat.warning() << "Settings version does not match current version! Resetting settings...." << std::endl;
         write_settings();
         return;
     }
