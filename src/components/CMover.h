@@ -3,7 +3,7 @@
 #include "util.h"
 #include "CImpulse.h"
 #include <string>
-#include <vector>
+#include <pvector.h>
 #include <typedReferenceCount.h>
 #include <pandabase.h>
 
@@ -38,7 +38,7 @@ class EXPCL_LIBOTP CMover : public TypedReferenceCount {
         float m_rotSpeed;
         float m_dt;
         
-        vector<CImpulse> m_c_impulses;
+        pvector<CImpulse> m_c_impulses;
         
         LVecBase3f shove;
         LVecBase3f force;

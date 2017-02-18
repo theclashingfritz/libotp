@@ -8,7 +8,7 @@
 #include "Settings.h"
 
 Configure(config_libotp);
-NotifyCategoryDef(libotp, ":libotp");
+NotifyCategoryDef(libotp, "");
 
 ConfigureFn(config_libotp) {
     init_libotp();
