@@ -24,7 +24,7 @@ Settings::Settings() {
 }
 
 Settings::~Settings() {
-
+    delete[] m_vfs;
 }
 
 void Settings::read_settings() {
@@ -152,6 +152,6 @@ bool Settings::get_embedded_mode() {
 }
 
 bool Settings::do_saved_settings_exist() {
-    return 0;
+    return m_vfs->exists(m_file);
 }
 
