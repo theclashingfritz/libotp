@@ -14,8 +14,6 @@ Settings::Settings() {
     //Now to define our default settings.
     m_want_music = 1;
     m_want_sfx = 1;
-    m_sfx_volume = 100.0f;
-    m_music_volume = 100.0f;
     m_force_sw_midi = 0;
     m_embedded_mode = 0;
     m_log_chat = 0;
@@ -24,6 +22,8 @@ Settings::Settings() {
     m_toon_chat_sounds = 1;
     m_accepting_new_friends = 1;
     m_accepting_non_friend_whispers = 1;
+    m_sfx_volume = 100.0f;
+    m_music_volume = 100.0f;
     m_current_driver = 0;
     m_resolution = 1;
     m_windowed_mode = 0;
