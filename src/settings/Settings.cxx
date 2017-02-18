@@ -8,6 +8,9 @@ Settings::Settings() {
     m_file = Filename(m_file.to_os_long_name()); //Now let's do the real file.
     m_file.set_binary();
     
+    //Define our Settings Version!
+    m_version = "v1.0.0";
+    
     //Now to define our default settings.
     m_want_music = 1;
     m_want_sfx = 1;
@@ -16,6 +19,8 @@ Settings::Settings() {
     m_force_sw_midi = 0;
     m_embedded_mode = 0;
     m_log_chat = 0;
+    m_accepting_new_friends = 1;
+    m_accepting_non_friend_whispers = 1;
     m_current_driver = 0;
     m_resolution = 1;
     m_windowed_mode = 0;
@@ -24,7 +29,7 @@ Settings::Settings() {
 }
 
 Settings::~Settings() {
-    delete[] m_vfs;
+
 }
 
 void Settings::read_settings() {
@@ -40,6 +45,10 @@ void Settings::read_settings() {
     Datagram dg(m_data);
     DatagramIterator dgi(dg);
     m_data = "";
+    if (dgi.get_string() != m_version) {
+        write_settings();
+        return;
+    }
     m_want_music = dgi.get_bool();
     m_want_sfx = dgi.get_bool();
     m_sfx_volume = dgi.get_stdfloat();
@@ -47,6 +56,8 @@ void Settings::read_settings() {
     m_force_sw_midi = dgi.get_bool();
     m_embedded_mode = dgi.get_bool();
     m_log_chat = dgi.get_bool();
+    m_accepting_new_friends = dgi.get_bool();
+    m_accepting_non_friend_whispers = dgi.get_bool();
     m_current_driver = dgi.get_uint8();
     m_resolution = dgi.get_uint8();
     m_windowed_mode = dgi.get_uint8();
@@ -56,6 +67,7 @@ void Settings::read_settings() {
 
 void Settings::write_settings() {
     Datagram dg;
+    dg.add_string(m_version);
     dg.add_bool(m_want_music);
     dg.add_bool(m_want_sfx);
     dg.add_stdfloat(m_sfx_volume);
@@ -63,6 +75,8 @@ void Settings::write_settings() {
     dg.add_bool(m_force_sw_midi);
     dg.add_bool(m_embedded_mode);
     dg.add_bool(m_log_chat);
+    dg.add_bool(m_accepting_new_friends);
+    dg.add_bool(m_accepting_non_friend_whispers);
     dg.add_uint8(m_current_driver);
     dg.add_uint8(m_resolution);
     dg.add_uint8(m_windowed_mode);
@@ -96,6 +110,14 @@ void Settings::set_embedded_mode(bool mode) {
 
 void Settings::set_chat_log(bool mode) {
     m_log_chat = mode;
+}
+
+void Settings::set_accepting_new_friends(bool mode) {
+    m_accepting_new_friends = mode;
+}
+
+void Settings::set_accepting_non_friend_whispers(bool mode) {
+    m_accepting_non_friend_whispers = mode;
 }
 
 void Settings::set_sfx_volume(float volume) {

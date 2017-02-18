@@ -27,6 +27,8 @@ class EXPCL_LIBOTP Settings : public TypedObject {
         void set_force_sw_midi(bool mode);
         void set_embedded_mode(bool mode);
         void set_chat_log(bool mode);
+        void set_accepting_new_friends(bool mode);
+        void set_accepting_non_friend_whispers(bool mode);
         void set_sfx_volume(float volume);
         void set_music_volume(float volume);
         void set_display_driver(unsigned int driver);
@@ -52,11 +54,14 @@ class EXPCL_LIBOTP Settings : public TypedObject {
         bool m_force_sw_midi;
         bool m_save_settings_exist;
         bool m_log_chat;
+        bool m_accepting_new_friends;
+        bool m_accepting_non_friend_whispers;
         bool m_embedded_mode;
         float m_music_volume;
         float m_sfx_volume;
         
     private:
+        std::string m_version;
         std::string m_data;
         Filename m_file;
         VirtualFileSystem* m_vfs;
