@@ -9,7 +9,7 @@ Settings::Settings() {
     m_file.set_binary();
     
     //Define our Settings Version!
-    m_version = "v1.0.1";
+    m_version = "v1.0.2";
     
     //Now to define our default settings.
     m_want_music = 1;
@@ -55,8 +55,6 @@ void Settings::read_settings() {
     }
     m_want_music = dgi.get_bool();
     m_want_sfx = dgi.get_bool();
-    m_sfx_volume = dgi.get_stdfloat();
-    m_music_volume = dgi.get_stdfloat();
     m_force_sw_midi = dgi.get_bool();
     m_embedded_mode = dgi.get_bool();
     m_log_chat = dgi.get_bool();
@@ -65,6 +63,8 @@ void Settings::read_settings() {
     m_toon_chat_sounds = dgi.get_bool();
     m_accepting_new_friends = dgi.get_bool();
     m_accepting_non_friend_whispers = dgi.get_bool();
+    m_sfx_volume = dgi.get_stdfloat();
+    m_music_volume = dgi.get_stdfloat();
     m_current_driver = dgi.get_uint8();
     m_resolution = dgi.get_uint8();
     m_windowed_mode = dgi.get_uint8();
@@ -77,8 +77,6 @@ void Settings::write_settings() {
     dg.add_string(m_version);
     dg.add_bool(m_want_music);
     dg.add_bool(m_want_sfx);
-    dg.add_stdfloat(m_sfx_volume);
-    dg.add_stdfloat(m_music_volume);
     dg.add_bool(m_force_sw_midi);
     dg.add_bool(m_embedded_mode);
     dg.add_bool(m_log_chat);
@@ -87,6 +85,8 @@ void Settings::write_settings() {
     dg.add_bool(m_toon_chat_sounds);
     dg.add_bool(m_accepting_new_friends);
     dg.add_bool(m_accepting_non_friend_whispers);
+    dg.add_stdfloat(m_sfx_volume);
+    dg.add_stdfloat(m_music_volume);
     dg.add_uint8(m_current_driver);
     dg.add_uint8(m_resolution);
     dg.add_uint8(m_windowed_mode);
