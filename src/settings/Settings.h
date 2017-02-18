@@ -27,6 +27,9 @@ class EXPCL_LIBOTP Settings : public TypedObject {
         void set_force_sw_midi(bool mode);
         void set_embedded_mode(bool mode);
         void set_chat_log(bool mode);
+        void set_show_fpsmeter(bool mode);
+        void set_custom_mouse_cursor(bool mode);
+        void set_toon_chat_sounds(bool mode);
         void set_accepting_new_friends(bool mode);
         void set_accepting_non_friend_whispers(bool mode);
         void set_sfx_volume(float volume);
@@ -41,6 +44,12 @@ class EXPCL_LIBOTP Settings : public TypedObject {
         float get_music_volume();
         bool get_music();
         bool get_sfx();
+        bool want_chat_log();
+        bool get_show_fpsmeter();
+        bool want_custom_mouse_cursor();
+        bool get_toon_chat_sounds();
+        bool get_accepting_new_friends();
+        bool get_accepting_non_friend_whispers();
         bool get_embedded_mode(); 
         bool do_saved_settings_exist();
         
@@ -54,6 +63,9 @@ class EXPCL_LIBOTP Settings : public TypedObject {
         bool m_force_sw_midi;
         bool m_save_settings_exist;
         bool m_log_chat;
+        bool m_show_fpsmeter;
+        bool m_custom_mouse_cursor;
+        bool m_toon_chat_sounds;
         bool m_accepting_new_friends;
         bool m_accepting_non_friend_whispers;
         bool m_embedded_mode;

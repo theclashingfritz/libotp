@@ -9,7 +9,7 @@ Settings::Settings() {
     m_file.set_binary();
     
     //Define our Settings Version!
-    m_version = "v1.0.0";
+    m_version = "v1.0.1";
     
     //Now to define our default settings.
     m_want_music = 1;
@@ -19,6 +19,9 @@ Settings::Settings() {
     m_force_sw_midi = 0;
     m_embedded_mode = 0;
     m_log_chat = 0;
+    m_show_fpsmeter = 0;
+    m_custom_mouse_cursor = 1;
+    m_toon_chat_sounds = 1;
     m_accepting_new_friends = 1;
     m_accepting_non_friend_whispers = 1;
     m_current_driver = 0;
@@ -46,6 +49,7 @@ void Settings::read_settings() {
     DatagramIterator dgi(dg);
     m_data = "";
     if (dgi.get_string() != m_version) {
+        libotp_cat.warning() << "Outdated settings version detected! Resetting settings...." << std::endl;
         write_settings();
         return;
     }
@@ -56,6 +60,9 @@ void Settings::read_settings() {
     m_force_sw_midi = dgi.get_bool();
     m_embedded_mode = dgi.get_bool();
     m_log_chat = dgi.get_bool();
+    m_show_fpsmeter = dgi.get_bool();
+    m_custom_mouse_cursor = dgi.get_bool();
+    m_toon_chat_sounds = dgi.get_bool();
     m_accepting_new_friends = dgi.get_bool();
     m_accepting_non_friend_whispers = dgi.get_bool();
     m_current_driver = dgi.get_uint8();
@@ -75,6 +82,9 @@ void Settings::write_settings() {
     dg.add_bool(m_force_sw_midi);
     dg.add_bool(m_embedded_mode);
     dg.add_bool(m_log_chat);
+    dg.add_bool(m_show_fpsmeter);
+    dg.add_bool(m_custom_mouse_cursor);
+    dg.add_bool(m_toon_chat_sounds);
     dg.add_bool(m_accepting_new_friends);
     dg.add_bool(m_accepting_non_friend_whispers);
     dg.add_uint8(m_current_driver);
@@ -110,6 +120,18 @@ void Settings::set_embedded_mode(bool mode) {
 
 void Settings::set_chat_log(bool mode) {
     m_log_chat = mode;
+}
+
+void Settings::set_show_fpsmeter(bool mode) {
+    m_show_fpsmeter = mode;
+}
+
+void Settings::set_custom_mouse_cursor(bool mode) {
+    m_custom_mouse_cursor = mode;
+}
+
+void Settings::set_toon_chat_sounds(bool mode) {
+    m_toon_chat_sounds = mode;
 }
 
 void Settings::set_accepting_new_friends(bool mode) {
@@ -159,6 +181,30 @@ bool Settings::get_music() {
 
 bool Settings::get_sfx() {
     return m_want_sfx;
+}
+
+bool Settings::want_chat_log() {
+    return m_log_chat;
+}
+
+bool Settings::get_show_fpsmeter() {
+    return m_show_fpsmeter;
+}
+
+bool Settings::want_custom_mouse_cursor() {
+    return m_custom_mouse_cursor;
+}
+
+bool Settings::get_toon_chat_sounds() {
+    return m_toon_chat_sounds;
+}
+
+bool Settings::get_accepting_new_friends() {
+    return m_accepting_new_friends;
+}
+
+bool Settings::get_accepting_non_friend_whispers() {
+    return m_accepting_non_friend_whispers;
 }
 
 float Settings::get_sfx_volume() {
