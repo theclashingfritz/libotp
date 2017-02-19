@@ -6,10 +6,18 @@ Settings::Settings() {
     m_vfs = VirtualFileSystem::get_global_ptr();
     m_file = Filename("/useropt"); //First let's use this to set our dir.
     m_file = Filename(m_file.to_os_long_name()); //Now let's do the real file.
-    m_file.set_binary();
     
     //Define our Settings Version!
-    m_version = "v1.0.2";
+    m_version = "v1.0.3";
+    
+    //Now define any PUBLISHED variables
+    GL = 1;
+    DX9 = 2;
+    TINYDISPLAY = 3;
+    
+    PRODUCTION = 1;
+    DEBUG = 2;
+    DEVELOPMENT = 3;
     
     //Now to define our default settings.
     m_want_music = 1;
@@ -65,6 +73,7 @@ void Settings::read_settings() {
     m_accepting_non_friend_whispers = dgi.get_bool();
     m_sfx_volume = dgi.get_stdfloat();
     m_music_volume = dgi.get_stdfloat();
+    m_server_type = dgi.get_uint8();
     m_current_driver = dgi.get_uint8();
     m_resolution = dgi.get_uint8();
     m_windowed_mode = dgi.get_uint8();
@@ -87,6 +96,7 @@ void Settings::write_settings() {
     dg.add_bool(m_accepting_non_friend_whispers);
     dg.add_stdfloat(m_sfx_volume);
     dg.add_stdfloat(m_music_volume);
+    dg.add_uint8(m_server_type);
     dg.add_uint8(m_current_driver);
     dg.add_uint8(m_resolution);
     dg.add_uint8(m_windowed_mode);
@@ -150,6 +160,10 @@ void Settings::set_music_volume(float volume) {
     m_music_volume = volume;
 }
 
+void Settings::set_server_type(int type) {
+    m_server_type = type;
+}
+
 void Settings::set_display_driver(unsigned int driver) {
     m_current_driver = driver;
 }
@@ -165,6 +179,10 @@ void Settings::set_resolution(unsigned int resolution) {
 void Settings::set_resolution_dimensions(unsigned int xsize, unsigned int ysize) {
     m_resolution_dimensions[0] = xsize;
     m_resolution_dimensions[1] = ysize;
+}
+
+int Settings::server_type() {
+    return m_server_type;
 }
 
 int Settings::get_resolution() {

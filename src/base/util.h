@@ -1,6 +1,7 @@
 #pragma once
 
 #include "config_libotp.h"
+#include <stdint.h>
 #include <pandabase.h>
 #include <luse.h>
 

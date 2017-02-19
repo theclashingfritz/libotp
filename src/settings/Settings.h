@@ -10,16 +10,27 @@
 #include <virtualFileSystem.h>
 #include <datagram.h>
 #include <datagramIterator.h>
-#include <typedObject.h>
+#include <typedReferenceCount.h>
 #include <pandabase.h>
 
 class Settings;
 
-class EXPCL_LIBOTP Settings : public TypedObject {
+class EXPCL_LIBOTP Settings : public TypedReferenceCount {
     
     PUBLISHED:
         Settings();
         ~Settings();
+        
+        //Before we set any functions let's define PUBLISHED variables.
+        unsigned int GL;
+        unsigned int DX9;
+        unsigned int TINYDISPLAY;
+        
+        unsigned int PRODUCTION;
+        unsigned int DEBUG;
+        unsigned int DEVELOPMENT;
+        
+        //Now let's do our functions!
         void read_settings();
         void write_settings();
         void set_music(bool mode);
@@ -34,10 +45,12 @@ class EXPCL_LIBOTP Settings : public TypedObject {
         void set_accepting_non_friend_whispers(bool mode);
         void set_sfx_volume(float volume);
         void set_music_volume(float volume);
+        void set_server_type(int type);
         void set_display_driver(unsigned int driver);
         void set_windowed_mode(unsigned int mode);
         void set_resolution(unsigned int resolution);
         void set_resolution_dimensions(unsigned int xsize, unsigned int ysize);
+        int server_type();
         int get_resolution();
         int get_windowed_mode();
         float get_sfx_volume();
@@ -57,6 +70,7 @@ class EXPCL_LIBOTP Settings : public TypedObject {
         unsigned int m_resolution_dimensions[2];
         unsigned int m_resolution;
         unsigned int m_windowed_mode;
+        unsigned int m_server_type;
         unsigned int m_current_driver;
         bool m_want_music;
         bool m_want_sfx;
