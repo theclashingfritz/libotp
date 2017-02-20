@@ -42,6 +42,13 @@ set(NAMETAG_FILES
     src/nametag/NametagGroup.h
     src/nametag/Nametag.cxx
     src/nametag/Nametag.h
+    src/nametag/Nametag3d.cxx
+    src/nametag/Nametag3d.h
+)
+
+set(MARGINS_FILES
+    src/margins/ClickablePopup.cxx
+    src/margins/ClickablePopup.h
 )
 
 set(SETTINGS_FILES
@@ -53,12 +60,14 @@ set(IGATE_FILES
     src/base_igate.cxx
     src/components_igate.cxx
     src/nametag_igate.cxx
+    src/margins_igate.cxx
     src/settings_igate.cxx
     src/libotp_module.cxx
 )
 
 include_directories(src/base)
 include_directories(src/nametag)
+include_directories(src/margins)
 include_directories(src/settings)
 include_directories(src/components)
 include_directories(${PANDA_DIR}/include)
@@ -110,6 +119,7 @@ add_library(libotp SHARED
     ${BASE_FILES}
     ${COMPONENTS_FILES}
     ${NAMETAG_FILES}
+    ${MARGINS_FILES}
     ${SETTINGS_FILES}
     ${IGATE_FILES}
 )
@@ -129,5 +139,6 @@ add_custom_command(TARGET libotp
 source_group("base" FILES ${BASE_FILES})
 source_group("components" FILES ${COMPONENTS_FILES})
 source_group("nametag" FILES ${NAMETAG_FILES})
+source_group("margins" FILES ${MARGINS_FILES})
 source_group("settings" FILES ${SETTINGS_FILES})
 source_group("interrogate_files" FILES ${IGATE_FILES})

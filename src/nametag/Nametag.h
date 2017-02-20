@@ -1,6 +1,9 @@
 #pragma once
 
 #include "util.h"
+
+#include "ClickablePopup.h"
+
 #include <nodepath.h>
 #include <pandanode.h>
 #include <mouseWatcher.h>
@@ -9,7 +12,7 @@
 
 class Nametag;
 
-class EXPCL_LIBOTP Nametag : public TypedReferenceCount {
+class EXPCL_LIBOTP Nametag : public TypedReferenceCount, ClickablePopup {
     
     PUBLISHED:
         Nametag();
