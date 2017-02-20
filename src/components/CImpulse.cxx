@@ -11,6 +11,10 @@ CImpulse::~CImpulse() {
     
 }
 
+void clear_mover(CMover* mover) {
+    
+}
+
 bool CImpulse::is_cpp() {
     return 1;
 }

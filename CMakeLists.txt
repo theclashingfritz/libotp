@@ -33,6 +33,7 @@ set(COMPONENTS_FILES
     src/components/CMover.h
     src/components/CImpulse.cxx
     src/components/CImpulse.h
+    src/components/CMID.h
 )
 
 set(NAMETAG_FILES

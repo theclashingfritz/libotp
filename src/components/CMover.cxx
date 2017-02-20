@@ -2,9 +2,19 @@
 
 TypeHandle CMover::_type_handle;
 
-CMover::CMover(NodePath m_nodepath): m_fwdSpeed(0.0), m_rotSpeed(0.0) {
+CMover::CMover(NodePath m_nodepath) {
+    m_fwdSpeed = 1.0;
+    m_rotSpeed = 1.0;
+}
+
+CMover::CMover(NodePath m_nodepath, float m_fwdSpeed) {
+    m_rotSpeed = 1.0;
+}
+
+CMover::CMover(NodePath m_nodepath, float m_fwdSpeed, float m_rotSpeed) {
 
 }
+
 
 CMover::~CMover() {
     
