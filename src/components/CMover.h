@@ -1,13 +1,15 @@
 #pragma once
 
 #include "util.h"
-#include "CMID.h"
 #include <string>
 #include <pvector.h>
 #include <typedReferenceCount.h>
 #include <pandabase.h>
 #include <nodePath.h>
 #include "CImpulse.h"
+
+//class CImpulse;
+class CMover;
 
 class EXPCL_LIBOTP CMover : public TypedReferenceCount {
     
