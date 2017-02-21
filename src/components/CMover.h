@@ -1,20 +1,22 @@
 #pragma once
 
 #include "util.h"
-#include "CImpulse.h"
 #include <string>
 #include <pvector.h>
 #include <typedReferenceCount.h>
 #include <pandabase.h>
-
 #include <nodePath.h>
+#include "CImpulse.h"
 
+//class CImpulse;
 class CMover;
 
 class EXPCL_LIBOTP CMover : public TypedReferenceCount {
     
     PUBLISHED:
         CMover(NodePath m_nodepath);
+        CMover(NodePath m_nodepath, float m_fwdSpeed);
+        CMover(NodePath m_nodepath, float m_fwdSpeed, float m_rotSpeed);
         ~CMover();
         
         void set_fwd_speed(float speed);
