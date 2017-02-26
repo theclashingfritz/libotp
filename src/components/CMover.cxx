@@ -39,14 +39,17 @@ void CMover::reset_dt() {
 }
 
 void CMover::add_c_impulse(string name, CImpulse impulse) {
+    libotp_cat.debug() << "Adding CImpulse to impulse map and setting it's mover to our current mover!" << std::endl;
     m_c_impulses[name] = impulse;
     m_c_impulses[name].set_mover(this);
 }
 
 void CMover::remove_c_impulse(string name) {
     if (m_c_impulses.find(name) == m_c_impulses.end()) {
+        libotp_cat.debug() << "CImpulse was not found in impulse map! Returning..." << std::endl;
         return;
     } else {
+        libotp_cat.debug() << "Removing CImpulse from map and destorying CImpulse!" << std::endl;
         m_c_impulses[name].clear_mover(this);
         it = m_c_impulses.find(name);
         m_c_impulses.erase(it);
