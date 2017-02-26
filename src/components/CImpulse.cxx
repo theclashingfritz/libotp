@@ -9,7 +9,6 @@ CImpulse::CImpulse() {
 
 CImpulse::~CImpulse() {
     m_mover = NULL;
-    delete[] m_mover;
 }
 
 void CImpulse::process(float dt) {
