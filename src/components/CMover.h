@@ -2,13 +2,14 @@
 
 #include "util.h"
 #include <string>
-#include <pvector.h>
+#include <fstream>
+#include <istream>
+#include <iostream>
 #include <typedReferenceCount.h>
 #include <pandabase.h>
 #include <nodePath.h>
 #include "CImpulse.h"
 
-//class CImpulse;
 class CMover;
 
 class EXPCL_LIBOTP CMover : public TypedReferenceCount {
@@ -26,24 +27,28 @@ class EXPCL_LIBOTP CMover : public TypedReferenceCount {
         void reset_dt();
         void add_c_impulse(string name, CImpulse impulse);
         void remove_c_impulse(string name);
-        void add_shove(LVecBase3f shove);
-        void add_rot_shove(LVecBase3f shove);
-        void add_force(LVecBase3f force);
-        void add_rot_force(LVecBase3f force);
+        void add_shove(VBase3 shove);
+        void add_rot_shove(VBase3 shove);
+        void add_force(VBase3 force);
+        void add_rot_force(VBase3 force);
         float get_fwd_speed();
         float get_rot_speed();
         float get_dt();
         NodePath get_node_path();
+        
+    public:
+        Vec3 m_vec_type;
         
     private:
         float m_fwdSpeed;
         float m_rotSpeed;
         float m_dt;
         
-        pvector<CImpulse> m_c_impulses;
+        pmap<std::string, CImpulse> m_c_impulses;
+        pmap<std::string, CImpulse>::iterator it;
         
-        LVecBase3f shove;
-        LVecBase3f force;
+        VBase3 shove;
+        VBase3 force;
         
         NodePath m_nodepath;
         

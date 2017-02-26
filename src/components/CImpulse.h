@@ -1,16 +1,14 @@
 #pragma once
 
 #include "util.h"
-#include <typedObject.h>
+#include <typedReferenceCount.h>
 #include <nodePath.h>
 #include <pandabase.h>
-
-//#include "CMover.h"
 
 class CMover;
 class CImpulse;
 
-class EXPCL_LIBOTP CImpulse : public TypedObject {
+class EXPCL_LIBOTP CImpulse : public TypedReferenceCount {
     
     PUBLISHED:
         CImpulse();
@@ -21,6 +19,9 @@ class EXPCL_LIBOTP CImpulse : public TypedObject {
         void clear_mover(CMover* mover);
         CMover* get_mover();
         bool is_cpp();
+        
+    public:
+        Vec3 m_vec_type;
         
     private:
         CMover* m_mover;
