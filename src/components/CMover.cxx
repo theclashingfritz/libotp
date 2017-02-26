@@ -56,6 +56,18 @@ void CMover::remove_c_impulse(string name) {
     }
 }
 
+void CMover::process_c_impulses(float dt) {
+    for each(pair<string, CImpulse> x in m_c_impulses) {
+        x.second.process(dt);
+    }
+}
+
+void CMover::process_c_impulses() {
+    for each(pair<string, CImpulse> x in m_c_impulses) {
+        x.second.process(get_dt());
+    }
+}
+
 void CMover::add_force(VBase3 force) {
     return;
 }
@@ -86,6 +98,14 @@ float CMover::get_rot_speed() {
 
 float CMover::get_dt() {
     return m_dt;
+}
+
+CImpulse CMover::get_c_impulse(string name) {
+    if (m_c_impulses.find(name) == m_c_impulses.end()) {
+        libotp_cat.debug() << "CImpulse was not found in impulse map! Returning..." << std::endl;
+    } else {
+        return m_c_impulses[name];
+    }
 }
 
 NodePath CMover::get_node_path() {
