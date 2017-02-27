@@ -53,7 +53,13 @@ void CMover::remove_c_impulse(string name) {
         m_c_impulses[name].clear_mover(this);
         pmap<std::string, CImpulse>::iterator it;
         it = m_c_impulses.find(name);
-        m_c_impulses.erase(it);
+        if (it != m_c_impulses.end()) {
+            // Found it? - Delete it!
+            m_c_impulses.erase(it);
+        } else {
+            libotp_cat.debug() << "CImpulse was not found in impulse map! Returning..." << std::endl;
+            return;
+        }
     }
 }
 

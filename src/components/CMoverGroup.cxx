@@ -25,7 +25,7 @@ void CMoverGroup::remove_c_mover(string name) {
         pmap<std::string, CMover*>::iterator it;
         it = m_c_movers.find(name);
         if (it != m_c_movers.end()) {
-            // Found it - Delete it
+            // Found it? - Delete it!
             delete it->second;
             m_c_movers.erase(it);
         } else {
