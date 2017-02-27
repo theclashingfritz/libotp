@@ -51,18 +51,21 @@ void CMover::remove_c_impulse(string name) {
     } else {
         libotp_cat.debug() << "Removing CImpulse from map and destorying CImpulse!" << std::endl;
         m_c_impulses[name].clear_mover(this);
+        pmap<std::string, CImpulse>::iterator it;
         it = m_c_impulses.find(name);
         m_c_impulses.erase(it);
     }
 }
 
 void CMover::process_c_impulses(float dt) {
+    libotp_cat.debug() << "Processing CImpulses!" << std::endl;
     for each(pair<string, CImpulse> x in m_c_impulses) {
         x.second.process(dt);
     }
 }
 
 void CMover::process_c_impulses() {
+    libotp_cat.debug() << "Processing CImpulses!" << std::endl;
     for each(pair<string, CImpulse> x in m_c_impulses) {
         x.second.process(get_dt());
     }
@@ -86,6 +89,10 @@ void CMover::add_rot_shove(VBase3 shove) {
 
 void CMover::set_node_path(NodePath np) {
     m_nodepath = np;
+}
+
+void CMover::integrate() {
+    libotp_cat.warning() << "CMover.integrate() is deperacted! Inherit the class in Python or C++ instead." << std::endl;
 }
 
 float CMover::get_fwd_speed() {

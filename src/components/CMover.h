@@ -33,6 +33,7 @@ class EXPCL_LIBOTP CMover : public TypedReferenceCount {
         void add_rot_shove(VBase3 shove);
         void add_force(VBase3 force);
         void add_rot_force(VBase3 force);
+        void integrate(); 
         float get_fwd_speed();
         float get_rot_speed();
         float get_dt();
@@ -48,7 +49,6 @@ class EXPCL_LIBOTP CMover : public TypedReferenceCount {
         float m_dt;
         
         pmap<std::string, CImpulse> m_c_impulses;
-        pmap<std::string, CImpulse>::iterator it;
         
         VBase3 shove;
         VBase3 force;

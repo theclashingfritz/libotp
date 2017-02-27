@@ -29,6 +29,8 @@ set(BASE_FILES
 )
 
 set(COMPONENTS_FILES
+    src/components/CMoverGroup.cxx
+    src/components/CMoverGroup.h
     src/components/CMover.cxx
     src/components/CMover.h
     src/components/CImpulse.cxx

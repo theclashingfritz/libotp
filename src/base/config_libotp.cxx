@@ -1,6 +1,7 @@
 #include "config_libotp.h"
 
 #include "CMover.h"
+#include "CMoverGroup.h"
 #include "CImpulse.h"
 #include "NametagGlobals.h"
 #include "NametagGroup.h"
@@ -22,6 +23,7 @@ void init_libotp() {
     initialized = true;
     
     CMover::init_type();
+    CMoverGroup::init_type();
     CImpulse::init_type();
     NametagGlobals::init_type();
     NametagGroup::init_type();
