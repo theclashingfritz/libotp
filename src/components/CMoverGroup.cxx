@@ -35,9 +35,15 @@ void CMoverGroup::remove_c_mover(string name) {
     }
 }
 
+void CMoverGroup::process_c_impulses() {
+    libotp_cat.debug() << "Processing all CImpulses in our CMover Groups!" << std::endl;
+    for each(pair<string, CMover*> x in m_c_movers) {
+        x.second->process_c_impulses(get_dt());
+    }
+}
 
 void CMoverGroup::process_c_impulses_and_integrate() {
-    libotp_cat.debug() << "Processing all CImpulses in our CMover Groups!" << std::endl;
+    libotp_cat.debug() << "Processing all CImpulses in our CMover Groups! But not integrating as it's deperacted." << std::endl;
     for each(pair<string, CMover*> x in m_c_movers) {
         x.second->process_c_impulses(get_dt());
     }

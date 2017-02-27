@@ -19,6 +19,7 @@ class EXPCL_LIBOTP CMoverGroup : public TypedReferenceCount {
         ~CMoverGroup();
         void add_c_mover(string name, CMover* mover);
         void remove_c_mover(string name);
+        void process_c_impulses();
         void process_c_impulses_and_integrate();
         void set_dt(float dt);
         void set_dt();
