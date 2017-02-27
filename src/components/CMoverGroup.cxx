@@ -28,6 +28,9 @@ void CMoverGroup::remove_c_mover(string name) {
             // Found it - Delete it
             delete it->second;
             m_c_movers.erase(it);
+        } else {
+            libotp_cat.debug() << "CMover was not found in mover map! Returning..." << std::endl;
+            return;
         }
     }
 }
