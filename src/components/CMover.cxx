@@ -1,5 +1,7 @@
 #include "CMover.h"
 
+NotifyCategoryDef(CMover, "");
+
 TypeHandle CMover::_type_handle;
 
 CMover::CMover(NodePath m_nodepath) {
@@ -39,39 +41,39 @@ void CMover::reset_dt() {
 }
 
 void CMover::add_c_impulse(string name, CImpulse impulse) {
-    libotp_cat.debug() << "Adding CImpulse to impulse map and setting it's mover to our current mover!" << std::endl;
+    CMover_cat.debug() << "Adding CImpulse '" << name << "' to impulse map and setting it's mover to our current mover!" << std::endl;
     m_c_impulses[name] = impulse;
     m_c_impulses[name].set_mover(this);
 }
 
 void CMover::remove_c_impulse(string name) {
     if (m_c_impulses.find(name) == m_c_impulses.end()) {
-        libotp_cat.debug() << "CImpulse was not found in impulse map! Returning..." << std::endl;
+        CMover_cat.debug() << "CImpulse '" << name << "' was not found in impulse map! Returning..." << std::endl;
         return;
     } else {
-        libotp_cat.debug() << "Removing CImpulse from map and destorying CImpulse!" << std::endl;
         m_c_impulses[name].clear_mover(this);
         pmap<std::string, CImpulse>::iterator it;
         it = m_c_impulses.find(name);
         if (it != m_c_impulses.end()) {
             // Found it? - Delete it!
+            CMover_cat.debug() << "Removing CImpulse '" << name << "' from map and destorying CImpulse!" << std::endl;
             m_c_impulses.erase(it);
         } else {
-            libotp_cat.debug() << "CImpulse was not found in impulse map! Returning..." << std::endl;
+            CMover_cat.debug() << "CImpulse '" << name << "' was not found in impulse map! Returning..." << std::endl;
             return;
         }
     }
 }
 
 void CMover::process_c_impulses(float dt) {
-    libotp_cat.debug() << "Processing CImpulses!" << std::endl;
+    CMover_cat.debug() << "Processing CImpulses!" << std::endl;
     for each(pair<string, CImpulse> x in m_c_impulses) {
         x.second.process(dt);
     }
 }
 
 void CMover::process_c_impulses() {
-    libotp_cat.debug() << "Processing CImpulses!" << std::endl;
+    CMover_cat.debug() << "Processing CImpulses!" << std::endl;
     for each(pair<string, CImpulse> x in m_c_impulses) {
         x.second.process(get_dt());
     }
@@ -98,7 +100,7 @@ void CMover::set_node_path(NodePath np) {
 }
 
 void CMover::integrate() {
-    libotp_cat.warning() << "CMover.integrate() is deperacted! Inherit the class in Python or C++ instead." << std::endl;
+    CMover_cat.warning() << "CMover.integrate() is deperacted! Inherit the class in Python or C++ instead." << std::endl;
 }
 
 float CMover::get_fwd_speed() {
@@ -115,7 +117,7 @@ float CMover::get_dt() {
 
 CImpulse CMover::get_c_impulse(string name) {
     if (m_c_impulses.find(name) == m_c_impulses.end()) {
-        libotp_cat.debug() << "CImpulse was not found in impulse map! Returning..." << std::endl;
+        CMover_cat.debug() << "CImpulse '" << name << "' was not found in impulse map! Returning..." << std::endl;
     } else {
         return m_c_impulses[name];
     }

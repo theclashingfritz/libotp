@@ -15,6 +15,17 @@ class EXPCL_LIBOTP NametagGlobals : public TypedObject {
     PUBLISHED:
         NametagGlobals();
         ~NametagGlobals();
+        
+        uint8_t CFSpeech;
+        uint8_t CFThought;
+        uint8_t CFQuicktalker;
+        uint8_t CFTimeout;
+        uint8_t CFPageButton;
+        uint8_t CFQuitButton;
+        uint8_t CFReversed;
+        uint8_t CFSndOpenchat;
+        uint16_t CFNoQuitButton;
+        
         void set_toon(NodePath toon);
         void set_arrow_model(NodePath node);
         void set_camera(NodePath node);
@@ -31,16 +42,6 @@ class EXPCL_LIBOTP NametagGlobals : public TypedObject {
         bool get_force_2d_nametags();
         
     protected:   
-        uint8_t CFSpeech;
-        uint8_t CFThought;
-        uint8_t CFQuicktalker;
-        uint8_t CFTimeout;
-        uint8_t CFPageButton;
-        uint8_t CFQuitButton;
-        uint8_t CFReversed;
-        uint8_t CFSndOpenchat;
-        uint16_t CFNoQuitButton;
-        
         bool m_want_active_nametags;
         bool m_force_onscreen_chat;
         bool m_force_2d_nametags;

@@ -5,10 +5,13 @@
 #include <fstream>
 #include <istream>
 #include <iostream>
+#include <notifyCategoryProxy.h>
 #include <typedReferenceCount.h>
 #include <pandabase.h>
 #include <nodePath.h>
 #include "CImpulse.h"
+
+NotifyCategoryDecl(CMover, EXPCL_LIBOTP, EXPTP_LIBOTP);
 
 class CMover;
 

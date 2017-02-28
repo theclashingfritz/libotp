@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 
+#include <notifyCategoryProxy.h>
 #include <filename.h>
 #include <compress_string.h>
 #include <virtualFileSystem.h>
@@ -12,6 +13,8 @@
 #include <datagramIterator.h>
 #include <typedReferenceCount.h>
 #include <pandabase.h>
+
+NotifyCategoryDecl(Settings, EXPCL_LIBOTP, EXPTP_LIBOTP);
 
 class Settings;
 

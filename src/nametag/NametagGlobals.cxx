@@ -30,7 +30,8 @@ NametagGlobals::NametagGlobals() {
 }
 
 NametagGlobals::~NametagGlobals() {
-    delete[] m_click_sound;
+    delete m_click_sound;
+    m_click_sound = NULL;
 }
 
 void NametagGlobals::set_toon(NodePath toon) {

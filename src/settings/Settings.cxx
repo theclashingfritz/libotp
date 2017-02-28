@@ -1,5 +1,7 @@
 #include "Settings.h"
 
+NotifyCategoryDef(Settings, "");
+
 TypeHandle Settings::_type_handle;
 
 Settings::Settings() {
@@ -8,7 +10,7 @@ Settings::Settings() {
     m_file = Filename(m_file.to_os_long_name()); //Now let's do the real file.
     
     //Define our Settings Version!
-    m_version = "v1.0.3";
+    m_version = "v1.0.5";
     
     //Now define any PUBLISHED variables
     GL = 1;
@@ -46,7 +48,7 @@ Settings::~Settings() {
 void Settings::read_settings() {
     Filename found(m_file);
     if (!m_vfs->exists(found)) {
-        libotp_cat.debug() << "Failed to find Settings! Creating file...." << std::endl;
+        Settings_cat.debug() << "Failed to find Settings! Creating file...." << std::endl;
         m_vfs->create_file(m_file);
         write_settings();
         return;
@@ -57,7 +59,7 @@ void Settings::read_settings() {
     DatagramIterator dgi(dg);
     m_data = "";
     if (dgi.get_string() != m_version) {
-        libotp_cat.warning() << "Settings version does not match current version! Resetting settings...." << std::endl;
+        Settings_cat.warning() << "Settings version does not match current version! Resetting settings...." << std::endl;
         write_settings();
         return;
     }
