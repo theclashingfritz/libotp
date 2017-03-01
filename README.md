@@ -14,7 +14,7 @@ The main people behind _libotp_ are listed below:
 * **CodeAnGo** - A Head Developer!
 
 ### Former Team ###
-* **SkippsDev** - The other former Head Developer of the project along with ponyboy837. Also used to head the project.
+* **SkippsDev** - The former Head Developer of the project. Also used to head the project.
 
 ### Contributing ###
 We welcome all potential contributors.
