@@ -7,8 +7,8 @@ __NOTE__ - This project is inspired, and based off of the libotp dynamic link li
 ### Features ###
 > * A **CMover** remake so Doodles will work! Woopie! 
 > * A remake of the Nametag and Margin system!
-> * A C++ Settings system just like in Toontown Online!
-> * More Features are to be decided.
+> * A C++ Settings system!
+> * And much more!
 
 ### The Team ###
 The main people behind _libotp_ are listed below:
