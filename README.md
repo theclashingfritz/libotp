@@ -20,3 +20,6 @@ The main people behind _libotp_ are listed below:
 
 ### Contributing ###
 We welcome all potential contributors.
+
+### Credits ###
+Credits to the people over at _libpandadna_ for the base we use to compile our code and for some stuff in the actual code!
