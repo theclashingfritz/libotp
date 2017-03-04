@@ -51,7 +51,7 @@ class EXPCL_LIBOTP NametagGroup : public virtual TypedReferenceCount {
         
         const std::string get_unique_id();
         
-        //virtual Nametag2d* get_nametag_2d();  //TODO: Figure out why this causes a compilation error
+        //virtual Nametag2d* get_nametag_2d();  //TODO: Figure out why this causes a compilation error (Besides the fact i removed the function temporary.)
         virtual Nametag3d* get_nametag_3d();
         
         PT(PandaNode) get_name_icon();
