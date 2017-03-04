@@ -50,6 +50,10 @@ set(NAMETAG_FILES
     src/nametag/Nametag2d.h
     src/nametag/Nametag3d.cxx
     src/nametag/Nametag3d.h
+    src/nametag/NametagFloat2d.cxx
+    src/nametag/NametagFloat2d.h
+    src/nametag/NametagFloat3d.cxx
+    src/nametag/NametagFloat3d.h
 )
 
 set(MARGINS_FILES

@@ -12,6 +12,8 @@
 #include "NametagGroup.h"
 #include "Nametag2d.h"
 #include "Nametag3d.h"
+#include "NametagFloat2d.h"
+#include "NametagFloat3d.h"
 #include "Nametag.h"
 #include "Settings.h"
 
@@ -41,6 +43,8 @@ void init_libotp() {
     NametagGroup::init_type();
     Nametag2d::init_type();
     Nametag3d::init_type();
+    NametagFloat2d::init_type();
+    NametagFloat3d::init_type();
     Nametag::init_type();
     Settings::init_type();
 }
