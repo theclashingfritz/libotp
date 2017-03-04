@@ -3,6 +3,10 @@
 #include "CMover.h"
 #include "CMoverGroup.h"
 #include "CImpulse.h"
+#include "ClickablePopup.h"
+#include "MarginCell.h"
+#include "MarginManager.h"
+#include "MarginPopup.h"
 #include "NametagGlobals.h"
 #include "NametagGroup.h"
 #include "Nametag.h"
@@ -25,6 +29,10 @@ void init_libotp() {
     CMover::init_type();
     CMoverGroup::init_type();
     CImpulse::init_type();
+    ClickablePopup::init_type();
+    MarginCell::init_type();
+    MarginManager::init_type();
+    MarginPopup::init_type();
     NametagGlobals::init_type();
     NametagGroup::init_type();
     Nametag::init_type();

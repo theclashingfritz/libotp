@@ -51,12 +51,12 @@ void CMover::remove_c_impulse(string name) {
         CMover_cat.debug() << "CImpulse '" << name << "' was not found in impulse map! Returning..." << std::endl;
         return;
     } else {
-        m_c_impulses[name].clear_mover(this);
         pmap<std::string, CImpulse>::iterator it;
         it = m_c_impulses.find(name);
         if (it != m_c_impulses.end()) {
             // Found it? - Delete it!
             CMover_cat.debug() << "Removing CImpulse '" << name << "' from map and destorying CImpulse!" << std::endl;
+            m_c_impulses[name].clear_mover(this);
             m_c_impulses.erase(it);
         } else {
             CMover_cat.debug() << "CImpulse '" << name << "' was not found in impulse map! Returning..." << std::endl;
@@ -117,7 +117,8 @@ float CMover::get_dt() {
 
 CImpulse CMover::get_c_impulse(string name) {
     if (m_c_impulses.find(name) == m_c_impulses.end()) {
-        CMover_cat.debug() << "CImpulse '" << name << "' was not found in impulse map! Returning..." << std::endl;
+        CMover_cat.debug() << "CImpulse '" << name << "' was not found in impulse map! Returning a fake CImpulse..." << std::endl;
+        return CImpulse();
     } else {
         return m_c_impulses[name];
     }

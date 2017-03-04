@@ -1,4 +1,8 @@
 #pragma once
+
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
  
 #include <pandabase.h>
 #include <dconfig.h>

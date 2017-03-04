@@ -7,12 +7,11 @@
 #include <nodepath.h>
 #include <pandanode.h>
 #include <mouseWatcher.h>
-#include <typedReferenceCount.h>
 #include <pandabase.h>
 
 class Nametag;
 
-class EXPCL_LIBOTP Nametag : public TypedReferenceCount, ClickablePopup {
+class EXPCL_LIBOTP Nametag : public ClickablePopup {
     
     PUBLISHED:
         Nametag();

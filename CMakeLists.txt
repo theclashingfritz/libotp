@@ -51,6 +51,12 @@ set(NAMETAG_FILES
 set(MARGINS_FILES
     src/margins/ClickablePopup.cxx
     src/margins/ClickablePopup.h
+    src/margins/MarginCell.cxx
+    src/margins/MarginCell.h
+    src/margins/MarginManager.cxx
+    src/margins/MarginManager.h
+    src/margins/MarginPopup.cxx
+    src/margins/MarginPopup.h
 )
 
 set(SETTINGS_FILES
@@ -92,7 +98,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     endif()
 endif()
 
-add_definitions(-DBUILDING_DNA)
+add_definitions(-DBUILDING_LIBOTP)
 
 set(PANDA_LIBS
     ${LIBPFX}p3framework
