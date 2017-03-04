@@ -23,4 +23,5 @@ We welcome all potential contributors.
 
 ### Credits ###
 Credits to the people over at _libpandadna_ (https://github.com/loblao/libpandadna) for the base we use to compile our code and for some stuff in the actual code!
+
 Also credit to the people over at _libtag_ (https://github.com/fluffyLLama/libtag) for alot of the Nametag and Margins code!
