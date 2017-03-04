@@ -2,9 +2,23 @@
 
 TypeHandle NametagGlobals::_type_handle;
 
+typedef pmap<NametagGlobals::ColorCode, state_map_t> color_map_t; // {cc: state_map_t}
+typedef pmap<NametagGlobals::WhisperType, state_map_simple_t> whisper_color_map_t; // {wt: state_map_simple_t}
+
 PT(MouseWatcher) NametagGlobals::m_mouse_watcher = NULL;
 PT(AudioSound) NametagGlobals::m_click_sound = NULL;
 PT(AudioSound) NametagGlobals::m_rollover_sound = NULL;
+
+NodePath& NametagGlobals::m_camera_nodepath EMPTY_NODEPATH;
+NodePath& NametagGlobals::m_arrow_nodepath EMPTY_NODEPATH;
+NodePath& NametagGlobals::m_nametag_model_nodepath EMPTY_NODEPATH;
+NodePath& NametagGlobals::m_page_button_nodepath EMPTY_NODEPATH;
+NodePath& NametagGlobals::m_nodepath EMPTY_NODEPATH;
+
+ChatBalloon* NametagGlobals::speech_balloon_2d = NULL;
+ChatBalloon* NametagGlobals::speech_balloon_3d = NULL;
+ChatBalloon* NametagGlobals::thought_balloon_2d = NULL;
+ChatBalloon* NametagGlobals::thought_balloon_3d = NULL;
 
 uint8_t NametagGlobals::CFSpeech = 1;
 uint8_t NametagGlobals::CFThought = 2;
@@ -16,22 +30,9 @@ uint8_t NametagGlobals::CFReversed = 64;
 uint8_t NametagGlobals::CFSndOpenchat = 128;
 uint16_t NametagGlobals::CFNoQuitButton = 256;
 
-ColorCode NametagGlobals::CCNormal;
-ColorCode NametagGlobals::CCNoChat;
-ColorCode NametagGlobals::CCNonPlayer;
-ColorCode NametagGlobals::CCSuit;
-ColorCode NametagGlobals::CCToonBuilding;
-ColorCode NametagGlobals::CCSuitBuilding;
-ColorCode NametagGlobals::CCHouseBuilding;
-ColorCode NametagGlobals::CCSpeedChat;
-ColorCode NametagGlobals::CCFreeChat;
-
-WhisperType NametagGlobals::WTNormal;
-WhisperType NametagGlobals::WTQuickTalker;
-WhisperType NametagGlobals::WTSystem;
-WhisperType NametagGlobals::WTBattleSOS;
-WhisperType NametagGlobals::WTEmote;
-WhisperType NametagGlobals::WTToontownBoardingGroup;
+uint8_t NametagGlobals::CName = 1;
+uint8_t NametagGlobals::CSpeech = 2;
+uint8_t NametagGlobals::CThought = 4;
 
 color_map_t NametagGlobals::nametag_colors;
 whisper_color_map_t NametagGlobals::whisper_colors;
@@ -253,11 +254,27 @@ void NametagGlobals::add_whisper_color(WhisperType wt, LVecBase4f normal_fg, LVe
     whisper_colors[wt] = def;
 }
 
-void NametagGlobals::set_toon(NodePath toon) {
+void NametagGlobals::set_speech_balloon_3d(ChatBalloon* sb3d) {
+    speech_balloon_3d = sb3d;
+}
+
+void NametagGlobals::set_thought_balloon_3d(ChatBalloon* tb3d) {
+    thought_balloon_3d = tb3d;
+}
+
+void NametagGlobals::set_speech_balloon_2d(ChatBalloon* sb2d) {
+    speech_balloon_2d = sb2d;
+}
+
+void NametagGlobals::set_thought_balloon_2d(ChatBalloon* tb2d) {
+    thought_balloon_2d = tb2d;
+}
+
+void NametagGlobals::set_toon(NodePath& toon) {
     m_nodepath = toon;
 }
 
-void NametagGlobals::set_arrow_model(NodePath node) {
+void NametagGlobals::set_arrow_model(NodePath& node) {
     m_arrow_nodepath = node;
 }
 
@@ -265,7 +282,7 @@ void NametagGlobals::set_mouse_watcher(NodePath& np) {
     m_mouse_watcher = DCAST(MouseWatcher, np.node());
 }
 
-void NametagGlobals::set_camera(NodePath node) {
+void NametagGlobals::set_camera(NodePath& node) {
     m_camera_nodepath = node;
 }
 
@@ -297,15 +314,15 @@ PT(AudioSound) NametagGlobals::get_rollover_sound() {
     return m_rollover_sound;
 }
 
-NodePath NametagGlobals::get_toon() {
+NodePath& NametagGlobals::get_toon() {
     return m_nodepath;
 }
 
-NodePath NametagGlobals::get_arrow_model() {
+NodePath& NametagGlobals::get_arrow_model() {
     return m_arrow_nodepath;
 }
 
-NodePath NametagGlobals::get_camera() {
+NodePath& NametagGlobals::get_camera() {
     return m_camera_nodepath;
 }
 

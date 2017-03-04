@@ -38,6 +38,8 @@ set(COMPONENTS_FILES
 )
 
 set(NAMETAG_FILES
+    src/nametag/ChatBalloon.cxx
+    src/nametag/ChatBalloon.h
     src/nametag/NametagGlobals.cxx
     src/nametag/NametagGlobals.h
     src/nametag/NametagGroup.cxx
