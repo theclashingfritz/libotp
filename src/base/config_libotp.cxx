@@ -10,6 +10,8 @@
 #include "ChatBalloon.h"
 #include "NametagGlobals.h"
 #include "NametagGroup.h"
+#include "Nametag2d.h"
+#include "Nametag3d.h"
 #include "Nametag.h"
 #include "Settings.h"
 
@@ -37,6 +39,8 @@ void init_libotp() {
     ChatBalloon::init_type();
     NametagGlobals::init_type();
     NametagGroup::init_type();
+    Nametag2d::init_type();
+    Nametag3d::init_type();
     Nametag::init_type();
     Settings::init_type();
 }

@@ -46,6 +46,8 @@ set(NAMETAG_FILES
     src/nametag/NametagGroup.h
     src/nametag/Nametag.cxx
     src/nametag/Nametag.h
+    src/nametag/Nametag2d.cxx
+    src/nametag/Nametag2d.h
     src/nametag/Nametag3d.cxx
     src/nametag/Nametag3d.h
 )

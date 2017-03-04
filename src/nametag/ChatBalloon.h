@@ -7,7 +7,7 @@
 #include <luse.h>
 #include <typedObject.h>
 
-class ChatBalloon : public TypedObject
+class ChatBalloon : public virtual TypedObject
 {
     PUBLISHED:
         ChatBalloon(NodePath& model);

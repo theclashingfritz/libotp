@@ -34,6 +34,9 @@ uint8_t NametagGlobals::CName = 1;
 uint8_t NametagGlobals::CSpeech = 2;
 uint8_t NametagGlobals::CThought = 4;
 
+buttons_map_t NametagGlobals::page_buttons;
+buttons_map_t NametagGlobals::quit_buttons;
+
 color_map_t NametagGlobals::nametag_colors;
 whisper_color_map_t NametagGlobals::whisper_colors;
 

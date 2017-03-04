@@ -16,7 +16,7 @@ class Nametag;
 class ChatBalloon;
 class NametagGroup; 
 
-class EXPCL_LIBOTP Nametag : public ClickablePopup {
+class EXPCL_LIBOTP Nametag : public virtual ClickablePopup {
     
     friend class NametagGroup;
     
@@ -40,6 +40,7 @@ class EXPCL_LIBOTP Nametag : public ClickablePopup {
 
     public:
         virtual void destroy();
+        virtual void tick()=0;
     
         uint8_t CSpeech;
         uint8_t CThought;

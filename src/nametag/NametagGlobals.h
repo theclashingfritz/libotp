@@ -113,7 +113,6 @@ class EXPCL_LIBOTP NametagGlobals : public TypedObject {
         static NodePath &m_page_button_nodepath;
         static NodePath &m_camera_nodepath;
         
-    protected:      
         static bool m_want_active_nametags;
         static bool m_force_onscreen_chat;
         static bool m_force_2d_nametags;
