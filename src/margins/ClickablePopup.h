@@ -15,7 +15,7 @@ class ClickablePopup;
 typedef void(*callback_t)(const Event* ev);
 typedef pmap<std::string, callback_t> event_table_t;
 
-class EXPCL_LIBOTP ClickablePopup : public EventReceiver, public PandaNode {
+class EXPCL_LIBOTP ClickablePopup : public virtual EventReceiver, public PandaNode {
     
     PUBLISHED:
         ClickablePopup(NodePath* camera=NULL);

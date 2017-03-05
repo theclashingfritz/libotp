@@ -22,6 +22,13 @@ typedef LPoint3d LTexCoord3d;
 typedef LVecBase4d LColord;
 typedef LVecBase3d LRGBColord;
 
+typedef LVertexf LVertex;
+typedef LNormalf LNormal;
+typedef LTexCoordf LTexCoord;
+typedef LTexCoord3f LTexCoord3;
+typedef LColorf LColor;
+typedef LRGBColorf LRGBColor;
+
 //Define the Python Typedefs. 
 typedef LMatrix4f Mat4;
 typedef LMatrix3f Mat3;

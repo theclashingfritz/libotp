@@ -65,6 +65,8 @@ set(MARGINS_FILES
     src/margins/MarginManager.h
     src/margins/MarginPopup.cxx
     src/margins/MarginPopup.h
+    src/margins/WhisperPopup.cxx
+    src/margins/WhisperPopup.h
 )
 
 set(SETTINGS_FILES

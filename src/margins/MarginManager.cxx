@@ -41,6 +41,54 @@ MarginCell* MarginManager::add_grid_cell(float x, float y, float left, float rig
     return cell;
 }
 
+MarginCell* MarginManager::add_grid_cell(float x, float y, float left, float right, float bottom, float top) {
+    float padding = .125;
+    float scale = .2;
+    float x_start = left + scale / 2. + padding;
+    float y_start = bottom + scale / 2. + padding;
+    float x_end = right - scale / 2. - padding;
+    float y_end = top - scale / 2. - padding;
+    float x_inc = (x_end - x_start) / 5.;
+    float y_inc = (y_end - y_start) / 3.5;
+    float x2 = x_start + x_inc * x;
+    float y2 = y_start + y_inc * y - 1;
+        
+    MarginCell* cell = new MarginCell(this);
+    cell->reparent_to(NodePath(this->get_parent(0)));
+    cell->set_scale(scale);
+    cell->set_pos(x2, 0, y2);
+    cell->set_available(true);
+    
+    m_cells.push_back(cell);
+    reorganize();
+    
+    return cell;
+}
+
+MarginCell* MarginManager::add_cell(float left, float right, float bottom, float top) {
+    float padding = .125;
+    float scale = .2;
+    float x_start = left + scale / 2. + padding;
+    float y_start = bottom + scale / 2. + padding;
+    float x_end = right - scale / 2. - padding;
+    float y_end = top - scale / 2. - padding;
+    float x_inc = (x_end - x_start) / 5.;
+    float y_inc = (y_end - y_start) / 3.5;
+    float x2 = x_start + x_inc;
+    float y2 = y_start + y_inc;
+        
+    MarginCell* cell = new MarginCell(this);
+    cell->reparent_to(NodePath(this->get_parent(0)));
+    cell->set_scale(scale);
+    cell->set_pos(x2, 0, y2);
+    cell->set_available(true);
+    
+    m_cells.push_back(cell);
+    reorganize();
+    
+    return cell;
+}
+
 MarginCell* MarginManager::add_cell(float x, float y, const NodePath& parent) {
     float scale = .2;
     MarginCell* cell = new MarginCell(this);
@@ -55,8 +103,30 @@ MarginCell* MarginManager::add_cell(float x, float y, const NodePath& parent) {
     return cell;
 }
 
+void MarginManager::set_cell_available(int cell_index, bool available) {
+    MarginCell* cell = m_cells.at(cell_index);
+    
+    cell_vec_t::iterator it = std::find(m_cells.begin(), m_cells.end(), cell);
+    if (it == m_cells.end())
+        return;
+    
+    cell->set_available(available);
+    reorganize();
+}
+
 void MarginManager::set_cell_available(MarginCell* cell, bool available) {
     cell->set_available(available);
+    reorganize();
+}
+
+void MarginManager::remove_cell(int cell_index) {
+    MarginCell* cell = m_cells.at(cell_index);
+    
+    cell_vec_t::iterator it = std::find(m_cells.begin(), m_cells.end(), cell);
+    if (it == m_cells.end())
+        return;
+        
+    m_cells.erase(it);
     reorganize();
 }
 
@@ -70,8 +140,10 @@ void MarginManager::remove_cell(MarginCell* cell) {
 }
 
 void MarginManager::add_visible_popup(MarginPopup* popup) {
-    m_popups.push_back(popup);
-    reorganize();
+    if (popup != NULL) {
+        m_popups.push_back(popup);
+        reorganize();
+    }
 }
 
 void MarginManager::remove_visible_popup(MarginPopup* popup) {
@@ -81,10 +153,6 @@ void MarginManager::remove_visible_popup(MarginPopup* popup) {
         
     m_popups.erase(it);
     reorganize();
-}
-
-static bool _sort_key(MarginPopup* lhs, MarginPopup* rhs) {
-    return lhs->get_priority() < rhs->get_priority();
 }
 
 void MarginManager::reorganize() {
@@ -131,4 +199,26 @@ void MarginManager::reorganize() {
             }
         }
     }
+}
+
+bool MarginManager::_sort_key(MarginPopup* lhs, MarginPopup* rhs) {
+    return lhs->get_priority() < rhs->get_priority();
+}
+
+bool MarginManager::get_cell_available(int cell_index) {
+    MarginCell* cell = m_cells.at(cell_index);
+    
+    cell_vec_t::iterator it = std::find(m_cells.begin(), m_cells.end(), cell);
+    if (it == m_cells.end())
+        return false;
+    
+    return cell->get_available();
+}
+
+bool MarginManager::get_cell_available(MarginCell* cell) {  
+    cell_vec_t::iterator it = std::find(m_cells.begin(), m_cells.end(), cell);
+    if (it == m_cells.end())
+        return false;
+    
+    return cell->get_available();
 }
