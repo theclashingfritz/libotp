@@ -130,7 +130,7 @@ void Nametag::set_chat_wordwrap(uint16_t chat_wordwrap) {
 }
 
 void Nametag::set_group(NametagGroup* group) {
-    if (!group) {
+    if ((!group) || (group == NULL)) {
         return;
     } 
     
@@ -139,11 +139,15 @@ void Nametag::set_group(NametagGroup* group) {
 }
 
 void Nametag::set_avatar(NodePath * avatar) {
+    if ((!avatar) || (avatar == NULL)) {
+        return;
+    }
+    
     m_avatar = avatar;
 }
 
 void Nametag::clear_avatar() {
-    if (!m_avatar) {
+    if ((!m_avatar) || (m_avatar == NULL)) {
         return;
     }
 
@@ -151,9 +155,9 @@ void Nametag::clear_avatar() {
 }
 
 void Nametag::clear_group() {
-    if (!m_group) {
+    if ((!m_group) || (m_group == NULL)) {
         return;
-    }
+    } 
 
     m_has_group = false;
     m_group = NULL;

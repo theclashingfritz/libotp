@@ -21,12 +21,18 @@ NametagGroup::NametagGroup() : m_nametag_2d(new Nametag2d()), m_nametag_3d(new N
 }
 
 NametagGroup::~NametagGroup() {
-    delete m_icon;
-    delete m_nametag_2d;
-    delete m_nametag_3d;
-    delete m_tick_task;
-    delete m_stomp_task;
-    delete m_chat_timeout_task;
+    if (m_icon != NULL)
+        delete m_icon;
+    if (m_nametag_2d != NULL)
+        delete m_nametag_2d;
+    if (m_nametag_3d != NULL)
+        delete m_nametag_3d;
+    if (m_tick_task != NULL)
+        delete m_tick_task;
+    if (m_stomp_task != NULL)
+        delete m_stomp_task;
+    if (m_chat_timeout_task != NULL)
+        delete m_chat_timeout_task;
 }
 
 void NametagGroup::destroy() {
@@ -95,6 +101,10 @@ void NametagGroup::set_contents(int contents) {
 }
 
 void NametagGroup::add_nametag(Nametag* nametag) {
+    if (nametag == NULL) {
+        return;
+    }
+    
     nametag->set_group(this);
     m_nametags.push_back(nametag);
     update_nametag(nametag);
@@ -104,6 +114,10 @@ void NametagGroup::add_nametag(Nametag* nametag) {
 }
 
 void NametagGroup::remove_nametag(Nametag* nametag) {
+    if (nametag == NULL) {
+        return;
+    }
+    
     nametag_vec_t::iterator it = std::find(m_nametags.begin(), m_nametags.end(), nametag);
     if (it != m_nametags.end()) {
         m_nametags.erase(it);
@@ -117,6 +131,10 @@ void NametagGroup::remove_nametag(Nametag* nametag) {
 }
 
 void NametagGroup::manage(MarginManager* manager) {
+    if (manager == NULL) {
+        return;
+    }
+    
     m_manager = manager;
     for (nametag_vec_t::iterator it = m_nametags.begin(); it != m_nametags.end(); ++it) {
         Nametag* nametag = *it;
@@ -126,6 +144,10 @@ void NametagGroup::manage(MarginManager* manager) {
 }
 
 void NametagGroup::unmanage(MarginManager* manager) {
+    if (manager == NULL) {
+        return;
+    }
+    
     m_manager = NULL;
     for (nametag_vec_t::iterator it = m_nametags.begin(); it != m_nametags.end(); ++it) {
         Nametag* nametag = *it;
@@ -196,6 +218,10 @@ void NametagGroup::stop_chat_timeout() {
 }
 
 void NametagGroup::update_nametag(Nametag* nametag) {
+    if (nametag == NULL) {
+        return;
+    }
+    
     nametag->m_font = m_font;
     nametag->m_name = m_name;
     nametag->m_display_name = m_display_name;

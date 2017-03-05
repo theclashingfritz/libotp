@@ -106,6 +106,10 @@ MarginCell* MarginManager::add_cell(float x, float y, const NodePath& parent) {
 void MarginManager::set_cell_available(int cell_index, bool available) {
     MarginCell* cell = m_cells.at(cell_index);
     
+    if (cell == NULL) {
+        return;
+    }
+    
     cell_vec_t::iterator it = std::find(m_cells.begin(), m_cells.end(), cell);
     if (it == m_cells.end())
         return;
@@ -115,12 +119,20 @@ void MarginManager::set_cell_available(int cell_index, bool available) {
 }
 
 void MarginManager::set_cell_available(MarginCell* cell, bool available) {
+    if (cell == NULL) {
+        return;
+    }
+    
     cell->set_available(available);
     reorganize();
 }
 
 void MarginManager::remove_cell(int cell_index) {
     MarginCell* cell = m_cells.at(cell_index);
+    
+    if (cell == NULL) {
+        return;
+    }
     
     cell_vec_t::iterator it = std::find(m_cells.begin(), m_cells.end(), cell);
     if (it == m_cells.end())
@@ -131,6 +143,10 @@ void MarginManager::remove_cell(int cell_index) {
 }
 
 void MarginManager::remove_cell(MarginCell* cell) {
+    if (cell == NULL) {
+        return;
+    }
+   
     cell_vec_t::iterator it = std::find(m_cells.begin(), m_cells.end(), cell);
     if (it == m_cells.end())
         return;
@@ -140,13 +156,19 @@ void MarginManager::remove_cell(MarginCell* cell) {
 }
 
 void MarginManager::add_visible_popup(MarginPopup* popup) {
-    if (popup != NULL) {
-        m_popups.push_back(popup);
-        reorganize();
+    if (popup == NULL) {
+        return;
     }
+    
+    m_popups.push_back(popup);
+    reorganize();
 }
 
 void MarginManager::remove_visible_popup(MarginPopup* popup) {
+    if (popup == NULL) {
+        return;
+    }
+    
     popup_vec_t::iterator it = std::find(m_popups.begin(), m_popups.end(), popup);
     if (it == m_popups.end())
         return;
@@ -202,11 +224,19 @@ void MarginManager::reorganize() {
 }
 
 bool MarginManager::_sort_key(MarginPopup* lhs, MarginPopup* rhs) {
+    if ((lhs == NULL) || (rhs == NULL)) {
+        return false;
+    }
+    
     return lhs->get_priority() < rhs->get_priority();
 }
 
 bool MarginManager::get_cell_available(int cell_index) {
     MarginCell* cell = m_cells.at(cell_index);
+    
+    if (cell == NULL) {
+        return false;
+    }
     
     cell_vec_t::iterator it = std::find(m_cells.begin(), m_cells.end(), cell);
     if (it == m_cells.end())
@@ -215,7 +245,11 @@ bool MarginManager::get_cell_available(int cell_index) {
     return cell->get_available();
 }
 
-bool MarginManager::get_cell_available(MarginCell* cell) {  
+bool MarginManager::get_cell_available(MarginCell* cell) { 
+    if (cell == NULL) {
+        return false;
+    }
+    
     cell_vec_t::iterator it = std::find(m_cells.begin(), m_cells.end(), cell);
     if (it == m_cells.end())
         return false;
