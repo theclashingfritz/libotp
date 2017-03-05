@@ -9,7 +9,3 @@ NametagFloat3d::NametagFloat3d(): Nametag3d() {
 NametagFloat3d::~NametagFloat3d() {
     
 }
-
-void NametagFloat3d::tick() {
-    
-}

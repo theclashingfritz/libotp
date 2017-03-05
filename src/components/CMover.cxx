@@ -80,19 +80,19 @@ void CMover::process_c_impulses() {
 }
 
 void CMover::add_force(VBase3 force) {
-    return;
+    CMover_cat.warning() << "add_force() -- Not Implemented!" << std::endl;
 }
 
 void CMover::add_rot_force(VBase3 force) {
-    return;
+    CMover_cat.warning() << "add_rot_force() -- Not Implemented!" << std::endl;
 }
 
 void CMover::add_shove(VBase3 shove) {
-    return;
+    CMover_cat.warning() << "add_shove() -- Not Implemented!" << std::endl;
 }
 
 void CMover::add_rot_shove(VBase3 shove) {
-    return;
+    CMover_cat.warning() << "add_rot_shove() -- Not Implemented!" << std::endl;
 }
 
 void CMover::set_node_path(NodePath np) {

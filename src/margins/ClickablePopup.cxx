@@ -12,13 +12,15 @@ ClickablePopup::ClickablePopup(NodePath* camera) : PandaNode("popup"), EventRece
     m_name = "ClickablePopup-";
     m_name += ClickablePopup::ClickablePopup_serial++;
     
-    m_region = new MouseWatcherRegion(m_name, 0, 0, 0, 0);
-    m_mouse_watcher->add_region(m_region);
+    if (m_mouse_watcher != NULL) {
+        m_region = new MouseWatcherRegion(m_name, 0, 0, 0, 0);
+        m_mouse_watcher->add_region(m_region);
     
-    accept(get_event(m_mouse_watcher->get_enter_pattern()));
-    accept(get_event(m_mouse_watcher->get_leave_pattern()));
-    accept(get_event(m_mouse_watcher->get_button_down_pattern()));
-    accept(get_event(m_mouse_watcher->get_button_up_pattern()));
+        accept(get_event(m_mouse_watcher->get_enter_pattern()));
+        accept(get_event(m_mouse_watcher->get_leave_pattern()));
+        accept(get_event(m_mouse_watcher->get_button_down_pattern()));
+        accept(get_event(m_mouse_watcher->get_button_up_pattern()));
+    }
 }
 
 ClickablePopup::~ClickablePopup() {
@@ -26,7 +28,9 @@ ClickablePopup::~ClickablePopup() {
 }
 
 void ClickablePopup::destroy() {
-    m_mouse_watcher->remove_region(m_region);
+    if (m_mouse_watcher != NULL) {
+        m_mouse_watcher->remove_region(m_region);
+    }
     ignore_all();
 }
 

@@ -95,6 +95,7 @@ void NametagGroup::set_contents(int contents) {
 }
 
 void NametagGroup::add_nametag(Nametag* nametag) {
+    nametag->set_group(this);
     m_nametags.push_back(nametag);
     update_nametag(nametag);
     
@@ -110,6 +111,7 @@ void NametagGroup::remove_nametag(Nametag* nametag) {
         if (m_manager != NULL && nametag->is_of_type(MarginPopup::get_class_type()))
             DCAST(MarginPopup, nametag)->unmanage(m_manager);
             
+        nametag->clear_group();
         nametag->destroy();
     }
 }

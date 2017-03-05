@@ -1,9 +1,11 @@
 #include "MarginPopup.h"
+#include "MarginCell.h"
 
 TypeHandle MarginPopup::_type_handle;
 
-MarginPopup::MarginPopup() : m_manager(NULL), m_visible(false), m_priority(0), m_last_cell(NULL), m_assigned_cell(NULL) {
-    
+MarginPopup::MarginPopup() : m_manager(NULL), m_visible(false), m_priority(0) {
+    m_last_cell = NULL;
+    m_assigned_cell = NULL;
 }
 
 MarginPopup::~MarginPopup() {
@@ -65,6 +67,12 @@ void MarginPopup::set_last_cell(MarginCell* cell) {
 }
 
 MarginCell* MarginPopup::get_last_cell() {
+    if (m_last_cell == NULL) {
+        if (m_manager != NULL) {
+            MarginCell* backup_cell = new MarginCell(m_manager);
+            return backup_cell;
+        }
+    }
     return m_last_cell;
 }
 
@@ -73,5 +81,11 @@ void MarginPopup::set_assigned_cell(MarginCell* cell) {
 }
 
 MarginCell* MarginPopup::get_assigned_cell() {
+    if (m_assigned_cell == NULL) {
+        if (m_manager != NULL) {
+            MarginCell* backup_cell = new MarginCell(m_manager);
+            return backup_cell;
+        }
+    }
     return m_assigned_cell;
 }

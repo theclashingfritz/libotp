@@ -26,7 +26,7 @@ class MarginPopup : public TypedObject {
         virtual void manage(MarginManager* manager);
         virtual void unmanage(MarginManager* manager);
         
-    public:
+    public:    
         void set_last_cell(MarginCell* cell);
         MarginCell* get_last_cell();
         
@@ -34,11 +34,12 @@ class MarginPopup : public TypedObject {
         MarginCell* get_assigned_cell();
 
     protected:
+        MarginCell* m_last_cell;
+        MarginCell* m_assigned_cell;
+        
         MarginManager* m_manager;
         int m_priority;
         bool m_visible;
-        MarginCell* m_last_cell;
-        MarginCell* m_assigned_cell;
         
     TYPE_HANDLE(MarginPopup, TypedObject);
 };

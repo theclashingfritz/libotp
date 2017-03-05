@@ -35,7 +35,9 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup {
         uint8_t get_draw_order();
         unsigned int get_contents();
         bool get_active();
+        bool has_group();
         uint16_t get_chat_wordwrap();
+        NametagGroup *get_group();
         NodePath *get_avatar();
 
     public:
@@ -51,8 +53,10 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup {
         
     protected:
         virtual void show_balloon(ChatBalloon* balloon, const std::wstring& text);
+        virtual void set_group(NametagGroup* group);
         virtual void click_state_changed();
         virtual void show_thought();
+        virtual void clear_group();
         virtual void show_speech();
         virtual void show_name();
         virtual void update();
@@ -71,6 +75,7 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup {
         float m_chat_wordwrap;
         
         bool m_active;
+        bool m_has_group;
         
         PT(TextFont) m_font;
         
@@ -81,6 +86,8 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup {
         LVecBase4f m_qt_color;
         
         NametagGlobals::ColorCode m_color_code;
+        
+        NametagGroup *m_group;
         
         NodePath *m_avatar;
         NodePath m_inner_np;

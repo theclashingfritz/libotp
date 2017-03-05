@@ -11,6 +11,10 @@ PT(AudioSound) NametagGlobals::m_rollover_sound = NULL;
 
 NodePath& NametagGlobals::m_camera_nodepath EMPTY_NODEPATH;
 NodePath& NametagGlobals::m_arrow_nodepath EMPTY_NODEPATH;
+NodePath& NametagGlobals::m_card_nodepath EMPTY_NODEPATH;
+NodePath& NametagGlobals::m_card_balloon_3d_nodepath EMPTY_NODEPATH;
+NodePath& NametagGlobals::m_card_balloon_2d_nodepath EMPTY_NODEPATH;
+NodePath& NametagGlobals::m_thought_balloon_nodepath EMPTY_NODEPATH;
 NodePath& NametagGlobals::m_nametag_model_nodepath EMPTY_NODEPATH;
 NodePath& NametagGlobals::m_page_button_nodepath EMPTY_NODEPATH;
 NodePath& NametagGlobals::m_nodepath EMPTY_NODEPATH;
@@ -281,12 +285,42 @@ void NametagGlobals::set_arrow_model(NodePath& node) {
     m_arrow_nodepath = node;
 }
 
+void NametagGlobals::set_card_model(NodePath& node) {
+    m_card_nodepath = node;
+}
+
+void NametagGlobals::set_chat_balloon_3d_model(NodePath& node) {
+    m_card_balloon_3d_nodepath = node;
+}
+
+void NametagGlobals::set_chat_balloon_2d_model(NodePath& node) {
+    m_card_balloon_2d_nodepath = node;
+}
+
+void NametagGlobals::set_thought_balloon_model(NodePath& node) {
+    m_thought_balloon_nodepath = node;
+}
+
 void NametagGlobals::set_mouse_watcher(NodePath& np) {
     m_mouse_watcher = DCAST(MouseWatcher, np.node());
 }
 
 void NametagGlobals::set_camera(NodePath& node) {
     m_camera_nodepath = node;
+}
+
+void NametagGlobals::set_page_button(NodePath& model, NodePath& model1, NodePath& model2, NodePath& model3) {
+    page_buttons[0] = model;
+    page_buttons[1] = model1;
+    page_buttons[2] = model2;
+    page_buttons[3] = model3;
+}
+
+void NametagGlobals::set_quit_button(NodePath& model, NodePath& model1, NodePath& model2, NodePath& model3) {
+    quit_buttons[0] = model;
+    quit_buttons[1] = model1;
+    quit_buttons[2] = model2;
+    quit_buttons[3] = model3;
 }
 
 void NametagGlobals::set_want_active_nametags(bool want) {
@@ -323,6 +357,22 @@ NodePath& NametagGlobals::get_toon() {
 
 NodePath& NametagGlobals::get_arrow_model() {
     return m_arrow_nodepath;
+}
+
+NodePath& NametagGlobals::get_card_model() {
+    return m_card_nodepath;
+}
+
+NodePath& NametagGlobals::get_chat_balloon_3d_model() {
+    return m_card_balloon_3d_nodepath;;
+}
+
+NodePath& NametagGlobals::get_chat_balloon_2d_model() {
+    return m_card_balloon_2d_nodepath;;
+}
+
+NodePath& NametagGlobals::get_thought_balloon_model() {
+    return m_thought_balloon_nodepath;
 }
 
 NodePath& NametagGlobals::get_camera() {

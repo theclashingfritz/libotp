@@ -1,4 +1,5 @@
 #include "Nametag.h"
+#include "NametagGroup.h"
 #include "ChatBalloon.h"
 
 TypeHandle Nametag::_type_handle;
@@ -128,6 +129,15 @@ void Nametag::set_chat_wordwrap(uint16_t chat_wordwrap) {
     m_chat_wordwrap = chat_wordwrap;
 }
 
+void Nametag::set_group(NametagGroup* group) {
+    if (!group) {
+        return;
+    } 
+    
+    m_has_group = true;
+    m_group = group;
+}
+
 void Nametag::set_avatar(NodePath * avatar) {
     m_avatar = avatar;
 }
@@ -138,6 +148,15 @@ void Nametag::clear_avatar() {
     }
 
     m_avatar = NULL;
+}
+
+void Nametag::clear_group() {
+    if (!m_group) {
+        return;
+    }
+
+    m_has_group = false;
+    m_group = NULL;
 }
 
 unsigned int Nametag::get_contents() {
@@ -154,6 +173,14 @@ uint16_t Nametag::get_chat_wordwrap() {
 
 bool Nametag::get_active() {
     return m_active;
+}
+
+bool Nametag::has_group() {
+    return m_has_group;
+}
+
+NametagGroup * Nametag::get_group() {
+    return m_group;
 }
 
 NodePath * Nametag::get_avatar() {
