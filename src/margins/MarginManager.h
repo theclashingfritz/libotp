@@ -7,9 +7,12 @@
 #include <pandabase.h>
 #include <pandaNode.h>
 #include <nodePath.h>
+#include <notifyCategoryProxy.h>
 
 typedef pvector<MarginCell*> cell_vec_t;
 typedef pvector<MarginPopup*> popup_vec_t;
+
+NotifyCategoryDecl(MarginManager, EXPCL_LIBOTP, EXPTP_LIBOTP);
 
 class MarginManager : public PandaNode {
     PUBLISHED:

@@ -9,6 +9,9 @@
 #include <pointerTo.h>
 #include <textFont.h>
 #include <genericAsyncTask.h>
+#include <notifyCategoryProxy.h>
+
+NotifyCategoryDecl(WhisperPopup, EXPCL_LIBOTP, EXPTP_LIBOTP);
 
 class MarginManager;
 

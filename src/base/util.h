@@ -8,6 +8,11 @@
 
 #define EMPTY_NODEPATH =NodePath()
 
+#define CLICKSTATE_NORMAL    0
+#define CLICKSTATE_CLICK     1
+#define CLICKSTATE_HOVER     2
+#define CLICKSTATE_DISABLED  3
+
 // Handy typedefs.
 typedef LPoint3f LVertexf;
 typedef LVector3f LNormalf;

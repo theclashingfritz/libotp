@@ -5,6 +5,9 @@
 
 #include <pandabase.h>
 #include <typedObject.h>
+#include <notifyCategoryProxy.h>
+
+NotifyCategoryDecl(MarginPopup, EXPCL_LIBOTP, EXPTP_LIBOTP);
 
 class MarginCell; 
 

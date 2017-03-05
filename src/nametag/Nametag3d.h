@@ -2,8 +2,11 @@
 
 #include "util.h"
 #include "Nametag.h"
+#include <notifyCategoryProxy.h>
 
 #include <pandabase.h>
+
+NotifyCategoryDecl(Nametag3d, EXPCL_LIBOTP, EXPTP_LIBOTP);
 
 class Nametag3d;
 

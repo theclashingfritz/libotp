@@ -2,13 +2,19 @@
 
 #include "util.h"
 #include "nametagGlobals.h"
+#include <cstdint>
+#include <cassert>
 #include <audioSound.h>
 #include <pandabase.h>
 #include <pandaNode.h>
 #include <nodePath.h>
+#include <typeinfo>
 #include <mouseWatcher.h>
 #include <mouseWatcherRegion.h>
+#include <notifyCategoryProxy.h>
 #include <eventReceiver.h>
+
+NotifyCategoryDecl(ClickablePopup, EXPCL_LIBOTP, EXPTP_LIBOTP);
 
 class ClickablePopup;
 

@@ -6,9 +6,12 @@ const float Nametag2d::chat_alpha = .5;
 const float Nametag2d::arrow_offset = -1;
 const float Nametag2d::arrow_scale = 1.5;
 
+NotifyCategoryDef(Nametag2d, "");
+
 TypeHandle Nametag2d::_type_handle;
 
 Nametag2d::Nametag2d() : Nametag(), MarginPopup(), m_arrow(NULL) {
+    Nametag2d_cat.debug() << "__init__()" << std::endl;
     m_contents = Nametag::CName | Nametag::CSpeech;
     m_chat_wordwrap = 7.5;
     m_inner_np.set_scale(scale_2d);
@@ -18,6 +21,7 @@ Nametag2d::~Nametag2d() {
 }
 
 void Nametag2d::show_balloon(ChatBalloon* balloon, const std::wstring& text) {
+    Nametag2d_cat.debug() << "show_balloon(ChatBalloon balloon " << text << ")" << std::endl;
     wstringstream ss;
     ss << m_display_name << ": " << text;
     Nametag::show_balloon(balloon, ss.str());
@@ -43,6 +47,7 @@ void Nametag2d::show_balloon(ChatBalloon* balloon, const std::wstring& text) {
 }
 
 void Nametag2d::show_name() {
+    Nametag2d_cat.debug() << "show_name()" << std::endl;
     Nametag::show_name();
     
     set_priority(0);
@@ -54,20 +59,24 @@ void Nametag2d::show_name() {
 }
    
 void Nametag2d::update() {
+    Nametag2d_cat.debug() << "update()" << std::endl;
     Nametag::update();
     consider_update_click_region();
 }
 
 void Nametag2d::margin_visibility_changed() {
+    Nametag2d_cat.debug() << "margin_visibility_changed()" << std::endl;
     consider_update_click_region();
 }
 
 void Nametag2d::consider_update_click_region() {
+    Nametag2d_cat.debug() << "consider_update_click_region()" << std::endl;
     if (is_displayed())
         update_click_region(-1, 1, -1, 1);
 }
 
 void Nametag2d::tick() {
+    Nametag2d_cat.debug() << "tick()" << std::endl;
     if (!is_displayed() || m_arrow == NULL)
         return;
         
@@ -86,14 +95,17 @@ void Nametag2d::tick() {
 }
 
 ChatBalloon* Nametag2d::get_speech_balloon() {
+    Nametag2d_cat.debug() << "get_speech_balloon()" << std::endl;
     return NametagGlobals::speech_balloon_2d;
 }
 
 ChatBalloon* Nametag2d::get_thought_balloon() {
+    Nametag2d_cat.debug() << "get_thought_balloon()" << std::endl;
     return NametagGlobals::thought_balloon_2d;
 }
 
 bool Nametag2d::is_displayed() {
+    Nametag2d_cat.debug() << "is_displayed()" << std::endl;
     if (!MarginPopup::is_displayed())
         return false;
 

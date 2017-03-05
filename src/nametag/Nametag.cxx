@@ -2,12 +2,15 @@
 #include "NametagGroup.h"
 #include "ChatBalloon.h"
 
+NotifyCategoryDef(Nametag, "");
+
 TypeHandle Nametag::_type_handle;
 
 const float Nametag::name_padding = .2;
 const float Nametag::chat_alpha = 1;
 
 Nametag::Nametag(bool is_3d) : ClickablePopup(is_3d ? &NametagGlobals::m_camera_nodepath : NULL), m_contents(0), m_inner_np(NodePath::any_path(this).attach_new_node("nametag_contents")), m_wordwrap(7.5), m_chat_wordwrap(10), m_font(NULL), m_qt_color(LVecBase4f(1)), m_color_code(NametagGlobals::CCNormal), m_avatar(NULL), m_icon(NodePath("icon")), m_name_fg(LVecBase4f(0, 0, 0, 1)), m_name_bg(LVecBase4f(1)), m_chat_fg(LVecBase4f(0, 0, 0, 1)), m_chat_bg(LVecBase4f(1)), m_chat_flags(0) {
+    Nametag_cat.debug() << "__init__(" << is_3d << ")" << std::endl;
     CName = NametagGlobals::CName;
     CSpeech = NametagGlobals::CSpeech;
     CThought = NametagGlobals::CThought;
@@ -18,14 +21,17 @@ Nametag::~Nametag() {
 }
 
 void Nametag::set_draw_order(uint8_t draw_order) {
+    Nametag_cat.debug() << "set_draw_order(" << draw_order << ")" << std::endl;
     m_draw_order = draw_order;
 }
 
 void Nametag::clear_draw_order() {
+    Nametag_cat.debug() << "clear_draw_order()" << std::endl;
     m_draw_order = 0;
 }
 
 void Nametag::show_balloon(ChatBalloon* balloon, const std::wstring& text) {
+    Nametag_cat.debug() << "show_balloon(ChatBalloon balloon, '" << text << "')" << std::endl;
     LVecBase4f color = m_chat_flags & NametagGlobals::CFQuicktalker ? m_qt_color : m_chat_bg;
     
     if (color.get_w() > chat_alpha)
@@ -36,14 +42,17 @@ void Nametag::show_balloon(ChatBalloon* balloon, const std::wstring& text) {
 }
 
 void Nametag::show_thought() {
+    Nametag_cat.debug() << "show_thought()" << std::endl;
     show_balloon(get_thought_balloon(), m_chat_string);
 }
 
 void Nametag::show_speech() {
+    Nametag_cat.debug() << "show_speech()" << std::endl;
     show_balloon(get_speech_balloon(), m_chat_string);
 }
 
 void Nametag::show_name() {
+    Nametag_cat.debug() << "show_name()" << std::endl;
     if (m_font == NULL)
         return;
         
@@ -72,6 +81,7 @@ void Nametag::show_name() {
 }
 
 void Nametag::update() {
+    Nametag_cat.debug() << "update()" << std::endl;
     NametagGlobals::ColorCode code = NametagGlobals::does_color_code_exist(m_color_code) ? m_color_code : NametagGlobals::CCNormal;
     m_inner_np.node()->remove_all_children();
 
@@ -85,7 +95,8 @@ void Nametag::update() {
     
     m_chat_fg = chat_colors[0];
     m_chat_bg = chat_colors[1];
-
+    
+    Nametag_cat.debug() << "Preparing Name, Thought, or Speech!" << std::endl;
     if (m_contents & CThought && m_chat_flags & NametagGlobals::CFThought)
         show_thought();
         
@@ -97,23 +108,28 @@ void Nametag::update() {
 }
 
 void Nametag::set_active(bool active) {
+    Nametag_cat.debug() << "set_active(" << active <<")" << std::endl;
     m_active = active;
 }
 
 void Nametag::set_contents(int contents) {
+    Nametag_cat.debug() << "set_contents(" << contents <<")" << std::endl;
     m_contents = contents;
     update();
 }
 
 void Nametag::destroy() {
+    Nametag_cat.debug() << "destroy()" << std::endl;
     ClickablePopup::destroy();
 }
 
 void Nametag::click_state_changed() {
+    Nametag_cat.debug() << "click_state_changed()" << std::endl;
     update();
 }
        
 NodePath Nametag::get_button() {
+    Nametag_cat.debug() << "get_button()" << std::endl;
     int cs = get_click_state();
     
     if (m_buttons.size() == 0)
@@ -126,10 +142,12 @@ NodePath Nametag::get_button() {
 }        
 
 void Nametag::set_chat_wordwrap(uint16_t chat_wordwrap) {
+    Nametag_cat.debug() << "set_chat_wordwrap(" << chat_wordwrap << ")" << std::endl;
     m_chat_wordwrap = chat_wordwrap;
 }
 
 void Nametag::set_group(NametagGroup* group) {
+    Nametag_cat.debug() << "set_group(NametagGroup group)" << std::endl;
     if ((!group) || (group == NULL)) {
         return;
     } 
@@ -139,6 +157,7 @@ void Nametag::set_group(NametagGroup* group) {
 }
 
 void Nametag::set_avatar(NodePath * avatar) {
+    Nametag_cat.debug() << "set_avatar(NodePath avatar)" << std::endl;
     if ((!avatar) || (avatar == NULL)) {
         return;
     }
@@ -147,6 +166,7 @@ void Nametag::set_avatar(NodePath * avatar) {
 }
 
 void Nametag::clear_avatar() {
+    Nametag_cat.debug() << "clear_avatar()" << std::endl;
     if ((!m_avatar) || (m_avatar == NULL)) {
         return;
     }
@@ -155,6 +175,7 @@ void Nametag::clear_avatar() {
 }
 
 void Nametag::clear_group() {
+    Nametag_cat.debug() << "clear_group()" << std::endl;
     if ((!m_group) || (m_group == NULL)) {
         return;
     } 
@@ -164,29 +185,36 @@ void Nametag::clear_group() {
 }
 
 unsigned int Nametag::get_contents() {
+    Nametag_cat.debug() << "get_contents()" << std::endl;
     return m_contents;
 }
 
 uint8_t Nametag::get_draw_order() {
+    Nametag_cat.debug() << "get_draw_order()" << std::endl;
     return m_draw_order;
 }
 
 uint16_t Nametag::get_chat_wordwrap() {
+    Nametag_cat.debug() << "get_chat_wordwrap()" << std::endl;
     return m_chat_wordwrap;
 }
 
 bool Nametag::get_active() {
+    Nametag_cat.debug() << "get_active()" << std::endl;
     return m_active;
 }
 
 bool Nametag::has_group() {
+    Nametag_cat.debug() << "has_group()" << std::endl;
     return m_has_group;
 }
 
 NametagGroup * Nametag::get_group() {
+    Nametag_cat.debug() << "get_group()" << std::endl;
     return m_group;
 }
 
 NodePath * Nametag::get_avatar() {
+    Nametag_cat.debug() << "get_avatar()" << std::endl;
     return m_avatar;
 }

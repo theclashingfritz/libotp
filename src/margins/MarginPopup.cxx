@@ -1,9 +1,12 @@
 #include "MarginPopup.h"
 #include "MarginCell.h"
 
+NotifyCategoryDef(MarginPopup, "");
+
 TypeHandle MarginPopup::_type_handle;
 
 MarginPopup::MarginPopup() : m_manager(NULL), m_visible(false), m_priority(0) {
+    MarginPopup_cat.debug() << "__init__()" << std::endl;
     m_last_cell = NULL;
     m_assigned_cell = NULL;
 }
@@ -13,6 +16,7 @@ MarginPopup::~MarginPopup() {
 }
 
 void MarginPopup::set_visible(bool flag) {
+    MarginPopup_cat.debug() << "set_visible(" << flag << ")" << std::endl;
     if (m_visible == flag)
         return;
         
@@ -27,24 +31,29 @@ void MarginPopup::set_visible(bool flag) {
 }
 
 bool MarginPopup::get_visible() {
+    MarginPopup_cat.debug() << "get_visible()" << std::endl;
     return m_visible;
 }
 
 void MarginPopup::set_priority(int priority) {
+    MarginPopup_cat.debug() << "set_priority(" << priority << ")" << std::endl;
     m_priority = priority;
     if (m_manager != NULL)
         m_manager->reorganize();
 }
 
 int MarginPopup::get_priority() {
+    MarginPopup_cat.debug() << "get_priority()" << std::endl;
     return m_priority;
 }
 
 bool MarginPopup::is_displayed() {
+    MarginPopup_cat.debug() << "is_displayed()" << std::endl;
     return m_assigned_cell != NULL;
 }
 
 void MarginPopup::manage(MarginManager* manager) {
+    MarginPopup_cat.debug() << "manage(MarginManager manager)" << std::endl;
     unmanage(m_manager);
     m_manager = manager;
     if (m_visible)
@@ -52,6 +61,7 @@ void MarginPopup::manage(MarginManager* manager) {
 }
 
 void MarginPopup::unmanage(MarginManager* manager) {
+    MarginPopup_cat.debug() << "unmanage(MarginManager manager)" << std::endl;
     (void *) manager; // Unused arg
     if (m_manager != NULL)
     {
@@ -63,10 +73,12 @@ void MarginPopup::unmanage(MarginManager* manager) {
 }
 
 void MarginPopup::set_last_cell(MarginCell* cell) {
+    MarginPopup_cat.debug() << "set_last_cell(MarginCell cell)" << std::endl;
     m_last_cell = cell;
 }
 
 MarginCell* MarginPopup::get_last_cell() {
+    MarginPopup_cat.debug() << "get_last_cell()" << std::endl;
     if (m_last_cell == NULL) {
         if (m_manager != NULL) {
             MarginCell* backup_cell = new MarginCell(m_manager);
@@ -77,10 +89,12 @@ MarginCell* MarginPopup::get_last_cell() {
 }
 
 void MarginPopup::set_assigned_cell(MarginCell* cell) {
+    MarginPopup_cat.debug() << "set_assigned_cell(MarginCell cell)" << std::endl;
     m_assigned_cell = cell;
 }
 
 MarginCell* MarginPopup::get_assigned_cell() {
+    MarginPopup_cat.debug() << "get_assigned_cell()" << std::endl;
     if (m_assigned_cell == NULL) {
         if (m_manager != NULL) {
             MarginCell* backup_cell = new MarginCell(m_manager);

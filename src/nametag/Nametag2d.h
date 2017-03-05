@@ -3,6 +3,9 @@
 #include "util.h"
 #include "Nametag.h"
 #include "MarginPopup.h"
+#include <notifyCategoryProxy.h>
+
+NotifyCategoryDecl(Nametag2d, EXPCL_LIBOTP, EXPTP_LIBOTP);
 
 class Nametag2d;
 

@@ -5,10 +5,13 @@
 
 static EventHandler* g_event_handler = EventHandler::get_global_event_handler();
 
+NotifyCategoryDef(ClickablePopup, "");
+
 TypeHandle ClickablePopup::_type_handle;
 unsigned int ClickablePopup::ClickablePopup_serial = 0;
 
 ClickablePopup::ClickablePopup(NodePath* camera) : PandaNode("popup"), EventReceiver(), m_mouse_watcher(NametagGlobals::m_mouse_watcher), m_click_sound(NametagGlobals::m_click_sound), m_rollover_sound(NametagGlobals::m_rollover_sound), m_cam(camera), m_disabled(false), m_clicked(false), m_hovered(false), m_click_state(CLICKSTATE_NORMAL), m_click_event("") {
+    ClickablePopup_cat.debug() << "__init__(NodePath camera)" << std::endl;
     m_name = "ClickablePopup-";
     m_name += ClickablePopup::ClickablePopup_serial++;
     
@@ -16,6 +19,21 @@ ClickablePopup::ClickablePopup(NodePath* camera) : PandaNode("popup"), EventRece
         m_region_name = m_name;
         m_region_name += "-region";
         m_region = new MouseWatcherRegion(m_region_name, 0, 0, 0, 0);
+        
+        std::string mouse_enter_name = "mouse-enter-";
+        mouse_enter_name += ClickablePopup::ClickablePopup_serial++;
+        std::string mouse_leave_name = "mouse-leave-";
+        mouse_leave_name += ClickablePopup::ClickablePopup_serial++;
+        std::string button_down_name = "button-down-";
+        button_down_name += ClickablePopup::ClickablePopup_serial++;
+        std::string button_up_name = "button-up-";
+        button_up_name += ClickablePopup::ClickablePopup_serial++;
+        
+        m_mouse_watcher->set_enter_pattern(mouse_enter_name);
+        m_mouse_watcher->set_leave_pattern(mouse_leave_name);
+        m_mouse_watcher->set_button_down_pattern(button_down_name);
+        m_mouse_watcher->set_button_up_pattern(button_up_name);
+        
         m_mouse_watcher->add_region(m_region);
     
         accept(get_event(m_mouse_watcher->get_enter_pattern()));
@@ -30,6 +48,7 @@ ClickablePopup::~ClickablePopup() {
 }
 
 void ClickablePopup::destroy() {
+    ClickablePopup_cat.debug() << "destory()" << std::endl;
     if (m_mouse_watcher != NULL) {
         m_mouse_watcher->remove_region(m_region);
     }
@@ -37,6 +56,7 @@ void ClickablePopup::destroy() {
 }
 
 void ClickablePopup::set_click_region_event(const std::string& event) {
+    ClickablePopup_cat.debug() << "set_click_region_event(" << event << ")" << std::endl;
     if (!event.size())
         m_disabled = true;
     
@@ -49,17 +69,26 @@ void ClickablePopup::set_click_region_event(const std::string& event) {
 }
 
 int ClickablePopup::get_click_state() {
+    ClickablePopup_cat.debug() << "get_click_state()" << std::endl;
+    int* state_pointer = reinterpret_cast<int*>(m_click_state);
+    
+    if (state_pointer == NULL) {
+        return 0;
+    }
+    
     return m_click_state;
 }
 
 
 const std::string ClickablePopup::get_event(const std::string& pattern) {
+    ClickablePopup_cat.debug() << "get_event(" << pattern << ")" << std::endl;
     std::string result = pattern;
     result.replace(result.find("%r"), m_name.size(), m_name);
     return result;
 }
 
 void ClickablePopup::update_click_state() {
+    ClickablePopup_cat.debug() << "update_click_state()" << std::endl;
     int state, old_state;
     
     if (m_disabled)
@@ -72,7 +101,7 @@ void ClickablePopup::update_click_state() {
         state = CLICKSTATE_HOVER;
         
     else
-       state = CLICKSTATE_NORMAL;
+        state = CLICKSTATE_NORMAL;
         
     if (m_click_state == state)
         return;
@@ -95,14 +124,17 @@ void ClickablePopup::update_click_state() {
 }
 
 void ClickablePopup::accept(const std::string& ev) {
+    ClickablePopup_cat.debug() << "accept(" << ev << ")" << std::endl;
     g_event_handler->add_hook(ev, &ClickablePopup::handle_event, (void*)this);
 }
 
 void ClickablePopup::ignore_all() {
+    ClickablePopup_cat.debug() << "ignore_all()" << std::endl;
     g_event_handler->remove_hooks_with(this);
 }
 
 void ClickablePopup::update_click_region(float left, float right, float bottom, float top) {
+    ClickablePopup_cat.debug() << "update_click_region(" << left << " " << right << " " << bottom << " " << top << ")" << std::endl;
     CPT(TransformState) transform = NodePath::any_path(this).get_net_transform();
     if (m_cam != NULL) {
         CPT(TransformState) cam_transform = m_cam->get_net_transform();
@@ -136,16 +168,19 @@ void ClickablePopup::update_click_region(float left, float right, float bottom, 
 }
 
 void ClickablePopup::mouse_enter(const Event* ev) {
+    ClickablePopup_cat.debug() << "mouse_enter(const Event ev)" << std::endl;
     m_hovered = true;
     update_click_state();
 }
 
 void ClickablePopup::mouse_leave(const Event* ev) {
+    ClickablePopup_cat.debug() << "mouse_leave(const Event ev)" << std::endl;
     m_hovered = false;
     update_click_state();
 }
 
 void ClickablePopup::button_down(const Event* ev) {
+    ClickablePopup_cat.debug() << "button_down(const Event ev)" << std::endl;
     if (ev->get_parameter(1).get_string_value() == "button1") {
         m_clicked = true;
         update_click_state();
@@ -153,6 +188,7 @@ void ClickablePopup::button_down(const Event* ev) {
 }
 
 void ClickablePopup::button_up(const Event* ev) {
+    ClickablePopup_cat.debug() << "button_up(const Event ev)" << std::endl;
     if (ev->get_parameter(1).get_string_value() == "button1") {
         m_clicked = false;
         update_click_state();
@@ -161,6 +197,7 @@ void ClickablePopup::button_up(const Event* ev) {
 
 
 void ClickablePopup::handle_event(const Event* ev, void* data) {
+    ClickablePopup_cat.debug() << "handle_event(const Event ev, void* data)" << std::endl;
     ClickablePopup* _this = (ClickablePopup*)data;
     const std::string name = ev->get_name();
     

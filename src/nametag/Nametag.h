@@ -9,8 +9,11 @@
 #include <pandanode.h>
 #include <textNode.h>
 #include <textFont.h>
+#include <notifyCategoryProxy.h>
 #include <mouseWatcher.h>
 #include <pandabase.h>
+
+NotifyCategoryDecl(Nametag, EXPCL_LIBOTP, EXPTP_LIBOTP);
 
 class Nametag;
 class ChatBalloon;
