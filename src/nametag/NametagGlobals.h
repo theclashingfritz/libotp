@@ -66,6 +66,7 @@ class EXPCL_LIBOTP NametagGlobals : public TypedObject {
         static void set_arrow_model(NodePath& node);
         static void set_card_model(NodePath& node);
         static void set_nametag_card(NodePath& model, VBase4 frame);
+        static void set_mouse_watcher(MouseWatcher& watcher);
         static void set_mouse_watcher(NodePath& np);
         static void set_camera(NodePath& node);
         static void set_want_active_nametags(bool want);

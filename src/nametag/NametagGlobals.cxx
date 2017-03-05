@@ -296,6 +296,10 @@ void NametagGlobals::set_nametag_card(NodePath& model, VBase4 frame) {
     m_card_nodepath = model;
 }
 
+void NametagGlobals::set_mouse_watcher(MouseWatcher& watcher) {
+    m_mouse_watcher = watcher;
+}
+
 void NametagGlobals::set_mouse_watcher(NodePath& np) {
     m_mouse_watcher = DCAST(MouseWatcher, np.node());
 }
