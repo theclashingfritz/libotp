@@ -6,6 +6,8 @@
 #include <luse.h>
 #include <nodepath.h>
 #include <audioSound.h>
+#include <filename.h>
+#include <loaderFileTypeBam.h>
 #include <mouseWatcher.h>
 #include <typedObject.h>
 #include <pandabase.h>
@@ -64,9 +66,7 @@ class EXPCL_LIBOTP NametagGlobals : public TypedObject {
         static void set_toon(NodePath& toon);
         static void set_arrow_model(NodePath& node);
         static void set_card_model(NodePath& node);
-        static void set_chat_balloon_3d_model(NodePath& node);
-        static void set_chat_balloon_2d_model(NodePath& node);
-        static void set_thought_balloon_model(NodePath& node);
+        static void set_nametag_card(NodePath& model, VBase4 frame);
         static void set_mouse_watcher(NodePath& np);
         static void set_camera(NodePath& node);
         static void set_want_active_nametags(bool want);
@@ -74,7 +74,9 @@ class EXPCL_LIBOTP NametagGlobals : public TypedObject {
         static void set_force_2d_nametags(bool want);
         static void set_click_sound(PT(AudioSound) sound);
         static void set_rollover_sound(PT(AudioSound) sound);
+        static void set_page_button(int state, NodePath& model);
         static void set_page_button(NodePath& model, NodePath& model1, NodePath& model2, NodePath& model3);
+        static void set_quit_button(int state, NodePath& model);
         static void set_quit_button(NodePath& model, NodePath& model1, NodePath& model2, NodePath& model3);
         static void set_speech_balloon_3d(ChatBalloon* sb3d);
         static void set_thought_balloon_3d(ChatBalloon* tb3d);
@@ -82,11 +84,13 @@ class EXPCL_LIBOTP NametagGlobals : public TypedObject {
         static void set_thought_balloon_2d(ChatBalloon* tb2d);
         static PT(AudioSound) get_click_sound();
         static PT(AudioSound) get_rollover_sound();
+        static VBase4 get_nametag_card_frame();
         static LVecBase4f get_name_fg(ColorCode cc, int clickstate);
         static color_tuple_t get_whisper_colors(WhisperType wt, int clickstate);
         static NodePath& get_toon();
         static NodePath& get_arrow_model();
         static NodePath& get_card_model();
+        static NodePath& get_nametag_card();
         static NodePath& get_chat_balloon_3d_model();
         static NodePath& get_chat_balloon_2d_model();
         static NodePath& get_thought_balloon_model();
@@ -111,6 +115,8 @@ class EXPCL_LIBOTP NametagGlobals : public TypedObject {
         
         static buttons_map_t page_buttons;
         static buttons_map_t quit_buttons;
+        
+        static VBase4 m_nametag_frame;
         
         static ChatBalloon *speech_balloon_2d;
         static ChatBalloon *speech_balloon_3d;
