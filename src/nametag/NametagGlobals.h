@@ -7,7 +7,6 @@
 #include <nodepath.h>
 #include <audioSound.h>
 #include <filename.h>
-#include <loaderFileTypeBam.h>
 #include <mouseWatcher.h>
 #include <typedObject.h>
 #include <pandabase.h>
