@@ -112,8 +112,6 @@ void MarginManager::reorganize() {
                 cell->set_content(NULL);
                 free_cells.push_back(cell);
             }
-        } else {
-            active_cells.erase(it);
         }
     }
     
@@ -131,8 +129,6 @@ void MarginManager::reorganize() {
                 free_cells.back()->set_content(popup);
                 free_cells.pop_back();
             }
-        } else {
-            popups.erase(it);
         }
     }
 }
