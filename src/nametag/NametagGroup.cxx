@@ -75,6 +75,10 @@ void NametagGroup::set_font(PT(TextFont) font) {
     update_tags();
 }
 
+void NametagGroup::set_chat_font(PT(TextFont) font) {
+    update_tags();
+}
+
 void NametagGroup::set_color_code(NametagGlobals::ColorCode cc) {
     m_color_code = cc;
     update_tags();

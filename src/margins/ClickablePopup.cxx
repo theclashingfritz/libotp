@@ -20,14 +20,10 @@ ClickablePopup::ClickablePopup(NodePath* camera) : PandaNode("popup"), EventRece
         m_region_name += "-region";
         m_region = new MouseWatcherRegion(m_region_name, 0, 0, 0, 0);
         
-        std::string mouse_enter_name = "mouse-enter-";
-        mouse_enter_name += ClickablePopup::ClickablePopup_serial++;
-        std::string mouse_leave_name = "mouse-leave-";
-        mouse_leave_name += ClickablePopup::ClickablePopup_serial++;
-        std::string button_down_name = "button-down-";
-        button_down_name += ClickablePopup::ClickablePopup_serial++;
-        std::string button_up_name = "button-up-";
-        button_up_name += ClickablePopup::ClickablePopup_serial++;
+        std::string mouse_enter_name = "mouse-enter-%r";
+        std::string mouse_leave_name = "mouse-leave-%r";
+        std::string button_down_name = "button-down-%r";
+        std::string button_up_name = "button-up-%r";
         
         m_mouse_watcher->set_enter_pattern(mouse_enter_name);
         m_mouse_watcher->set_leave_pattern(mouse_leave_name);
@@ -73,7 +69,11 @@ int ClickablePopup::get_click_state() {
     int* state_pointer = reinterpret_cast<int*>(m_click_state);
     
     if (state_pointer == NULL) {
-        return 0;
+        m_click_state = 0;
+    }
+    
+    if (m_click_state == NULL) {
+        m_click_state = 0;
     }
     
     return m_click_state;

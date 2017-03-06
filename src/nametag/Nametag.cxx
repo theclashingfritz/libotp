@@ -83,16 +83,21 @@ void Nametag::show_name() {
 void Nametag::update() {
     Nametag_cat.debug() << "update()" << std::endl;
     NametagGlobals::ColorCode code = NametagGlobals::does_color_code_exist(m_color_code) ? m_color_code : NametagGlobals::CCNormal;
+    Nametag_cat.debug() << "Removing Children!!" << std::endl;
     m_inner_np.node()->remove_all_children();
-
+    
+    Nametag_cat.debug() << "Getting Colors from Nametag Globals!" << std::endl;
     color_tuple_tuple_t colors = NametagGlobals::nametag_colors[code][get_click_state()];
     
+    Nametag_cat.debug() << "Setting Name and Chat Colors!" << std::endl;
     color_tuple_t name_colors = colors[0];
     color_tuple_t chat_colors = colors[1];
     
+    Nametag_cat.debug() << "Setting Name BG and FG!" << std::endl;
     m_name_fg = name_colors[0];
     m_name_bg = name_colors[1];
     
+    Nametag_cat.debug() << "Setting Chat BG and FG!" << std::endl;
     m_chat_fg = chat_colors[0];
     m_chat_bg = chat_colors[1];
     

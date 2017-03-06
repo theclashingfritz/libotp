@@ -31,6 +31,7 @@ class EXPCL_LIBOTP NametagGroup : public virtual TypedReferenceCount {
         void set_page_number(int page);
         void set_avatar(NodePath* node);
         void set_font(PT(TextFont) font);
+        void set_chat_font(PT(TextFont) font);
         void set_name(const std::wstring& name);
         void set_name_wordwrap(float wordwrap);
         void set_chat(const std::wstring& chat_string, int chat_flags);

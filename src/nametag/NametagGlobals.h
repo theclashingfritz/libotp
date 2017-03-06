@@ -13,6 +13,10 @@
 
 class NametagGlobals;
 
+namespace NametagConstants {
+    
+}
+
 class EXPCL_LIBOTP NametagGlobals : public TypedObject {
     public:
         enum ColorCode {
