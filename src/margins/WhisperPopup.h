@@ -17,7 +17,7 @@ class MarginManager;
 
 class WhisperPopup : public virtual ClickablePopup, public virtual MarginPopup {
     PUBLISHED:
-        WhisperPopup(const std::wstring& text, PT(TextFont) font, const NametagGlobals::WhisperType whisper_type, const float timeout=10);
+        WhisperPopup(const std::wstring& text, PT(TextFont) font, const unsigned int whisper_type, const float timeout=10);
         ~WhisperPopup();
         
         void update_contents();
@@ -28,7 +28,7 @@ class WhisperPopup : public virtual ClickablePopup, public virtual MarginPopup {
         static AsyncTask::DoneStatus timeout_task(GenericAsyncTask* task, void* data);
         const std::wstring& m_text;
         PT(TextFont) m_font;
-        const NametagGlobals::WhisperType m_whisper_type;
+        const unsigned int m_whisper_type;
         const float m_timeout;
         NodePath m_inner_np;
         

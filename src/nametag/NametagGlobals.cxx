@@ -2,8 +2,7 @@
 
 TypeHandle NametagGlobals::_type_handle;
 
-typedef pmap<NametagGlobals::ColorCode, state_map_t> color_map_t; // {cc: state_map_t}
-typedef pmap<NametagGlobals::WhisperType, state_map_simple_t> whisper_color_map_t; // {wt: state_map_simple_t}
+//template class pmap<unsigned int, state_map_t>;
 
 PT(MouseWatcher) NametagGlobals::m_mouse_watcher = NULL;
 PT(AudioSound) NametagGlobals::m_click_sound = NULL;
@@ -25,16 +24,6 @@ ChatBalloon* NametagGlobals::thought_balloon_2d = NULL;
 ChatBalloon* NametagGlobals::thought_balloon_3d = NULL;
 
 VBase4 NametagGlobals::m_nametag_frame = VBase4(-0.5, 0.5, -0.5, 0.5);
-
-uint8_t NametagGlobals::CFSpeech = 1;
-uint8_t NametagGlobals::CFThought = 2;
-uint8_t NametagGlobals::CFQuicktalker = 4;
-uint8_t NametagGlobals::CFTimeout = 8;
-uint8_t NametagGlobals::CFPageButton = 16;
-uint8_t NametagGlobals::CFQuitButton = 32;
-uint8_t NametagGlobals::CFReversed = 64;
-uint8_t NametagGlobals::CFSndOpenchat = 128;
-uint16_t NametagGlobals::CFNoQuitButton = 256;
 
 uint8_t NametagGlobals::CName = 1;
 uint8_t NametagGlobals::CSpeech = 2;
@@ -61,7 +50,7 @@ NametagGlobals::~NametagGlobals() {
     m_rollover_sound = NULL;
 }
 
-void NametagGlobals::add_color(ColorCode cc, LVecBase4f normal_name_fg, LVecBase4f normal_name_bg, LVecBase4f normal_chat_fg, LVecBase4f normal_chat_bg, LVecBase4f click_name_fg, LVecBase4f click_name_bg, LVecBase4f click_chat_fg, LVecBase4f click_chat_bg, LVecBase4f hover_name_fg, LVecBase4f hover_name_bg, LVecBase4f hover_chat_fg, LVecBase4f hover_chat_bg, LVecBase4f disabled_name_fg, LVecBase4f disabled_name_bg, LVecBase4f disabled_chat_fg, LVecBase4f disabled_chat_bg) {
+void NametagGlobals::add_color(unsigned int cc, LVecBase4f normal_name_fg, LVecBase4f normal_name_bg, LVecBase4f normal_chat_fg, LVecBase4f normal_chat_bg, LVecBase4f click_name_fg, LVecBase4f click_name_bg, LVecBase4f click_chat_fg, LVecBase4f click_chat_bg, LVecBase4f hover_name_fg, LVecBase4f hover_name_bg, LVecBase4f hover_chat_fg, LVecBase4f hover_chat_bg, LVecBase4f disabled_name_fg, LVecBase4f disabled_name_bg, LVecBase4f disabled_chat_fg, LVecBase4f disabled_chat_bg) {
     color_tuple_t normal_name(2);
     normal_name[0] = normal_name_fg;
     normal_name[1] = normal_name_bg;
@@ -119,7 +108,7 @@ void NametagGlobals::add_color(ColorCode cc, LVecBase4f normal_name_fg, LVecBase
     nametag_colors[cc] = def;
 }
 
-void NametagGlobals::add_whisper_color(WhisperType wt, LVecBase4f normal_fg, LVecBase4f normal_bg, LVecBase4f click_fg, LVecBase4f click_bg, LVecBase4f hover_fg, LVecBase4f hover_bg, LVecBase4f disabled_fg, LVecBase4f disabled_bg) {
+void NametagGlobals::add_whisper_color(unsigned int wt, LVecBase4f normal_fg, LVecBase4f normal_bg, LVecBase4f click_fg, LVecBase4f click_bg, LVecBase4f hover_fg, LVecBase4f hover_bg, LVecBase4f disabled_fg, LVecBase4f disabled_bg) {
     color_tuple_t normal(2);
     normal[0] = normal_fg;
     normal[1] = normal_bg;
@@ -276,7 +265,7 @@ VBase4 NametagGlobals::get_nametag_card_frame() {
     return m_nametag_frame;
 }
 
-LVecBase4f NametagGlobals::get_name_fg(ColorCode cc, int clickstate)
+LVecBase4f NametagGlobals::get_name_fg(unsigned int cc, int clickstate)
 {
     if (clickstate < CLICKSTATE_NORMAL || clickstate > CLICKSTATE_DISABLED) {
         return LVecBase4f(1);
@@ -289,7 +278,7 @@ LVecBase4f NametagGlobals::get_name_fg(ColorCode cc, int clickstate)
     return nametag_colors[cc][clickstate][0][0];
 }
 
-color_tuple_t NametagGlobals::get_whisper_colors(WhisperType wt, int clickstate)
+color_tuple_t NametagGlobals::get_whisper_colors(unsigned int wt, int clickstate)
 {
     if (clickstate < CLICKSTATE_NORMAL || clickstate > CLICKSTATE_DISABLED) {
         color_tuple_t ret(2);
@@ -320,11 +309,11 @@ bool NametagGlobals::get_force_2d_nametags() {
     return m_force_2d_nametags;
 }
 
-bool NametagGlobals::does_color_code_exist(ColorCode cc) {
+bool NametagGlobals::does_color_code_exist(unsigned int cc) {
     return nametag_colors.count(cc) == 1;
 }
 
-bool NametagGlobals::does_whisper_type_exist(WhisperType wt) {
+bool NametagGlobals::does_whisper_type_exist(unsigned int wt) {
     return whisper_colors.count(wt) == 1;
 }
 

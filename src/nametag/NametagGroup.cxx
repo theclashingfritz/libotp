@@ -1,4 +1,6 @@
 #include "NametagGroup.h"
+#include "Nametag2d.h"
+#include "Nametag3d.h"
 
 #include <asyncTaskManager.h>
 #include <boundingBox.h>
@@ -79,7 +81,7 @@ void NametagGroup::set_chat_font(PT(TextFont) font) {
     update_tags();
 }
 
-void NametagGroup::set_color_code(NametagGlobals::ColorCode cc) {
+void NametagGroup::set_color_code(unsigned int cc) {
     m_color_code = cc;
     update_tags();
 }
@@ -161,7 +163,7 @@ void NametagGroup::unmanage(MarginManager* manager) {
 }
 
 void NametagGroup::set_chat(const std::wstring& chat_string, int chat_flags) {
-    if (!(m_chat_flags & NametagGlobals::CFSpeech))
+    if (!(m_chat_flags & CFSpeech))
         update_chat(chat_string, chat_flags);
         
     else {
@@ -270,7 +272,7 @@ void NametagGroup::clear_chat() {
 }
 
 unsigned int NametagGroup::get_num_chat_pages() {
-    if (!(m_chat_flags & (NametagGlobals::CFSpeech | NametagGlobals::CFThought)))
+    if (!(m_chat_flags & (CFSpeech | CFThought)))
         return 0;
         
     return m_chat_pages.size();
@@ -284,6 +286,10 @@ Nametag3d* NametagGroup::get_nametag_3d() {
     return m_nametag_3d;
 }
 
+Nametag2d* NametagGroup::get_nametag_2d() {
+    return nullptr;
+}
+
 PT(PandaNode) NametagGroup::get_name_icon() {
     return m_icon;
 }
@@ -292,10 +298,10 @@ buttons_map_t NametagGroup::get_buttons() {
     buttons_map_t empty;
     
     if (get_num_chat_pages() < 2) {
-        if (m_chat_flags & NametagGlobals::CFPageButton)
+        if (m_chat_flags & CFPageButton)
             return NametagGlobals::page_buttons;
            
-        else if (m_chat_flags & NametagGlobals::CFQuitButton)
+        else if (m_chat_flags & CFQuitButton)
             return NametagGlobals::quit_buttons;
             
         else

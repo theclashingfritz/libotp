@@ -65,12 +65,6 @@ typedef LVecBase4f Colorf;
 typedef PointerToArray<Colorf> PTA_Colorf;
 typedef ConstPointerToArray<Colorf> CPTA_Colorf;
 
-typedef pvector<LVecBase4f> color_tuple_t; // (LVecBase4f, LVecBase4f)
-typedef pvector<color_tuple_t> color_tuple_tuple_t; // ((LVecBase4f, LVecBase4f), (LVecBase4f, LVecBase4f))
-typedef pmap<int, color_tuple_tuple_t> state_map_t; // {state: color_tuple_tuple_t}
-typedef pmap<int, color_tuple_t> state_map_simple_t; // {state: color_tuple_t}
-typedef pmap<int, NodePath> buttons_map_t;
-
 // PROPERTY MACRO (TYPE, NAME)
 // This is a helper for classes
 // Declares protected m_NAME variable of type TYPE

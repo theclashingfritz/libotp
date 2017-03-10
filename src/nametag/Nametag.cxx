@@ -82,7 +82,7 @@ void Nametag::show_name() {
 
 void Nametag::update() {
     Nametag_cat.debug() << "update()" << std::endl;
-    NametagGlobals::ColorCode code = NametagGlobals::does_color_code_exist(m_color_code) ? m_color_code : NametagGlobals::CCNormal;
+    unsigned int code = NametagGlobals::does_color_code_exist(m_color_code) ? m_color_code : NametagGlobals::CCNormal;
     Nametag_cat.spam() << "Removing Children!!" << std::endl;
     m_inner_np.node()->remove_all_children();
     
@@ -187,6 +187,16 @@ void Nametag::clear_group() {
 
     m_has_group = false;
     m_group = NULL;
+}
+
+std::wstring Nametag::get_name() {
+    Nametag_cat.debug() << "get_name()" << std::endl;
+    return m_name;
+}
+
+std::wstring Nametag::get_display_name() {
+    Nametag_cat.debug() << "get_display_name()" << std::endl;
+    return m_display_name;
 }
 
 unsigned int Nametag::get_contents() {

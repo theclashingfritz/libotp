@@ -2,28 +2,40 @@
 
 #include "util.h"
 #include "Nametag.h"
-#include "Nametag2d.h"
-#include "Nametag3d.h"
 #include "NametagGlobals.h"
 
 #include <luse.h>
 #include <nodepath.h>
 #include <namable.h>
 #include <genericAsyncTask.h>
-#include <typedReferenceCount.h>
+#include <typedObject.h>
 #include <pandabase.h>
 
 class NametagGroup;
+class Nametag2d;
+class Nametag3d;
 class MarginManager;
 
 typedef pvector<Nametag*> nametag_vec_t;
 typedef pvector<std::wstring> chat_page_vec_t;
 
 
-class EXPCL_LIBOTP NametagGroup : public virtual TypedReferenceCount {
+class EXPCL_LIBOTP NametagGroup : public virtual TypedObject {
     PUBLISHED:
         NametagGroup();
         ~NametagGroup();
+        
+        enum {
+            CFSpeech = 1,
+            CFThought = 2,
+            CFQuicktalker = 4,
+            CFTimeout = 8,
+            CFPageButton = 16,
+            CFQuitButton = 32,
+            CFReversed = 64,
+            CFSndOpenchat = 128,
+            CFNoQuitButton = 256
+        };
         
         void destroy();
         void add_nametag(Nametag* nametag);
@@ -38,7 +50,7 @@ class EXPCL_LIBOTP NametagGroup : public virtual TypedReferenceCount {
         void set_contents(int contents);
         void set_display_name(const std::wstring& name);
         void set_qt_color(LVecBase4f color);
-        void set_color_code(NametagGlobals::ColorCode cc);
+        void set_color_code(unsigned int cc);
         void set_active(bool active);
         void manage(MarginManager* manager);
         void unmanage(MarginManager* manager);
@@ -52,8 +64,8 @@ class EXPCL_LIBOTP NametagGroup : public virtual TypedReferenceCount {
         
         const std::string get_unique_id();
         
-        //virtual Nametag2d* get_nametag_2d();  //TODO: Figure out why this causes a compilation error (Besides the fact i removed the function temporary.)
-        virtual Nametag3d* get_nametag_3d();
+        Nametag3d* get_nametag_3d();
+        Nametag2d* get_nametag_2d();
         
         PT(PandaNode) get_name_icon();
         
@@ -113,7 +125,7 @@ class EXPCL_LIBOTP NametagGroup : public virtual TypedReferenceCount {
         
         static unsigned int NametagGroup::NametagGroup_serial;
         
-        NametagGlobals::ColorCode m_color_code;
+        unsigned int m_color_code;
     
         NodePath* m_avatar; 
         

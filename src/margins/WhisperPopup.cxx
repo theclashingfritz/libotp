@@ -8,7 +8,7 @@ NotifyCategoryDef(WhisperPopup, "");
 
 TypeHandle WhisperPopup::_type_handle;
 
-WhisperPopup::WhisperPopup(const std::wstring& text, PT(TextFont) font, const NametagGlobals::WhisperType whisper_type, const float timeout): ClickablePopup(), MarginPopup(), m_text(text), m_font(font), m_whisper_type(whisper_type), m_timeout(timeout) {
+WhisperPopup::WhisperPopup(const std::wstring& text, PT(TextFont) font, const unsigned int whisper_type, const float timeout): ClickablePopup(), MarginPopup(), m_text(text), m_font(font), m_whisper_type(whisper_type), m_timeout(timeout) {
     WhisperPopup_cat.debug() << "__init__(" << text << " " << "TextFont font" << " " << "NametagGlobals::WhisperType whisper_type" << " " << timeout << ")" << std::endl;
     m_inner_np = NodePath::any_path(this).attach_new_node("inner_np");
     m_inner_np.set_scale(.25);
@@ -23,7 +23,7 @@ WhisperPopup::~WhisperPopup() {
 
 void WhisperPopup::update_contents() {
     WhisperPopup_cat.debug() << "update_contents()" << std::endl;
-    NametagGlobals::WhisperType cc;
+    unsigned int cc;
     
     if (NametagGlobals::does_whisper_type_exist(m_whisper_type))
         cc = m_whisper_type;

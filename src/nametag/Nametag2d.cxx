@@ -17,6 +17,17 @@ Nametag2d::Nametag2d() : Nametag(), MarginPopup(), m_arrow(NULL) {
     m_inner_np.set_scale(scale_2d);
 }
 
+Nametag2d::Nametag2d(const Nametag2d& tag) : Nametag(), MarginPopup(), m_arrow(NULL) {
+    Nametag2d_cat.debug() << "__init__(Nametag2d)" << std::endl;
+    m_contents = Nametag::CName | Nametag::CSpeech;
+    m_chat_wordwrap = 7.5;
+    m_inner_np.set_scale(scale_2d);
+    //m_display_name = tag.get_display_name();
+    //m_avatar = tag.get_avatar();
+    //m_group = tag.get_group();
+    //m_active = tag.get_active();
+}
+
 Nametag2d::~Nametag2d() {
 }
 

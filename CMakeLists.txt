@@ -25,6 +25,7 @@ execute_process(COMMAND ${PYTHON2_EXECUTABLE} "${CMAKE_SOURCE_DIR}/src/run_inter
 set(BASE_FILES
     src/base/config_libotp.h
     src/base/config_libotp.cxx
+    src/base/config_libotp.N
     src/base/util.h
 )
 

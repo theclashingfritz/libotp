@@ -12,6 +12,7 @@ class Nametag2d;
 class EXPCL_LIBOTP Nametag2d : public virtual Nametag, public virtual MarginPopup {
     PUBLISHED:
         Nametag2d();
+        Nametag2d(const Nametag2d& tag);
         ~Nametag2d();
         
     public:
