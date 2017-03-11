@@ -2,6 +2,7 @@
 
 #include <eventHandler.h>
 #include <throw_event.h>
+#include <luse.h>
 
 static EventHandler* g_event_handler = EventHandler::get_global_event_handler();
 
@@ -30,12 +31,24 @@ ClickablePopup::ClickablePopup(NodePath* camera) : PandaNode("popup"), EventRece
         m_mouse_watcher->set_button_down_pattern(button_down_name);
         m_mouse_watcher->set_button_up_pattern(button_up_name);
         
-        m_mouse_watcher->add_region(m_region);
+        ClickablePopup_cat.debug() << "Adding Region!" << std::endl;
+        
+        if (m_region != nullptr && m_region != NULL) {
+            if (m_region->get_area() <= 0.0) {
+                m_region->set_frame(LVecBase4(1, 1, 1, 1));
+            }
+            m_mouse_watcher->add_region(m_region);
+        }
     
+        ClickablePopup_cat.debug() << "Accepting Enter Pattern!" << std::endl;
         accept(get_event(m_mouse_watcher->get_enter_pattern()));
+        ClickablePopup_cat.debug() << "Accepting Leave Pattern!" << std::endl;
         accept(get_event(m_mouse_watcher->get_leave_pattern()));
+        ClickablePopup_cat.debug() << "Accepting Button Down Pattern!" << std::endl;
         accept(get_event(m_mouse_watcher->get_button_down_pattern()));
+        ClickablePopup_cat.debug() << "Accepting Button Up Pattern!" << std::endl;
         accept(get_event(m_mouse_watcher->get_button_up_pattern()));
+        ClickablePopup_cat.debug() << "Finished Initializing!" << std::endl;
     }
 }
 
