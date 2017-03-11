@@ -10,14 +10,14 @@ NotifyCategoryDef(Nametag2d, "");
 
 TypeHandle Nametag2d::_type_handle;
 
-Nametag2d::Nametag2d() : Nametag(), MarginPopup(), m_arrow(NULL) {
+Nametag2d::Nametag2d() : Nametag(), MarginPopup(), m_arrow(nullptr) {
     Nametag2d_cat.debug() << "__init__()" << std::endl;
     m_contents = Nametag::CName | Nametag::CSpeech;
     m_chat_wordwrap = 7.5;
     m_inner_np.set_scale(scale_2d);
 }
 
-Nametag2d::Nametag2d(const Nametag2d& tag) : Nametag(), MarginPopup(), m_arrow(NULL) {
+Nametag2d::Nametag2d(const Nametag2d& tag) : Nametag(), MarginPopup(), m_arrow(nullptr) {
     Nametag2d_cat.debug() << "__init__(Nametag2d)" << std::endl;
     m_contents = Nametag::CName | Nametag::CSpeech;
     m_chat_wordwrap = 7.5;
@@ -50,10 +50,10 @@ void Nametag2d::show_balloon(ChatBalloon* balloon, const std::wstring& text) {
     
     set_priority(1);
     
-    if (m_arrow != NULL)
+    if (m_arrow != nullptr)
     {
         m_arrow->remove_node();
-        m_arrow = NULL;
+        m_arrow = nullptr;
     }
 }
 
@@ -88,10 +88,10 @@ void Nametag2d::consider_update_click_region() {
 
 void Nametag2d::tick() {
     Nametag2d_cat.debug() << "tick()" << std::endl;
-    if (!is_displayed() || m_arrow == NULL)
+    if (!is_displayed() || m_arrow == nullptr)
         return;
         
-    if (m_avatar == NULL)
+    if (m_avatar == nullptr)
         return;
         
     NodePath camera = NametagGlobals::m_camera_nodepath;

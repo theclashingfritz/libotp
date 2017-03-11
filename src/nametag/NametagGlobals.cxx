@@ -4,9 +4,9 @@ TypeHandle NametagGlobals::_type_handle;
 
 //template class pmap<unsigned int, state_map_t>;
 
-PT(MouseWatcher) NametagGlobals::m_mouse_watcher = NULL;
-PT(AudioSound) NametagGlobals::m_click_sound = NULL;
-PT(AudioSound) NametagGlobals::m_rollover_sound = NULL;
+PT(MouseWatcher) NametagGlobals::m_mouse_watcher = nullptr;
+PT(AudioSound) NametagGlobals::m_click_sound = nullptr;
+PT(AudioSound) NametagGlobals::m_rollover_sound = nullptr;
 
 NodePath& NametagGlobals::m_camera_nodepath EMPTY_NODEPATH;
 NodePath& NametagGlobals::m_arrow_nodepath EMPTY_NODEPATH;
@@ -18,10 +18,12 @@ NodePath& NametagGlobals::m_nametag_model_nodepath EMPTY_NODEPATH;
 NodePath& NametagGlobals::m_page_button_nodepath EMPTY_NODEPATH;
 NodePath& NametagGlobals::m_nodepath EMPTY_NODEPATH;
 
-ChatBalloon* NametagGlobals::speech_balloon_2d = NULL;
-ChatBalloon* NametagGlobals::speech_balloon_3d = NULL;
-ChatBalloon* NametagGlobals::thought_balloon_2d = NULL;
-ChatBalloon* NametagGlobals::thought_balloon_3d = NULL;
+ChatBalloon* NametagGlobals::speech_balloon_2d = nullptr;
+ChatBalloon* NametagGlobals::speech_balloon_3d = nullptr;
+ChatBalloon* NametagGlobals::thought_balloon_2d = nullptr;
+ChatBalloon* NametagGlobals::thought_balloon_3d = nullptr;
+
+NametagGlobals* NametagGlobals::_global_ptr = nullptr;
 
 VBase4 NametagGlobals::m_nametag_frame = VBase4(-0.5, 0.5, -0.5, 0.5);
 
@@ -45,9 +47,9 @@ NametagGlobals::NametagGlobals() {
 
 NametagGlobals::~NametagGlobals() {
     delete m_click_sound;
-    m_click_sound = NULL;
+    m_click_sound = nullptr;
     delete m_rollover_sound;
-    m_rollover_sound = NULL;
+    m_rollover_sound = nullptr;
 }
 
 void NametagGlobals::add_color(unsigned int cc, LVecBase4f normal_name_fg, LVecBase4f normal_name_bg, LVecBase4f normal_chat_fg, LVecBase4f normal_chat_bg, LVecBase4f click_name_fg, LVecBase4f click_name_bg, LVecBase4f click_chat_fg, LVecBase4f click_chat_bg, LVecBase4f hover_name_fg, LVecBase4f hover_name_bg, LVecBase4f hover_chat_fg, LVecBase4f hover_chat_bg, LVecBase4f disabled_name_fg, LVecBase4f disabled_name_bg, LVecBase4f disabled_chat_fg, LVecBase4f disabled_chat_bg) {
@@ -317,6 +319,13 @@ bool NametagGlobals::does_whisper_type_exist(unsigned int wt) {
     return whisper_colors.count(wt) == 1;
 }
 
+NametagGlobals* NametagGlobals::get_global_ptr() {
+    if ((_global_ptr == nullptr) || (_global_ptr == NULL)) {
+        _global_ptr = new NametagGlobals;
+    }
+    return _global_ptr;
+}
+
 void* __initialize_constants() {
    NametagGlobals::add_color(NametagGlobals::CCNormal,
                (0.3, 0.3, 0.7, 1.0), (0.8, 0.8, 0.8, 0.5),
@@ -439,7 +448,7 @@ void* __initialize_constants() {
     );
 
 // XXX TODO: WT_battle_SOS, WT_emote, WT_toontown_boarding_group
-return NULL;
+return nullptr;
 }
 
 void* _ = __initialize_constants();

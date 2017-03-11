@@ -18,6 +18,7 @@ NotifyCategoryDecl(Nametag, EXPCL_LIBOTP, EXPTP_LIBOTP);
 class Nametag;
 class ChatBalloon;
 class NametagGroup; 
+class MarginManager;
 
 class EXPCL_LIBOTP Nametag : public virtual ClickablePopup {
     
@@ -34,6 +35,11 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup {
         void set_chat_wordwrap(uint16_t chat_wordwrap);
         void set_avatar(NodePath *avatar);
         void clear_avatar();
+        
+        //These are filler commands below
+        void manage(MarginManager* manager);
+        void unmanage(MarginManager* manager);
+        void set_visible(bool flag);
 
         uint8_t get_draw_order();
         unsigned int get_contents();

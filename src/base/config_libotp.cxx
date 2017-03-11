@@ -38,7 +38,7 @@ void init_libotp() {
     ClickablePopup::init_type();
     MarginCell::init_type();
     MarginManager::init_type();
-    MarginPopup::init_type();
+    //MarginPopup::init_type();
     WhisperPopup::init_type();
     ChatBalloon::init_type();
     NametagGlobals::init_type();

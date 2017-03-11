@@ -80,6 +80,7 @@ class EXPCL_LIBOTP NametagGlobals : public virtual TypedObject {
         static void set_thought_balloon_3d(ChatBalloon* tb3d);
         static void set_speech_balloon_2d(ChatBalloon* sb2d);
         static void set_thought_balloon_2d(ChatBalloon* tb2d);
+        static NametagGlobals* get_global_ptr();
         static PT(AudioSound) get_click_sound();
         static PT(AudioSound) get_rollover_sound();
         static VBase4 get_nametag_card_frame();
@@ -131,6 +132,9 @@ class EXPCL_LIBOTP NametagGlobals : public virtual TypedObject {
         static bool m_want_active_nametags;
         static bool m_force_onscreen_chat;
         static bool m_force_2d_nametags;
+        
+    private:
+        static NametagGlobals* _global_ptr;
       
     TYPE_HANDLE(NametagGlobals, TypedObject);
 };

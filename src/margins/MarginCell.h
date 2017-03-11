@@ -8,7 +8,7 @@
 class MarginManager; 
 class MarginPopup; 
 
-class MarginCell : public NodePath, public TypedObject {
+class MarginCell : public NodePath, public virtual TypedObject {
     PUBLISHED:
         MarginCell(MarginManager* manager);
         ~MarginCell();

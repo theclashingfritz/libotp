@@ -115,8 +115,8 @@ void NametagGroup::add_nametag(Nametag* nametag) {
     m_nametags.push_back(nametag);
     update_nametag(nametag);
     
-    if (m_manager != NULL && nametag->is_of_type(MarginPopup::get_class_type()))
-        DCAST(MarginPopup, nametag)->manage(m_manager);
+    if (m_manager != NULL && nametag->is_of_type(Nametag2d::get_class_type()))
+        nametag->manage(m_manager);
 }
 
 void NametagGroup::remove_nametag(Nametag* nametag) {
@@ -128,8 +128,8 @@ void NametagGroup::remove_nametag(Nametag* nametag) {
     if (it != m_nametags.end()) {
         m_nametags.erase(it);
         
-        if (m_manager != NULL && nametag->is_of_type(MarginPopup::get_class_type()))
-            DCAST(MarginPopup, nametag)->unmanage(m_manager);
+        if (m_manager != NULL && nametag->is_of_type(Nametag2d::get_class_type()))
+            nametag->unmanage(m_manager);
             
         nametag->clear_group();
         nametag->destroy();
@@ -144,8 +144,8 @@ void NametagGroup::manage(MarginManager* manager) {
     m_manager = manager;
     for (nametag_vec_t::iterator it = m_nametags.begin(); it != m_nametags.end(); ++it) {
         Nametag* nametag = *it;
-        if (nametag->is_of_type(MarginPopup::get_class_type()))
-            DCAST(MarginPopup, nametag)->manage(manager);
+        if (nametag->is_of_type(Nametag2d::get_class_type()))
+            nametag->manage(manager);
     }
 }
 
@@ -157,8 +157,8 @@ void NametagGroup::unmanage(MarginManager* manager) {
     m_manager = NULL;
     for (nametag_vec_t::iterator it = m_nametags.begin(); it != m_nametags.end(); ++it) {
         Nametag* nametag = *it;
-        if (nametag->is_of_type(MarginPopup::get_class_type()))
-            DCAST(MarginPopup, nametag)->unmanage(manager);
+        if (nametag->is_of_type(Nametag2d::get_class_type()))
+            nametag->unmanage(manager);
     }
 }
 
@@ -287,7 +287,7 @@ Nametag3d* NametagGroup::get_nametag_3d() {
 }
 
 Nametag2d* NametagGroup::get_nametag_2d() {
-    return nullptr;
+    return m_nametag_2d;
 }
 
 PT(PandaNode) NametagGroup::get_name_icon() {
@@ -393,8 +393,8 @@ AsyncTask::DoneStatus NametagGroup::tick() {
         for (nametag_vec_t::iterator it = m_nametags.begin(); it != m_nametags.end(); ++it) {
             Nametag* nametag = *it;
             nametag->tick();
-            if (nametag->is_of_type(MarginPopup::get_class_type()))
-                DCAST(MarginPopup, nametag)->set_visible(!visible_3d);
+            if (nametag->is_of_type(Nametag2d::get_class_type()))
+                nametag->set_visible(!visible_3d);
         }
     }
     

@@ -11,7 +11,7 @@ NotifyCategoryDecl(MarginPopup, EXPCL_LIBOTP, EXPTP_LIBOTP);
 
 class MarginCell; 
 
-class MarginPopup : public TypedObject {
+class MarginPopup {
     PUBLISHED:
         MarginPopup();
         ~MarginPopup();
@@ -44,5 +44,5 @@ class MarginPopup : public TypedObject {
         int m_priority;
         bool m_visible;
         
-    TYPE_HANDLE(MarginPopup, TypedObject);
+   //TYPE_HANDLE(MarginPopup, TypedObject);
 };

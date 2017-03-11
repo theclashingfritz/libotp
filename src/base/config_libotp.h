@@ -7,6 +7,7 @@
 #include <nodePath.h>
 #include <stdio.h>
 
+//You will need a custom Panda3D due to a error in mouseWatcherBase.cxx. 
 #ifdef NDEBUG
 #undef NDEBUG
 #endif
@@ -15,10 +16,13 @@
 #pragma warning (disable : 4275)
 #pragma warning (disable : 4217)
 
-#define EXPCL_LIBOTP EXPORT_CLASS 
-#define EXPTP_LIBOTP EXPORT_TEMPL 
-#define IMPCL_LIBOTP IMPORT_CLASS 
-#define IMPTP_LIBOTP IMPORT_TEMPL 
+#ifdef BUILDING_LIBOTP
+    #define EXPCL_LIBOTP EXPORT_CLASS 
+    #define EXPTP_LIBOTP EXPORT_TEMPL 
+#else 
+    #define EXPCL_LIBOTP IMPORT_CLASS 
+    #define EXPTP_LIBOTP IMPORT_TEMPL 
+#endif 
 
 typedef pvector<LVecBase4f> color_tuple_t; // (LVecBase4f, LVecBase4f)
 typedef pvector<color_tuple_t> color_tuple_tuple_t; // ((LVecBase4f, LVecBase4f), (LVecBase4f, LVecBase4f))

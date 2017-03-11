@@ -53,6 +53,7 @@ class EXPCL_LIBOTP Settings : public TypedReferenceCount {
         void set_windowed_mode(unsigned int mode);
         void set_resolution(unsigned int resolution);
         void set_resolution_dimensions(unsigned int xsize, unsigned int ysize);
+        static Settings* get_global_ptr();
         int server_type();
         int get_resolution();
         int get_windowed_mode();
@@ -94,6 +95,8 @@ class EXPCL_LIBOTP Settings : public TypedReferenceCount {
         std::string m_data;
         Filename m_file;
         VirtualFileSystem* m_vfs;
+        
+        static Settings* _global_ptr;
         
     TYPE_HANDLE(Settings, TypedObject);
 };
