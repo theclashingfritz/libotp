@@ -4,7 +4,7 @@ _libotp_ is a library made for Panda3D that handles Nametags, CMovers, CImpulses
 
 __NOTE__ - This project is inspired, and based off of the libotp dynamic link library created for the now-closed MMORPGs - _Toontown Online_ and _Pirates of the Carribean Online_, and therefore will be geared towards supporting them.
 
-__EVEN BIGGER NOTE__ - A Custom Panda3D may be required in certain situations in till the official Panda3D team themselves fixes a issue. Such as issues with MouseWatcherBase. (Thanks for the crashing assertions P3D Team, They techinally aren't even needed as they can be replaced with IF statements! D:)
+__EVEN BIGGER NOTE__ - A Custom Panda3D may be required in certain situations in till the official Panda3D team themselves fix a issue. Such as issues with MouseWatcherBase. (Thanks for the crashing assertions P3D Team, They techinally aren't even needed as they can be replaced with IF statements! D:)
 
 ### Features ###
 > * A **CMover** remake so Doodles will work! Woopie! 
