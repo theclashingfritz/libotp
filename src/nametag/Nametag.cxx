@@ -54,8 +54,9 @@ void Nametag::show_speech() {
 
 void Nametag::show_name() {
     Nametag_cat.debug() << "show_name()" << std::endl;
-    if (m_font == nullptr)
+    if ((m_font == nullptr) || (m_font == NULL)) {
         return;
+    }
         
     m_inner_np.attach_new_node(m_icon.node());
     
@@ -103,14 +104,13 @@ void Nametag::update() {
     m_chat_bg = chat_colors[1];
     
     Nametag_cat.spam() << "Preparing Name, Thought, or Speech!" << std::endl;
-    if (m_contents & CThought && m_chat_flags & NametagGlobals::CFThought)
+    if (m_contents & CThought && m_chat_flags & NametagGlobals::CFThought) {
         show_thought();
-        
-    else if (m_contents & CSpeech && m_chat_flags & NametagGlobals::CFSpeech)
+    } else if (m_contents & CSpeech && m_chat_flags & NametagGlobals::CFSpeech) {
         show_speech();
-    
-    else if (m_contents & CName && m_display_name.size())
+    } else if (m_contents & CName && m_display_name.size()) {
         show_name();
+    }
 }
 
 void Nametag::set_active(bool active) {
@@ -150,11 +150,11 @@ NodePath Nametag::get_button() {
     Nametag_cat.debug() << "get_button()" << std::endl;
     int cs = get_click_state();
     
-    if (m_buttons.size() == 0)
+    if (m_buttons.size() == 0) {
         return NodePath::not_found();
-        
-    else if (cs < m_buttons.size())
+    } else if (cs < m_buttons.size()) {
         return m_buttons[cs];
+    }
     
     return m_buttons.at(0);
 }        
@@ -166,7 +166,7 @@ void Nametag::set_chat_wordwrap(uint16_t chat_wordwrap) {
 
 void Nametag::set_group(NametagGroup* group) {
     Nametag_cat.debug() << "set_group(NametagGroup group)" << std::endl;
-    if ((!group) || (group == nullptr)) {
+    if ((group == nullptr) || (group == NULL)) {
         return;
     } 
     
@@ -176,7 +176,7 @@ void Nametag::set_group(NametagGroup* group) {
 
 void Nametag::set_avatar(NodePath * avatar) {
     Nametag_cat.debug() << "set_avatar(NodePath avatar)" << std::endl;
-    if ((!avatar) || (avatar == nullptr)) {
+    if ((avatar == nullptr) || (avatar == NULL)) {
         return;
     }
     
@@ -185,7 +185,7 @@ void Nametag::set_avatar(NodePath * avatar) {
 
 void Nametag::clear_avatar() {
     Nametag_cat.debug() << "clear_avatar()" << std::endl;
-    if ((!m_avatar) || (m_avatar == nullptr)) {
+    if ((m_avatar == nullptr) || (m_avatar == NULL)) {
         return;
     }
 
@@ -194,7 +194,7 @@ void Nametag::clear_avatar() {
 
 void Nametag::clear_group() {
     Nametag_cat.debug() << "clear_group()" << std::endl;
-    if ((!m_group) || (m_group == nullptr)) {
+    if ((m_group == nullptr) || (m_group == NULL)) {
         return;
     } 
 

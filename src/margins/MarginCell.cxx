@@ -49,7 +49,7 @@ bool MarginCell::has_content() {
 }
 
 MarginPopup* MarginCell::get_content() {
-    if (m_content != nullptr && m_content != NULL) {
+    if (has_content()) {
         return m_content;
     } else {
         return nullptr;
