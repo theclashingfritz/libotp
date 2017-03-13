@@ -14,7 +14,9 @@ class EXPCL_LIBOTP Nametag3d : public virtual Nametag {
     
     PUBLISHED:
         Nametag3d();
+        Nametag3d(const Nametag3d& tag);
         ~Nametag3d();
+        Nametag3d& operator=(const Nametag3d& tag);
         
     public:
         virtual void tick();
@@ -26,6 +28,6 @@ class EXPCL_LIBOTP Nametag3d : public virtual Nametag {
         virtual void billboard();
         
         float m_bb_offset;
-    
+        
     TYPE_HANDLE(Nametag3d, TypedObject);
 };

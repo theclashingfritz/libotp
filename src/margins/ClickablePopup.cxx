@@ -31,13 +31,15 @@ ClickablePopup::ClickablePopup(NodePath* camera) : PandaNode("popup"), EventRece
         m_mouse_watcher->set_button_down_pattern(button_down_name);
         m_mouse_watcher->set_button_up_pattern(button_up_name);
         
-        ClickablePopup_cat.debug() << "Adding Region!" << std::endl;
-        
         if (m_region != nullptr && m_region != NULL) {
-            if (m_region->get_area() <= 0.0) {
-                m_region->set_frame(LVecBase4(1, 1, 1, 1));
+            if (m_mouse_watcher != nullptr && m_mouse_watcher != NULL) {
+                if (!m_mouse_watcher->has_region(m_region)) {
+                    ClickablePopup_cat.debug() << "Adding Region!" << std::endl;
+                    m_mouse_watcher->add_region(m_region);
+                    ClickablePopup_cat.debug() << "Sorting Regions!" << std::endl;
+                    m_mouse_watcher->sort_regions();
+                }
             }
-            m_mouse_watcher->add_region(m_region);
         }
     
         ClickablePopup_cat.debug() << "Accepting Enter Pattern!" << std::endl;

@@ -27,6 +27,8 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup {
     PUBLISHED:
         Nametag(bool is_3d=false);
         ~Nametag();
+        
+        friend bool operator==(const Nametag& tag1, const Nametag& tag2);
 
         void set_draw_order(uint8_t draw_order);
         void clear_draw_order();
@@ -99,6 +101,7 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup {
         LVecBase4f m_qt_color;
         
         unsigned int m_color_code;
+        unsigned int m_serial;
         
         NametagGroup *m_group;
         
@@ -113,6 +116,7 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup {
         std::wstring m_chat_string;
 
     private:
+        static unsigned int Nametag_serial;
         //PandaNode m_pandaNode;
 
     TYPE_HANDLE(Nametag, TypedObject);

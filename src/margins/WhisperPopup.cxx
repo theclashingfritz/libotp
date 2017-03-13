@@ -1,4 +1,5 @@
 #include "WhisperPopup.h"
+#include "MarginCell.h"
 
 #include <asyncTaskManager.h>
  
@@ -12,6 +13,11 @@ WhisperPopup::WhisperPopup(const std::wstring& text, PT(TextFont) font, const un
     WhisperPopup_cat.debug() << "__init__(" << text << " " << "TextFont font" << " " << "NametagGlobals::WhisperType whisper_type" << " " << timeout << ")" << std::endl;
     m_inner_np = NodePath::any_path(this).attach_new_node("inner_np");
     m_inner_np.set_scale(.25);
+    
+    MarginCell* m_cell = get_assigned_cell();
+    if (m_cell != nullptr && m_cell != NULL) {
+        m_cell->set_content_nodepath(this);
+    }
     
     update_contents();
     set_priority(2);

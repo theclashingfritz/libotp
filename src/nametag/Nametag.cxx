@@ -10,15 +10,25 @@ TypeHandle Nametag::_type_handle;
 const float Nametag::name_padding = .2;
 const float Nametag::chat_alpha = 1;
 
+unsigned int Nametag::Nametag_serial = 0;
+
 Nametag::Nametag(bool is_3d) : ClickablePopup(is_3d ? &NametagGlobals::m_camera_nodepath : nullptr), m_contents(0), m_inner_np(NodePath::any_path(this).attach_new_node("nametag_contents")), m_wordwrap(7.5), m_chat_wordwrap(10), m_font(nullptr), m_qt_color(LVecBase4f(1)), m_color_code(NametagGlobals::CCNormal), m_avatar(nullptr), m_icon(NodePath("icon")), m_name_fg(LVecBase4f(0, 0, 0, 1)), m_name_bg(LVecBase4f(1)), m_chat_fg(LVecBase4f(0, 0, 0, 1)), m_chat_bg(LVecBase4f(1)), m_chat_flags(0) {
     Nametag_cat.debug() << "__init__(" << is_3d << ")" << std::endl;
     CName = NametagGlobals::CName;
     CSpeech = NametagGlobals::CSpeech;
     CThought = NametagGlobals::CThought;
+    m_serial = Nametag::Nametag_serial++;
 }
 
 Nametag::~Nametag() {
 
+}
+
+/**
+ * This little guy is a overload operator. Useful for comparing Nametag Objects!
+ */
+bool operator==(const Nametag& tag1, const Nametag& tag2) {
+    return tag1.m_serial == tag2.m_serial;
 }
 
 void Nametag::set_draw_order(uint8_t draw_order) {
@@ -32,6 +42,10 @@ void Nametag::clear_draw_order() {
 }
 
 void Nametag::show_balloon(ChatBalloon* balloon, const std::wstring& text) {
+    if (balloon == nullptr || balloon == NULL) {
+        return;
+    }
+    
     Nametag_cat.debug() << "show_balloon(ChatBalloon balloon, '" << text << "')" << std::endl;
     LVecBase4f color = m_chat_flags & NametagGlobals::CFQuicktalker ? m_qt_color : m_chat_bg;
     

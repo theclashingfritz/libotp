@@ -15,6 +15,7 @@ class EXPCL_LIBOTP Nametag2d : public virtual Nametag, public MarginPopup {
         Nametag2d();
         Nametag2d(const Nametag2d& tag);
         ~Nametag2d();
+        Nametag2d& operator=(const Nametag2d& tag);
         
     public:
         virtual void tick();

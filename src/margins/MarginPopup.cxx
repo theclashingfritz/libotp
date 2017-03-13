@@ -66,8 +66,9 @@ void MarginPopup::unmanage(MarginManager* manager) {
     MarginPopup_cat.debug() << "unmanage(MarginManager manager)" << std::endl;
     (void *) manager; // Unused arg
     if (m_manager != nullptr && m_manager != NULL) {
-        if (m_visible)
+        if (m_visible) {
             m_manager->remove_visible_popup(this);
+        }
             
         m_manager = nullptr;
     }

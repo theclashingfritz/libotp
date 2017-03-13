@@ -1,8 +1,7 @@
 #include "MarginCell.h"
 #include "MarginPopup.h"
 #include "ClickablePopup.h"
-
-#include <pandaNode.h>
+#include "WhisperPopup.h"
 
 TypeHandle MarginCell::_type_handle;
 
@@ -27,6 +26,10 @@ bool MarginCell::get_available() {
 }
        
 void MarginCell::set_content(MarginPopup* content) {
+    if (content == nullptr || content == NULL) {
+        return;
+    }  
+
     if (has_content()) {
         m_content->set_assigned_cell(nullptr);
         m_content_np.remove_node();
@@ -43,6 +46,23 @@ void MarginCell::set_content(MarginPopup* content) {
     
     m_content = content;
 }
+
+void MarginCell::set_content_nodepath(PandaNode* path) {
+    if (path == nullptr || path == NULL) {
+        return;
+    }  
+
+    if (has_content()) {
+        m_content_np.remove_node();
+    }
+    
+    m_content_np = attach_new_node(path);
+    
+    if (has_content()) {
+        m_content->margin_visibility_changed();
+    }
+}
+
 
 bool MarginCell::has_content() {   
     return (m_content != nullptr && m_content != NULL);
