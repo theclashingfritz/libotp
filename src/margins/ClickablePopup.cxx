@@ -15,6 +15,8 @@ ClickablePopup::ClickablePopup(NodePath* camera) : PandaNode("popup"), EventRece
     ClickablePopup_cat.debug() << "__init__(NodePath camera)" << std::endl;
     m_name = "ClickablePopup-";
     m_name += ClickablePopup::ClickablePopup_serial++;
+    m_from_id = 0;
+    m_event_parameter = EventParameter(0);
     
     if (m_mouse_watcher != nullptr && m_mouse_watcher != NULL) {
         m_region_name = m_name;
@@ -66,12 +68,14 @@ void ClickablePopup::destroy() {
     ignore_all();
 }
 
-void ClickablePopup::set_click_region_event(const std::string& event) {
+void ClickablePopup::set_click_region_event(const std::string& event, int do_id) {
     ClickablePopup_cat.debug() << "set_click_region_event(" << event << ")" << std::endl;
     if (!event.size()) {
         m_disabled = true;
     } else {
         m_click_event = event;
+        m_from_id = do_id;
+        m_event_parameter = EventParameter(do_id);
         m_disabled = false;
     }
     
@@ -126,7 +130,11 @@ void ClickablePopup::update_click_state() {
             m_click_sound->play();  
         }
     } else if (old_state == CLICKSTATE_CLICK && state == CLICKSTATE_HOVER) {
-        throw_event(m_click_event);
+        if (m_from_id != 0) {
+            throw_event(m_click_event, m_event_parameter);
+        } else {
+            throw_event(m_click_event);
+        }
     }
 }
 

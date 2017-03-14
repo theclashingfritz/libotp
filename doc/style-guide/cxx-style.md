@@ -1,145 +1,129 @@
 C++ Style Guidelines
 ====================
-For C++ programming, we use the [Oct 8, 2013 - Astron C++ Style Guide](https://github.com/Astron/Astron/blob/6a974ce247a364fdcd11d440db1cad0f1c2f6ba2/doc/style-guide/cxx-style.md "Oct 8, 2013 - Astron C++ Style Guide").
-- - -
-## Whitespace ##
-Tabs shall be used to indent, spaces shall be used to align.
-Source files should end with a newline.
+Almost any programming language gives a considerable amount of freedom
+to the programmer in style conventions.  Most programmers eventually
+develop a personal style and use it as they develop code.
 
-## Variable Names ##
-Variables shall have a descriptive lowercase name, where words are seperated by underscores.
-Global variables shall start with g_
-Member variables shall start with m_
+When multiple programmers are working together on one project, this
+can lead to multiple competing styles appearing throughout the code.
+This is not the end of the world, but it does tend to make the code
+more difficult to read and maintain if common style conventions are
+not followed throughout.
 
-Example: `field_count` or
+It is much better if all programmers can agree to use the same style
+when working together on the same body of work.  It makes reading,
+understanding, and extending the existing code much easier and faster
+for everyone involved.  This is akin to all of the animators on a
+feature film training themselves to draw in one consistent style
+throughout the film.
 
-	class Foo
-	{
-		private:
-			int m_my_number;
-	};
+Often, there is no strong reason to prefer one style over another,
+except that at the end of the day just one must be chosen.
 
-## Function Names ##
-Functions shall be named the same way as variables
+The following lays out the conventions that we have agreed to use
+within Panda (And by extension libotp). Most of these conventions originated
+from an amalgamation of the different styles of the first three programmers 
+to do major development in Panda. The decisions were often arbitrary,
+and some may object to the particular choices that were made.
+Although discussions about the ideal style for future work are still
+welcome, considerable code has already been written using these
+existing conventions, and the most important goal of this effort is
+consistency. Thus, changing the style at this point would require
+changing all of the existing code as well.
 
-## Class Names ##
-Class names shall be in CamelCase
+Note that not all existing Panda (And by extension libotp) code follows these 
+conventions. This is unfortunate, but it in no way constitutes an argument in 
+favor of abandoning the conventions.  Rather, it means we should make an effort
+to bring the older code into compliance as we have the opportunity.
 
-Example: `DistributedObject`
+Naturally, these conventions only apply to C and C++ code; a
+completely different set of conventions has been established for
+Python code for the project, and those conventions will not be
+discussed here.
 
-## Braces ##
-Each brace shall be on it's own line, even if it's for an empty member:
+## SPACING ##
 
-Example:
+No tab characters should ever appear in a C++ file; we use only space
+characters to achieve the appropriate indentation.  Most editors can
+be configured to use spaces instead of tabs.
 
-	void foo()
-	{
-	}
+We use two-character indentation.  That is, each nested level of
+indentation is two characters further to the right than the enclosing
+level.
 
-## Header Files ##
-A class shall not have a header file if nothing else interacts with it or if nothing else will ever inherit from it.
+Spaces should generally surround operators, e.g. i + 1 instead of i+1.
+Spaces follow commas in a parameter list, and semicolons in a for
+statement.  Spaces are not placed immediately within parentheses;
+e.g. foo(a, b) rather than foo( a,b ).
 
-## Typedefs ##
-Typedefs shall have a descriptive name and end with _t
+Resist writing lines of code that extend beyond 80 columns; instead,
+fold a long line when possible.  Occasionally a line cannot be easily
+folded and remain readable, so this should be taken as more of a
+suggestion than a fixed rule, but most lines can easily be made to fit
+within 80 columns.
 
-Example: `typedef unsigned int uint32_t`
+Comments should never extend beyond 80 columns, especially sentence or
+paragraph comments that appear on a line or lines by themselves.
+These should generally be wordwrapped within 72 columns.  Any smart
+editor can do this easily.
 
-## Usage of std::string (and when possible for stl types) ##
-Whenever possible, have function parameters be of type `const std::string&` and not `std::string`
+## CURLY BRACES ##
 
-Example:
+In general, the opening curly brace for a block of text trails the
+line that introduces it, and the matching curly brace is on a line by
+itself, lined up with the start of the introducing line, e.g.:
 
-	void foo(const std::string &name)
-	{
-		std::cout << "Hello " << name << "!" << std::endl;
-	}
-	
-## Preprocessor Macros ##
-Preproc macros shall be UPPER CASE and words shall be seperated by underlines.
+  for (int i = 0; i < 10; i++) {
+    ...
+  }
 
-Example: `#define CLIENT_HELLO 1`
+Commands like if, while, and for should always use curly braces, even
+if they only enclose one command.  That is, do this:
 
-## auto Keyword ##
-The `auto` keyword shall be used to avoid typing out long iterator types, and only for that.
+  if (foo) {
+    bar();
+  }
 
-Example:
+instead of this:
 
-	std::list<DistributedObjects> my_objects;
-	auto it = my_objects.begin();
+  if (foo)
+    bar();
 
-## Template specifiers ##
-There shall be no space between the identifier and the <>
 
-Good example: `std::list<channel_t> my_channels;`
+## NAMING ##
 
-Bad example: `std::list <channel_t> my_channels;`
+Class names are mixed case with an initial capital, e.g. MyNewClass.
+Each different class (except nested classes, of course) is defined in
+its own header file named the same as the class itself, but with the
+first letter lowercase, e.g. myNewClass.h.
 
-## Access specifiers ##
-Class/struct access specifiers shall be indented.
+Typedef names and other type names follow the same convention as class
+names: mixed case with an initial capital.  These need not be defined
+in their own header file, but usually typedef names will be scoped
+within some enclosing class.
 
-Good example:
+Local variable names are lowercase with an underscore delimiting
+words: my_value.  Class data members, including static data members,
+are the same, but with a leading underscore: _my_data_member.  We do
+not use Hungarian notation.
 
-	class Foo
-	{
-		public:
-			Foo();
-	};
+Class method names, as well as standalone function names, are
+lowercase with a delimiting underscore, just like local variable
+names: my_function().
 
-Bad examples:
+## LANGUAGE CONSTRUCTS ##
 
-	class Foo
-	{
-	public:
-		Foo();
-	};
-	
-	class Foo
-	{
-		public:
-		Foo();
-	};
+Prefer C++ constructs over equivalent C constructs when writing C++
+code.  For instance, use:
 
-## Switches ##
-Case statements inside switches shall be indented. If the case does not fall through, it shall have it's own scope.
-The braces for the scope shall be on the same indentation level as the case statement itself.
-At the end of the scope, a `break;` shall be placed on the same indentation level as the case statement.
+  static const int buffer_size = 1024;
 
-Example:
+instead of:
 
-	int temp = some_int;
-	switch(temp)
-	{
-		case 0:
-		{
-			//code
-		}
-		break;
-		default:
-			//code
-	}
+  #define BUFFER_SIZE 1024
 
-## Character Limit ##
-Each line shall be no longer than 100 characters, each tab counting as 4 characters.
-This is not a hard-limit, exceptions may be made.
 
-## Initializer lists ##
-The first variable inside of the initializer list shall be on the same line as the function header
-if the character limit allows.
-The following variables will be on the next line, with another level of indentation. 
-That line will continue until it hits the character limit, once that occurs a new line will be created,
-with the same level of indenation.
-
-Example:
-
-	class Foo
-	{
-		private:
-			int m_number;
-			int m_number2;
-			
-		public:
-			Foo() : m_number(0),
-				m_number2(0)
-			{
-			}
-	};
+Resist using brand-new C++ features that are not broadly supported by
+compilers.  One of our goals in Panda is ease of distribution to a
+wide range of platforms; this goal is thwarted if only a few compilers
+may be used.

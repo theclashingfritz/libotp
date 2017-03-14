@@ -13,6 +13,7 @@
 #include <mouseWatcherRegion.h>
 #include <notifyCategoryProxy.h>
 #include <eventReceiver.h>
+#include <eventParameter.h>
 
 NotifyCategoryDecl(ClickablePopup, EXPCL_LIBOTP, EXPTP_LIBOTP);
 
@@ -29,7 +30,7 @@ class EXPCL_LIBOTP ClickablePopup : public virtual EventReceiver, public PandaNo
         
     public:
         virtual void destroy();
-        virtual void set_click_region_event(const std::string& event);
+        virtual void set_click_region_event(const std::string& event, int do_id=0);
         
         int get_click_state();
         virtual void click_state_changed()=0;
@@ -57,6 +58,10 @@ class EXPCL_LIBOTP ClickablePopup : public virtual EventReceiver, public PandaNo
     
     private:
         static unsigned int ClickablePopup_serial;
+        
+        int m_from_id;
+        
+        EventParameter m_event_parameter;
         
         void mouse_enter(const Event* ev);
         void mouse_leave(const Event* ev);

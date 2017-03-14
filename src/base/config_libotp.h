@@ -7,11 +7,6 @@
 #include <nodePath.h>
 #include <stdio.h>
 
-//You will need a custom Panda3D due to a error in mouseWatcherBase.cxx. 
-#ifdef NDEBUG
-#undef NDEBUG
-#endif
-
 #pragma warning (disable : 4273)
 #pragma warning (disable : 4275)
 #pragma warning (disable : 4217)

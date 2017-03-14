@@ -94,7 +94,7 @@ void CMover::add_shove(Vec3 shove) {
         step = vel + (Vec3::zero() * m_dt);
         m_nodepath.set_fluid_pos(Point3(m_nodepath.get_pos() + step));
     } else {
-        CMover_cat.warning() << "Can't push a empty nodepath!" << std::endl;
+        CMover_cat.warning() << "add_shove(Vec3 shove) -- Can't push a empty nodepath!" << std::endl;
     }
 }
 
@@ -105,7 +105,7 @@ void CMover::add_rot_shove(Vec3 shove) {
         rotation = vel + (Vec3::zero() * m_dt);
         m_nodepath.set_hpr(Point3(m_nodepath.get_hpr() + rotation));
     } else {
-        CMover_cat.warning() << "Can't rotate a empty nodepath!" << std::endl;
+        CMover_cat.warning() << "add_rot_shove(Vec3 shove) -- Can't rotate a empty nodepath!" << std::endl;
     }
 }
 
