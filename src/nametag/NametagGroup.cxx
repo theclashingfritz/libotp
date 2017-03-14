@@ -1,4 +1,6 @@
 #include "NametagGroup.h"
+#include "Nametag2d.h"
+#include "Nametag3d.h"
 
 #include <asyncTaskManager.h>
 #include <boundingBox.h>
@@ -9,7 +11,7 @@ static PT(AsyncTaskManager) g_task_mgr = AsyncTaskManager::get_global_ptr();
 TypeHandle NametagGroup::_type_handle;
 unsigned int NametagGroup::NametagGroup_serial;
 
-NametagGroup::NametagGroup() : m_nametag_2d(new Nametag2d()), m_nametag_3d(new Nametag3d()),  m_icon(new PandaNode("icon")), m_chat_timeout_task(NULL), m_stomp_flags(0), m_color_code(NametagGlobals::CCNormal), m_chat_flags(0), m_font(NULL), m_avatar(NULL), m_manager(NULL), m_qt_color(LVecBase4f(1)), m_active(true), m_chat_page(0), m_visible_3d(true), m_stomp_task(NULL) {
+NametagGroup::NametagGroup() : m_nametag_2d(new Nametag2d()), m_nametag_3d(new Nametag3d()),  m_icon(new PandaNode("icon")), m_chat_timeout_task(nullptr), m_stomp_flags(0), m_color_code(NametagGlobals::CCNormal), m_chat_flags(0), m_font(nullptr), m_avatar(nullptr), m_manager(nullptr), m_qt_color(LVecBase4f(1)), m_active(true), m_chat_page(0), m_visible_3d(true), m_stomp_task(nullptr) {
     add_nametag(m_nametag_2d);
     add_nametag(m_nametag_3d);
     
@@ -21,38 +23,44 @@ NametagGroup::NametagGroup() : m_nametag_2d(new Nametag2d()), m_nametag_3d(new N
 }
 
 NametagGroup::~NametagGroup() {
-    if (m_icon != NULL)
+    if (m_icon != NULL && m_icon != nullptr) {
         delete m_icon;
-    if (m_nametag_2d != NULL)
+    }
+    if (m_nametag_2d != NULL && m_nametag_2d != nullptr) {
         delete m_nametag_2d;
-    if (m_nametag_3d != NULL)
+    }
+    if (m_nametag_3d != NULL && m_nametag_3d != nullptr) {
         delete m_nametag_3d;
-    if (m_tick_task != NULL)
+    }
+    if (m_tick_task != NULL && m_tick_task != nullptr) {
         delete m_tick_task;
-    if (m_stomp_task != NULL)
+    }
+    if (m_stomp_task != NULL && m_stomp_task != nullptr) {
         delete m_stomp_task;
-    if (m_chat_timeout_task != NULL)
+    }
+    if (m_chat_timeout_task != NULL && m_chat_timeout_task != nullptr) {
         delete m_chat_timeout_task;
+    }
 }
 
 void NametagGroup::destroy() {
-    if (m_tick_task != NULL)
-    {
+    if (m_tick_task != NULL && m_tick_task != nullptr) {
         m_tick_task->remove();
-        m_tick_task = NULL;
+        m_tick_task = nullptr;
     }
     
-    if (m_stomp_task != NULL)
-    {
+    if (m_stomp_task != NULL && m_stomp_task != nullptr) {
         m_stomp_task->remove();
-        m_stomp_task = NULL;
+        m_stomp_task = nullptr;
     }
     
-    if (m_manager != NULL)
+    if (m_manager != NULL && m_manager != nullptr) {
         unmanage(m_manager);
+    }
     
-    for (nametag_vec_t::iterator it = m_nametags.begin(); it != m_nametags.end(); ++it)
+    for (nametag_vec_t::iterator it = m_nametags.begin(); it != m_nametags.end(); ++it) {
         remove_nametag(*it);
+    }
         
     m_nametags.clear();
 }
@@ -79,7 +87,7 @@ void NametagGroup::set_chat_font(PT(TextFont) font) {
     update_tags();
 }
 
-void NametagGroup::set_color_code(NametagGlobals::ColorCode cc) {
+void NametagGroup::set_color_code(unsigned int cc) {
     m_color_code = cc;
     update_tags();
 }
@@ -100,12 +108,13 @@ void NametagGroup::set_qt_color(LVecBase4f color) {
 }
 
 void NametagGroup::set_contents(int contents) {
-    for (nametag_vec_t::iterator it = m_nametags.begin(); it != m_nametags.end(); ++it)
+    for (nametag_vec_t::iterator it = m_nametags.begin(); it != m_nametags.end(); ++it) {
         (*it)->set_contents(contents);
+    }
 }
 
 void NametagGroup::add_nametag(Nametag* nametag) {
-    if (nametag == NULL) {
+    if (nametag == NULL || nametag == nullptr) {
         return;
     }
     
@@ -113,12 +122,13 @@ void NametagGroup::add_nametag(Nametag* nametag) {
     m_nametags.push_back(nametag);
     update_nametag(nametag);
     
-    if (m_manager != NULL && nametag->is_of_type(MarginPopup::get_class_type()))
-        DCAST(MarginPopup, nametag)->manage(m_manager);
+    if (m_manager != NULL && m_manager != nullptr && nametag->is_of_type(Nametag2d::get_class_type())) {
+        nametag->manage(m_manager);
+    }
 }
 
 void NametagGroup::remove_nametag(Nametag* nametag) {
-    if (nametag == NULL) {
+    if (nametag == NULL || nametag == nullptr) {
         return;
     }
     
@@ -126,8 +136,9 @@ void NametagGroup::remove_nametag(Nametag* nametag) {
     if (it != m_nametags.end()) {
         m_nametags.erase(it);
         
-        if (m_manager != NULL && nametag->is_of_type(MarginPopup::get_class_type()))
-            DCAST(MarginPopup, nametag)->unmanage(m_manager);
+        if (m_manager != NULL && m_manager != nullptr && nametag->is_of_type(Nametag2d::get_class_type())) {
+            nametag->unmanage(m_manager);
+        }
             
         nametag->clear_group();
         nametag->destroy();
@@ -135,36 +146,35 @@ void NametagGroup::remove_nametag(Nametag* nametag) {
 }
 
 void NametagGroup::manage(MarginManager* manager) {
-    if (manager == NULL) {
+    if (manager == NULL || manager == nullptr) {
         return;
     }
     
     m_manager = manager;
     for (nametag_vec_t::iterator it = m_nametags.begin(); it != m_nametags.end(); ++it) {
         Nametag* nametag = *it;
-        if (nametag->is_of_type(MarginPopup::get_class_type()))
-            DCAST(MarginPopup, nametag)->manage(manager);
+        if (nametag->is_of_type(Nametag2d::get_class_type()))
+            nametag->manage(manager);
     }
 }
 
 void NametagGroup::unmanage(MarginManager* manager) {
-    if (manager == NULL) {
+    if (manager == NULL || manager == nullptr) {
         return;
     }
     
-    m_manager = NULL;
+    m_manager = nullptr;
     for (nametag_vec_t::iterator it = m_nametags.begin(); it != m_nametags.end(); ++it) {
         Nametag* nametag = *it;
-        if (nametag->is_of_type(MarginPopup::get_class_type()))
-            DCAST(MarginPopup, nametag)->unmanage(manager);
+        if (nametag->is_of_type(Nametag2d::get_class_type()))
+            nametag->unmanage(manager);
     }
 }
 
 void NametagGroup::set_chat(const std::wstring& chat_string, int chat_flags) {
-    if (!(m_chat_flags & NametagGlobals::CFSpeech))
+    if (!(m_chat_flags & CFSpeech)) {
         update_chat(chat_string, chat_flags);
-        
-    else {
+    } else {
         clear_chat();
         m_stomp_text = chat_string;
         m_stomp_flags = chat_flags;
@@ -185,23 +195,23 @@ void NametagGroup::update_chat(const std::wstring& chat_string, int chat_flags) 
         const wchar_t* begin;
         const wchar_t* str = chat_string.c_str();
         
-        do
-        {
+        do {
             begin = str;
 
-            while(*str != '\x07' && *str)
+            while(*str != '\x07' && *str) {
                 str++;
+            }
 
             m_chat_pages.push_back(std::wstring(begin, str));
-        }
-        while (*str++ != NULL);
+        } while (*str++ != NULL);
     }
     
     set_page_number(0);
     
     stop_chat_timeout();
-    if (chat_flags & NametagGlobals::CFTimeout)
+    if (chat_flags & NametagGlobals::CFTimeout) {
         start_chat_timeout();
+    }
 }
 
 void NametagGroup::start_chat_timeout() {
@@ -215,14 +225,14 @@ void NametagGroup::start_chat_timeout() {
 }
 
 void NametagGroup::stop_chat_timeout() {
-    if (m_chat_timeout_task != NULL) {
+    if (m_chat_timeout_task != NULL && m_chat_timeout_task != nullptr) {
         m_chat_timeout_task->remove();
-        m_chat_timeout_task = NULL;
+        m_chat_timeout_task = nullptr;
     }
 }
 
 void NametagGroup::update_nametag(Nametag* nametag) {
-    if (nametag == NULL) {
+    if (nametag == NULL || nametag == nullptr) {
         return;
     }
     
@@ -237,18 +247,19 @@ void NametagGroup::update_nametag(Nametag* nametag) {
     nametag->m_avatar = m_avatar;
     nametag->m_icon = NodePath(m_icon);
     
-    if (m_active || has_button())
+    if (m_active || has_button()) {
         nametag->set_click_region_event(get_unique_id());
-        
-    else
+    } else {
         nametag->set_click_region_event("");
+    }
         
     nametag->update();
 }
 
 void NametagGroup::update_tags() {
-    for (nametag_vec_t::iterator it = m_nametags.begin(); it != m_nametags.end(); ++it)
+    for (nametag_vec_t::iterator it = m_nametags.begin(); it != m_nametags.end(); ++it) {
         update_nametag(*it);
+    }
 }
 
 void NametagGroup::set_name_wordwrap(float wordwrap) {
@@ -262,16 +273,16 @@ void NametagGroup::clear_shadow() {
 void NametagGroup::clear_chat() {
     const std::wstring empty;
     update_chat(empty, 0);
-    if (m_stomp_task != NULL)
-    {
+    if (m_stomp_task != NULL && m_stomp_task != nullptr) {
         m_stomp_task->remove();
-        m_stomp_task = NULL;
+        m_stomp_task = nullptr;
     }
 }
 
 unsigned int NametagGroup::get_num_chat_pages() {
-    if (!(m_chat_flags & (NametagGlobals::CFSpeech | NametagGlobals::CFThought)))
+    if (!(m_chat_flags & (CFSpeech | CFThought))) {
         return 0;
+    }
         
     return m_chat_pages.size();
 }
@@ -284,6 +295,10 @@ Nametag3d* NametagGroup::get_nametag_3d() {
     return m_nametag_3d;
 }
 
+Nametag2d* NametagGroup::get_nametag_2d() {
+    return m_nametag_2d;
+}
+
 PT(PandaNode) NametagGroup::get_name_icon() {
     return m_icon;
 }
@@ -292,26 +307,25 @@ buttons_map_t NametagGroup::get_buttons() {
     buttons_map_t empty;
     
     if (get_num_chat_pages() < 2) {
-        if (m_chat_flags & NametagGlobals::CFPageButton)
+        if (m_chat_flags & CFPageButton) {
             return NametagGlobals::page_buttons;
-           
-        else if (m_chat_flags & NametagGlobals::CFQuitButton)
+        } else if (m_chat_flags & CFQuitButton) {
             return NametagGlobals::quit_buttons;
-            
-        else
+        } else {
             return empty;
-    }
-    
-    else if (m_chat_page == get_num_chat_pages() - 1)
+        }
+    } else if (m_chat_page == get_num_chat_pages() - 1) {
         return (m_chat_flags & NametagGlobals::CFNoQuitButton) ? empty : NametagGlobals::quit_buttons;
+    }
         
     return (m_chat_flags & NametagGlobals::CFPageButton) ? NametagGlobals::page_buttons : empty;
 }
 
 const std::wstring NametagGroup::get_chat() {
     std::wstring empty;
-    if (m_chat_page >= m_chat_pages.size())
+    if (m_chat_page >= m_chat_pages.size()) {
         return empty;
+    }
         
     return m_chat_pages.at(m_chat_page);
 }
@@ -335,7 +349,7 @@ bool NametagGroup::is_active() {
 }
 
 bool NametagGroup::get_chat_stomp() {
-    return m_stomp_task != NULL;
+    return (m_stomp_task != NULL && m_stomp_task != nullptr);
 }
 
 
@@ -345,7 +359,7 @@ bool NametagGroup::has_button() {
 
 AsyncTask::DoneStatus NametagGroup::update_stomp() {
     update_chat(m_stomp_text, m_stomp_flags);
-    m_stomp_task = NULL;
+    m_stomp_task = nullptr;
     return AsyncTask::DS_done;
 }
 
@@ -356,24 +370,23 @@ AsyncTask::DoneStatus NametagGroup::do_chat_timeout() {
 }
 
 AsyncTask::DoneStatus NametagGroup::tick() {
-    for (nametag_vec_t::iterator it = m_nametags.begin(); it != m_nametags.end(); ++it)
+    for (nametag_vec_t::iterator it = m_nametags.begin(); it != m_nametags.end(); ++it) {
         (*it)->tick();
+    }
         
-    if (m_avatar == NULL)
+    if (m_avatar == NULL || m_avatar == nullptr) {
         return AsyncTask::DS_cont;
-        
-    else if (m_avatar->is_empty())
+    } else if (m_avatar->is_empty()) {
         return AsyncTask::DS_cont;
+    }
             
     bool visible_3d;
     
-    if (m_avatar->is_hidden())
+    if (m_avatar->is_hidden()) {
         visible_3d = false;
-        
-    else if (NametagGlobals::m_force_onscreen_chat && m_chat_flags & NametagGlobals::CFSpeech)
+    } else if (NametagGlobals::m_force_onscreen_chat && m_chat_flags & NametagGlobals::CFSpeech) {
         visible_3d = false;
-        
-    else {
+    } else {
         LPoint3f min_corner, max_corner;
         m_avatar->calc_tight_bounds(min_corner, max_corner);
         PT(BoundingBox) avatar_bounds = new BoundingBox(min_corner, max_corner);
@@ -387,8 +400,8 @@ AsyncTask::DoneStatus NametagGroup::tick() {
         for (nametag_vec_t::iterator it = m_nametags.begin(); it != m_nametags.end(); ++it) {
             Nametag* nametag = *it;
             nametag->tick();
-            if (nametag->is_of_type(MarginPopup::get_class_type()))
-                DCAST(MarginPopup, nametag)->set_visible(!visible_3d);
+            if (nametag->is_of_type(Nametag2d::get_class_type()))
+                nametag->set_visible(!visible_3d);
         }
     }
     

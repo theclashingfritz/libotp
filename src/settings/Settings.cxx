@@ -4,6 +4,8 @@ NotifyCategoryDef(Settings, "");
 
 TypeHandle Settings::_type_handle;
 
+Settings* Settings::_global_ptr = nullptr;
+
 Settings::Settings() {
     m_vfs = VirtualFileSystem::get_global_ptr();
     m_file = Filename("/useropt"); //First let's use this to set our dir.
@@ -243,3 +245,9 @@ bool Settings::do_saved_settings_exist() {
     return m_vfs->exists(m_file);
 }
 
+Settings* Settings::get_global_ptr() {
+    if ((_global_ptr == nullptr) || (_global_ptr == NULL)) {
+        _global_ptr = new Settings;
+    }
+    return _global_ptr;
+}

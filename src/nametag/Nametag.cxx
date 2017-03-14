@@ -1,6 +1,7 @@
 #include "Nametag.h"
 #include "NametagGroup.h"
 #include "ChatBalloon.h"
+#include "MarginManager.h"
 
 NotifyCategoryDef(Nametag, "");
 
@@ -9,15 +10,25 @@ TypeHandle Nametag::_type_handle;
 const float Nametag::name_padding = .2;
 const float Nametag::chat_alpha = 1;
 
-Nametag::Nametag(bool is_3d) : ClickablePopup(is_3d ? &NametagGlobals::m_camera_nodepath : NULL), m_contents(0), m_inner_np(NodePath::any_path(this).attach_new_node("nametag_contents")), m_wordwrap(7.5), m_chat_wordwrap(10), m_font(NULL), m_qt_color(LVecBase4f(1)), m_color_code(NametagGlobals::CCNormal), m_avatar(NULL), m_icon(NodePath("icon")), m_name_fg(LVecBase4f(0, 0, 0, 1)), m_name_bg(LVecBase4f(1)), m_chat_fg(LVecBase4f(0, 0, 0, 1)), m_chat_bg(LVecBase4f(1)), m_chat_flags(0) {
+unsigned int Nametag::Nametag_serial = 0;
+
+Nametag::Nametag(bool is_3d) : ClickablePopup(is_3d ? &NametagGlobals::m_camera_nodepath : nullptr), m_contents(0), m_inner_np(NodePath::any_path(this).attach_new_node("nametag_contents")), m_wordwrap(7.5), m_chat_wordwrap(10), m_font(nullptr), m_qt_color(LVecBase4f(1)), m_color_code(NametagGlobals::CCNormal), m_avatar(nullptr), m_icon(NodePath("icon")), m_name_fg(LVecBase4f(0, 0, 0, 1)), m_name_bg(LVecBase4f(1)), m_chat_fg(LVecBase4f(0, 0, 0, 1)), m_chat_bg(LVecBase4f(1)), m_chat_flags(0) {
     Nametag_cat.debug() << "__init__(" << is_3d << ")" << std::endl;
     CName = NametagGlobals::CName;
     CSpeech = NametagGlobals::CSpeech;
     CThought = NametagGlobals::CThought;
+    m_serial = Nametag::Nametag_serial++;
 }
 
 Nametag::~Nametag() {
 
+}
+
+/**
+ * This little guy is a overload operator. Useful for comparing Nametag Objects!
+ */
+bool operator==(const Nametag& tag1, const Nametag& tag2) {
+    return tag1.m_serial == tag2.m_serial;
 }
 
 void Nametag::set_draw_order(uint8_t draw_order) {
@@ -31,6 +42,10 @@ void Nametag::clear_draw_order() {
 }
 
 void Nametag::show_balloon(ChatBalloon* balloon, const std::wstring& text) {
+    if (balloon == nullptr || balloon == NULL) {
+        return;
+    }
+    
     Nametag_cat.debug() << "show_balloon(ChatBalloon balloon, '" << text << "')" << std::endl;
     LVecBase4f color = m_chat_flags & NametagGlobals::CFQuicktalker ? m_qt_color : m_chat_bg;
     
@@ -53,8 +68,9 @@ void Nametag::show_speech() {
 
 void Nametag::show_name() {
     Nametag_cat.debug() << "show_name()" << std::endl;
-    if (m_font == NULL)
+    if ((m_font == nullptr) || (m_font == NULL)) {
         return;
+    }
         
     m_inner_np.attach_new_node(m_icon.node());
     
@@ -82,7 +98,7 @@ void Nametag::show_name() {
 
 void Nametag::update() {
     Nametag_cat.debug() << "update()" << std::endl;
-    NametagGlobals::ColorCode code = NametagGlobals::does_color_code_exist(m_color_code) ? m_color_code : NametagGlobals::CCNormal;
+    unsigned int code = NametagGlobals::does_color_code_exist(m_color_code) ? m_color_code : NametagGlobals::CCNormal;
     Nametag_cat.spam() << "Removing Children!!" << std::endl;
     m_inner_np.node()->remove_all_children();
     
@@ -102,14 +118,13 @@ void Nametag::update() {
     m_chat_bg = chat_colors[1];
     
     Nametag_cat.spam() << "Preparing Name, Thought, or Speech!" << std::endl;
-    if (m_contents & CThought && m_chat_flags & NametagGlobals::CFThought)
+    if (m_contents & CThought && m_chat_flags & NametagGlobals::CFThought) {
         show_thought();
-        
-    else if (m_contents & CSpeech && m_chat_flags & NametagGlobals::CFSpeech)
+    } else if (m_contents & CSpeech && m_chat_flags & NametagGlobals::CFSpeech) {
         show_speech();
-    
-    else if (m_contents & CName && m_display_name.size())
+    } else if (m_contents & CName && m_display_name.size()) {
         show_name();
+    }
 }
 
 void Nametag::set_active(bool active) {
@@ -132,16 +147,28 @@ void Nametag::click_state_changed() {
     Nametag_cat.debug() << "click_state_changed()" << std::endl;
     update();
 }
+
+void Nametag::manage(MarginManager* manager) {
+    
+}
+
+void Nametag::unmanage(MarginManager* manager) {
+    
+}
+
+void Nametag::set_visible(bool flag) {
+    
+}
        
 NodePath Nametag::get_button() {
     Nametag_cat.debug() << "get_button()" << std::endl;
     int cs = get_click_state();
     
-    if (m_buttons.size() == 0)
+    if (m_buttons.size() == 0) {
         return NodePath::not_found();
-        
-    else if (cs < m_buttons.size())
+    } else if (cs < m_buttons.size()) {
         return m_buttons[cs];
+    }
     
     return m_buttons.at(0);
 }        
@@ -153,7 +180,7 @@ void Nametag::set_chat_wordwrap(uint16_t chat_wordwrap) {
 
 void Nametag::set_group(NametagGroup* group) {
     Nametag_cat.debug() << "set_group(NametagGroup group)" << std::endl;
-    if ((!group) || (group == NULL)) {
+    if ((group == nullptr) || (group == NULL)) {
         return;
     } 
     
@@ -163,7 +190,7 @@ void Nametag::set_group(NametagGroup* group) {
 
 void Nametag::set_avatar(NodePath * avatar) {
     Nametag_cat.debug() << "set_avatar(NodePath avatar)" << std::endl;
-    if ((!avatar) || (avatar == NULL)) {
+    if ((avatar == nullptr) || (avatar == NULL)) {
         return;
     }
     
@@ -172,21 +199,31 @@ void Nametag::set_avatar(NodePath * avatar) {
 
 void Nametag::clear_avatar() {
     Nametag_cat.debug() << "clear_avatar()" << std::endl;
-    if ((!m_avatar) || (m_avatar == NULL)) {
+    if ((m_avatar == nullptr) || (m_avatar == NULL)) {
         return;
     }
 
-    m_avatar = NULL;
+    m_avatar = nullptr;
 }
 
 void Nametag::clear_group() {
     Nametag_cat.debug() << "clear_group()" << std::endl;
-    if ((!m_group) || (m_group == NULL)) {
+    if ((m_group == nullptr) || (m_group == NULL)) {
         return;
     } 
 
     m_has_group = false;
-    m_group = NULL;
+    m_group = nullptr;
+}
+
+std::wstring Nametag::get_name() {
+    Nametag_cat.debug() << "get_name()" << std::endl;
+    return m_name;
+}
+
+std::wstring Nametag::get_display_name() {
+    Nametag_cat.debug() << "get_display_name()" << std::endl;
+    return m_display_name;
 }
 
 unsigned int Nametag::get_contents() {

@@ -18,6 +18,7 @@ NotifyCategoryDecl(Nametag, EXPCL_LIBOTP, EXPTP_LIBOTP);
 class Nametag;
 class ChatBalloon;
 class NametagGroup; 
+class MarginManager;
 
 class EXPCL_LIBOTP Nametag : public virtual ClickablePopup {
     
@@ -26,6 +27,8 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup {
     PUBLISHED:
         Nametag(bool is_3d=false);
         ~Nametag();
+        
+        friend bool operator==(const Nametag& tag1, const Nametag& tag2);
 
         void set_draw_order(uint8_t draw_order);
         void clear_draw_order();
@@ -34,6 +37,11 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup {
         void set_chat_wordwrap(uint16_t chat_wordwrap);
         void set_avatar(NodePath *avatar);
         void clear_avatar();
+        
+        //These are filler commands below
+        void manage(MarginManager* manager);
+        void unmanage(MarginManager* manager);
+        void set_visible(bool flag);
 
         uint8_t get_draw_order();
         unsigned int get_contents();
@@ -46,6 +54,8 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup {
     public:
         virtual void destroy();
         virtual void tick()=0;
+        
+        std::wstring get_display_name();
     
         uint8_t CSpeech;
         uint8_t CThought;
@@ -63,6 +73,8 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup {
         virtual void show_speech();
         virtual void show_name();
         virtual void update();
+        
+        std::wstring get_name();
         
         virtual ChatBalloon* get_speech_balloon()=0;
         virtual ChatBalloon* get_thought_balloon()=0;
@@ -88,7 +100,8 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup {
         LVecBase4f m_chat_bg;
         LVecBase4f m_qt_color;
         
-        NametagGlobals::ColorCode m_color_code;
+        unsigned int m_color_code;
+        unsigned int m_serial;
         
         NametagGroup *m_group;
         
@@ -103,6 +116,7 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup {
         std::wstring m_chat_string;
 
     private:
+        static unsigned int Nametag_serial;
         //PandaNode m_pandaNode;
 
     TYPE_HANDLE(Nametag, TypedObject);

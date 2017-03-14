@@ -79,20 +79,34 @@ void CMover::process_c_impulses() {
     }
 }
 
-void CMover::add_force(VBase3 force) {
+void CMover::add_force(Vec3 force) {
     CMover_cat.warning() << "add_force() -- Not Implemented!" << std::endl;
 }
 
-void CMover::add_rot_force(VBase3 force) {
+void CMover::add_rot_force(Vec3 force) {
     CMover_cat.warning() << "add_rot_force() -- Not Implemented!" << std::endl;
 }
 
-void CMover::add_shove(VBase3 shove) {
-    CMover_cat.warning() << "add_shove() -- Not Implemented!" << std::endl;
+void CMover::add_shove(Vec3 shove) {
+    if (!m_nodepath.is_empty()) {
+        CMover_cat.debug() << "add_shove(Vec3 shove)" << std::endl;
+        vel = shove;
+        step = vel + (Vec3::zero() * m_dt);
+        m_nodepath.set_fluid_pos(Point3(m_nodepath.get_pos() + step));
+    } else {
+        CMover_cat.warning() << "add_shove(Vec3 shove) -- Can't push a empty nodepath!" << std::endl;
+    }
 }
 
-void CMover::add_rot_shove(VBase3 shove) {
-    CMover_cat.warning() << "add_rot_shove() -- Not Implemented!" << std::endl;
+void CMover::add_rot_shove(Vec3 shove) {
+    if (!m_nodepath.is_empty()) {
+        CMover_cat.debug() << "add_rot_shove(Vec3 shove)" << std::endl;
+        vel = shove;
+        rotation = vel + (Vec3::zero() * m_dt);
+        m_nodepath.set_hpr(Point3(m_nodepath.get_hpr() + rotation));
+    } else {
+        CMover_cat.warning() << "add_rot_shove(Vec3 shove) -- Can't rotate a empty nodepath!" << std::endl;
+    }
 }
 
 void CMover::set_node_path(NodePath np) {

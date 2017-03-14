@@ -1,4 +1,5 @@
 #include "WhisperPopup.h"
+#include "MarginCell.h"
 
 #include <asyncTaskManager.h>
  
@@ -8,10 +9,17 @@ NotifyCategoryDef(WhisperPopup, "");
 
 TypeHandle WhisperPopup::_type_handle;
 
-WhisperPopup::WhisperPopup(const std::wstring& text, PT(TextFont) font, const NametagGlobals::WhisperType whisper_type, const float timeout): ClickablePopup(), MarginPopup(), m_text(text), m_font(font), m_whisper_type(whisper_type), m_timeout(timeout) {
+WhisperPopup::WhisperPopup(const std::wstring& text, PT(TextFont) font, const unsigned int whisper_type, const float timeout): ClickablePopup(), MarginPopup(), m_text(text), m_font(font), m_whisper_type(whisper_type), m_timeout(timeout) {
     WhisperPopup_cat.debug() << "__init__(" << text << " " << "TextFont font" << " " << "NametagGlobals::WhisperType whisper_type" << " " << timeout << ")" << std::endl;
     m_inner_np = NodePath::any_path(this).attach_new_node("inner_np");
     m_inner_np.set_scale(.25);
+    m_from_id = 0;
+    m_active = false;
+    
+    MarginCell* m_cell = get_assigned_cell();
+    if (m_cell != nullptr && m_cell != NULL) {
+        m_cell->set_content_nodepath(this);
+    }
     
     update_contents();
     set_priority(2);
@@ -23,12 +31,13 @@ WhisperPopup::~WhisperPopup() {
 
 void WhisperPopup::update_contents() {
     WhisperPopup_cat.debug() << "update_contents()" << std::endl;
-    NametagGlobals::WhisperType cc;
+    unsigned int cc;
     
-    if (NametagGlobals::does_whisper_type_exist(m_whisper_type))
+    if (NametagGlobals::does_whisper_type_exist(m_whisper_type)) {
         cc = m_whisper_type;
-    else
+    } else {
         cc = NametagGlobals::WTSystem;
+    }
         
     color_tuple_t colors = NametagGlobals::get_whisper_colors(cc, CLICKSTATE_NORMAL);
     
@@ -37,14 +46,29 @@ void WhisperPopup::update_contents() {
     
     NodePath text_np = balloon.find("**/+TextNode");
     PT(TextNode) tn = DCAST(TextNode, text_np.node());
-    LVecBase4f frame = tn->get_frame_actual();
+    frame = tn->get_frame_actual();
     LPoint3f center = m_inner_np.get_relative_point(text_np, LPoint3f((frame.get_x() + frame.get_y()) / 2., 0, (frame.get_z() + frame.get_w()) / 2.));
     
     balloon.set_pos(balloon, -center);
+    
+    if (m_active != false && m_from_id != 0) {
+        set_click_region_event("clickedWhisper", m_from_id);
+    }
 }
 
-void WhisperPopup::set_clickable(const std::wstring& sender_name, unsigned int from_id, bool) {
-    // To do
+void WhisperPopup::set_clickable(const std::wstring& sender_name, unsigned int from_id, bool todo) {
+    m_active = true;
+    m_from_id = from_id;
+    update_contents();
+    __update_click_region();
+}
+
+void WhisperPopup::__update_click_region() {
+    if (is_displayed() && m_active != false && m_from_id != 0) {
+        update_click_region(frame.get_x(), frame.get_y(), frame.get_z(), frame.get_w());
+    } else {
+        return;
+    }
 }
 
 void WhisperPopup::manage(MarginManager* manager) {
@@ -54,6 +78,11 @@ void WhisperPopup::manage(MarginManager* manager) {
     PT(GenericAsyncTask) task = new GenericAsyncTask("whisper-timeout", &WhisperPopup::timeout_task, (void*)this);
     task->set_delay(10);
     g_task_mgr->add(task);
+}
+
+bool WhisperPopup::is_displayed() {
+    WhisperPopup_cat.debug() << "is_displayed()" << std::endl;
+    return (m_assigned_cell != nullptr && m_assigned_cell != NULL);;
 }
 
 AsyncTask::DoneStatus WhisperPopup::timeout_task(GenericAsyncTask* task, void* data) {

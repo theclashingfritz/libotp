@@ -1,4 +1,5 @@
 #include "Nametag2d.h"
+#include <textFont.h>
 #include <math.h>
 
 const float Nametag2d::scale_2d = .25;
@@ -10,14 +11,60 @@ NotifyCategoryDef(Nametag2d, "");
 
 TypeHandle Nametag2d::_type_handle;
 
-Nametag2d::Nametag2d() : Nametag(), MarginPopup(), m_arrow(NULL) {
+Nametag2d::Nametag2d() : Nametag(), MarginPopup(), m_arrow(nullptr) {
     Nametag2d_cat.debug() << "__init__()" << std::endl;
     m_contents = Nametag::CName | Nametag::CSpeech;
     m_chat_wordwrap = 7.5;
     m_inner_np.set_scale(scale_2d);
 }
 
+Nametag2d::Nametag2d(const Nametag2d& tag) : Nametag(), MarginPopup(), m_arrow(nullptr) {
+    Nametag2d_cat.debug() << "__init__(Nametag2d)" << std::endl;
+    m_inner_np.set_scale(scale_2d);
+    m_contents = *new int(tag.m_contents);
+    m_chat_flags = *new int(tag.m_chat_flags);
+    m_color_code = *new unsigned int(tag.m_color_code);
+    m_name = *new std::wstring(tag.m_name);
+    m_display_name = *new std::wstring(tag.m_display_name);
+    m_chat_string = *new std::wstring(tag.m_chat_string);
+    m_chat_wordwrap = *new float(tag.m_chat_wordwrap);
+    m_wordwrap = *new float(tag.m_wordwrap);
+    m_name_fg = *new LVecBase4f(tag.m_name_fg);
+    m_name_bg = *new LVecBase4f(tag.m_name_bg);
+    m_chat_fg = *new LVecBase4f(tag.m_chat_fg);
+    m_chat_bg = *new LVecBase4f(tag.m_chat_bg);
+    m_avatar = tag.m_avatar; 
+    m_group = tag.m_group;
+    m_font = tag.m_font; 
+    m_has_group = bool(*new int(tag.m_has_group));
+    m_active = bool(*new int(tag.m_active));
+}
+
 Nametag2d::~Nametag2d() {
+}
+
+/**
+ * This little guy is a overload operator. We use this to assign a Nametag object to this object!
+ */
+Nametag2d& Nametag2d::operator=(const Nametag2d& tag) {
+    m_contents = *new int(tag.m_contents);
+    m_chat_flags = *new int(tag.m_chat_flags);
+    m_color_code = *new unsigned int(tag.m_color_code);
+    m_name = *new std::wstring(tag.m_name);
+    m_display_name = *new std::wstring(tag.m_display_name);
+    m_chat_string = *new std::wstring(tag.m_chat_string);
+    m_chat_wordwrap = *new float(tag.m_chat_wordwrap);
+    m_wordwrap = *new float(tag.m_wordwrap);
+    m_name_fg = *new LVecBase4f(tag.m_name_fg);
+    m_name_bg = *new LVecBase4f(tag.m_name_bg);
+    m_chat_fg = *new LVecBase4f(tag.m_chat_fg);
+    m_chat_bg = *new LVecBase4f(tag.m_chat_bg);
+    m_avatar = tag.m_avatar; 
+    m_group = tag.m_group;
+    m_font = tag.m_font; 
+    m_has_group = bool(*new int(tag.m_has_group));
+    m_active = bool(*new int(tag.m_active));
+    return *this;
 }
 
 void Nametag2d::show_balloon(ChatBalloon* balloon, const std::wstring& text) {
@@ -39,10 +86,9 @@ void Nametag2d::show_balloon(ChatBalloon* balloon, const std::wstring& text) {
     
     set_priority(1);
     
-    if (m_arrow != NULL)
-    {
+    if (m_arrow != nullptr || m_arrow != NULL) {
         m_arrow->remove_node();
-        m_arrow = NULL;
+        m_arrow = nullptr;
     }
 }
 
@@ -60,7 +106,35 @@ void Nametag2d::show_name() {
    
 void Nametag2d::update() {
     Nametag2d_cat.debug() << "update()" << std::endl;
-    Nametag::update();
+    
+    unsigned int code = NametagGlobals::does_color_code_exist(m_color_code) ? m_color_code : NametagGlobals::CCNormal;
+    Nametag2d_cat.spam() << "Removing Children!!" << std::endl;
+    m_inner_np.node()->remove_all_children();
+    
+    Nametag2d_cat.spam() << "Getting Colors from Nametag Globals!" << std::endl;
+    color_tuple_tuple_t colors = NametagGlobals::nametag_colors[code][get_click_state()];
+    
+    Nametag2d_cat.spam() << "Setting Name and Chat Colors!" << std::endl;
+    color_tuple_t name_colors = colors[0];
+    color_tuple_t chat_colors = colors[1];
+    
+    Nametag2d_cat.spam() << "Setting Name BG and FG!" << std::endl;
+    m_name_fg = name_colors[0];
+    m_name_bg = name_colors[1];
+    
+    Nametag2d_cat.spam() << "Setting Chat BG and FG!" << std::endl;
+    m_chat_fg = chat_colors[0];
+    m_chat_bg = chat_colors[1];
+    
+    Nametag2d_cat.spam() << "Preparing Name, Thought, or Speech!" << std::endl;
+    if (m_contents & CThought && m_chat_flags & NametagGlobals::CFThought) {
+        show_thought();
+    } else if (m_contents & CSpeech && m_chat_flags & NametagGlobals::CFSpeech) {
+        show_speech();
+    } else if (m_contents & CName && m_display_name.size()) {
+        show_name();
+    }
+    
     consider_update_click_region();
 }
 
@@ -77,17 +151,20 @@ void Nametag2d::consider_update_click_region() {
 
 void Nametag2d::tick() {
     Nametag2d_cat.debug() << "tick()" << std::endl;
-    if (!is_displayed() || m_arrow == NULL)
+    if (!is_displayed() || (m_arrow == nullptr || m_arrow == NULL)) {
         return;
+    }
         
-    if (m_avatar == NULL)
+    if (m_avatar == nullptr || m_avatar == NULL) {
         return;
+    }
         
     NodePath camera = NametagGlobals::m_camera_nodepath;
     NodePath toon = NametagGlobals::m_nodepath.is_empty() ? camera : NametagGlobals::m_nodepath;
     
-    if (m_avatar->is_empty())
+    if (m_avatar->is_empty()) {
         return;
+    }
         
     LVecBase3f pos = toon.get_quat(camera).xform(m_avatar->get_pos());
     double angle = atan(pos.get_x() / pos.get_y()) / 3.14159265 * 180;
@@ -106,8 +183,9 @@ ChatBalloon* Nametag2d::get_thought_balloon() {
 
 bool Nametag2d::is_displayed() {
     Nametag2d_cat.debug() << "is_displayed()" << std::endl;
-    if (!MarginPopup::is_displayed())
+    if (!MarginPopup::is_displayed()) {
         return false;
+    }
 
     return m_chat_flags & NametagGlobals::CFSpeech;
 }

@@ -5,12 +5,139 @@ NotifyCategoryDef(MarginManager, "");
 
 TypeHandle MarginManager::_type_handle;
 
+MarginManager* MarginManager::_global_ptr = nullptr;
+
 MarginManager::MarginManager() : PandaNode("mrmanager") {
     MarginManager_cat.debug() << "__init__()" << std::endl;
 }
 
 MarginManager::~MarginManager() {
     
+}
+
+void MarginManager::set_cell_available(int cell_index, bool available) {
+    MarginManager_cat.debug() << "set_cell_available(" << cell_index << " " << available << ")" << std::endl;
+    MarginCell* cell = m_cells.at(cell_index);
+    
+    if ((cell == nullptr) || (cell == NULL)) {
+        return;
+    }
+    
+    cell_vec_t::iterator it = std::find(m_cells.begin(), m_cells.end(), cell);
+    if (it == m_cells.end())
+        return;
+    
+    cell->set_available(available);
+    reorganize();
+}
+
+void MarginManager::set_cell_available(MarginCell* cell, bool available) {
+    MarginManager_cat.debug() << "set_cell_available(" << "MarginCell cell" << " " << available << ")" << std::endl;
+    if ((cell == nullptr) || (cell == NULL)) {
+        return;
+    }
+    
+    cell->set_available(available);
+    reorganize();
+}
+
+void MarginManager::remove_cell(int cell_index) {
+    MarginManager_cat.debug() << "remove_cell(" << cell_index << ")" << std::endl;
+    MarginCell* cell = m_cells.at(cell_index);
+    
+    if ((cell == nullptr) || (cell == NULL)) {
+        return;
+    }
+    
+    cell_vec_t::iterator it = std::find(m_cells.begin(), m_cells.end(), cell);
+    if (it == m_cells.end())
+        return;
+        
+    m_cells.erase(it);
+    reorganize();
+}
+
+void MarginManager::remove_cell(MarginCell* cell) {
+    MarginManager_cat.debug() << "remove_cell(MarginCell cell)" << std::endl;
+    if ((cell == nullptr) || (cell == NULL)) {
+        return;
+    }
+   
+    cell_vec_t::iterator it = std::find(m_cells.begin(), m_cells.end(), cell);
+    if (it == m_cells.end())
+        return;
+        
+    m_cells.erase(it);
+    reorganize();
+}
+
+void MarginManager::add_visible_popup(MarginPopup* popup) {
+    MarginManager_cat.debug() << "add_visible_popup(MarginPopup popup)" << std::endl;
+    if ((popup == nullptr) || (popup == NULL)) {
+        return;
+    }
+    
+    m_popups.push_back(popup);
+    reorganize();
+}
+
+void MarginManager::remove_visible_popup(MarginPopup* popup) {
+    MarginManager_cat.debug() << "remove_visible_popup(MarginPopup popup)" << std::endl;
+    if ((popup == nullptr) || (popup == NULL)) {
+        return;
+    }
+    
+    popup_vec_t::iterator it = std::find(m_popups.begin(), m_popups.end(), popup);
+    if (it == m_popups.end())
+        return;
+        
+    m_popups.erase(it);
+    reorganize();
+}
+
+void MarginManager::reorganize() {
+    MarginManager_cat.debug() << "reorganize()" << std::endl;
+    cell_vec_t active_cells;
+    for (cell_vec_t::iterator it = m_cells.begin(); it != m_cells.end(); ++it) {
+        if ((*it)->is_available())
+            active_cells.push_back(*it);
+    }
+    
+    popup_vec_t popups = m_popups;
+    std::sort(popups.begin(), popups.end(), _sort_key);
+    popups.resize(active_cells.size());
+    
+    cell_vec_t free_cells;
+    for (cell_vec_t::iterator it = active_cells.begin(); it != active_cells.end(); ++it) {
+        MarginCell* cell = *it;
+        if (cell != nullptr && cell != NULL) {
+            if (!cell->has_content()) {
+                free_cells.push_back(cell);
+            } else if (std::find(popups.begin(), popups.end(), cell->get_content()) != popups.end()) {
+                popups.erase(std::find(popups.begin(), popups.end(), cell->get_content()));
+            } else {
+                cell->set_content(nullptr);
+                free_cells.push_back(cell);
+            }
+        }
+    }
+    
+    assert(free_cells.size() >= popups.size());
+    std::random_shuffle(free_cells.begin(), free_cells.end());
+    
+    for (popup_vec_t::const_iterator it = popups.begin(); it != popups.end(); it++) {
+        MarginPopup* popup = *it;
+        if (popup != nullptr && popup != NULL) {
+            MarginCell* last_cell = popup->get_last_cell();
+            if (last_cell != nullptr && last_cell != NULL && std::find(free_cells.begin(), free_cells.end(), last_cell) != free_cells.end() && last_cell->is_free()) {
+                last_cell->set_content(popup);
+                free_cells.erase(std::find(free_cells.begin(), free_cells.end(), last_cell));
+            } else {
+                free_cells.back()->set_content(popup);
+                free_cells.pop_back();
+            }
+        }
+    }
 }
 
 MarginCell* MarginManager::add_grid_cell(float x, float y, float left, float right, float bottom, float top, const NodePath& parent, float aspect_ratio) {
@@ -109,136 +236,9 @@ MarginCell* MarginManager::add_cell(float x, float y, const NodePath& parent) {
     return cell;
 }
 
-void MarginManager::set_cell_available(int cell_index, bool available) {
-    MarginManager_cat.debug() << "set_cell_available(" << cell_index << " " << available << ")" << std::endl;
-    MarginCell* cell = m_cells.at(cell_index);
-    
-    if (cell == NULL) {
-        return;
-    }
-    
-    cell_vec_t::iterator it = std::find(m_cells.begin(), m_cells.end(), cell);
-    if (it == m_cells.end())
-        return;
-    
-    cell->set_available(available);
-    reorganize();
-}
-
-void MarginManager::set_cell_available(MarginCell* cell, bool available) {
-    MarginManager_cat.debug() << "set_cell_available(" << "MarginCell cell" << " " << available << ")" << std::endl;
-    if (cell == NULL) {
-        return;
-    }
-    
-    cell->set_available(available);
-    reorganize();
-}
-
-void MarginManager::remove_cell(int cell_index) {
-    MarginManager_cat.debug() << "remove_cell(" << cell_index << ")" << std::endl;
-    MarginCell* cell = m_cells.at(cell_index);
-    
-    if (cell == NULL) {
-        return;
-    }
-    
-    cell_vec_t::iterator it = std::find(m_cells.begin(), m_cells.end(), cell);
-    if (it == m_cells.end())
-        return;
-        
-    m_cells.erase(it);
-    reorganize();
-}
-
-void MarginManager::remove_cell(MarginCell* cell) {
-    MarginManager_cat.debug() << "remove_cell(MarginCell cell)" << std::endl;
-    if (cell == NULL) {
-        return;
-    }
-   
-    cell_vec_t::iterator it = std::find(m_cells.begin(), m_cells.end(), cell);
-    if (it == m_cells.end())
-        return;
-        
-    m_cells.erase(it);
-    reorganize();
-}
-
-void MarginManager::add_visible_popup(MarginPopup* popup) {
-    MarginManager_cat.debug() << "add_visible_popup(MarginPopup popup)" << std::endl;
-    if (popup == NULL) {
-        return;
-    }
-    
-    m_popups.push_back(popup);
-    reorganize();
-}
-
-void MarginManager::remove_visible_popup(MarginPopup* popup) {
-    MarginManager_cat.debug() << "remove_visible_popup(MarginPopup popup)" << std::endl;
-    if (popup == NULL) {
-        return;
-    }
-    
-    popup_vec_t::iterator it = std::find(m_popups.begin(), m_popups.end(), popup);
-    if (it == m_popups.end())
-        return;
-        
-    m_popups.erase(it);
-    reorganize();
-}
-
-void MarginManager::reorganize() {
-    MarginManager_cat.debug() << "reorganize()" << std::endl;
-    cell_vec_t active_cells;
-    for (cell_vec_t::iterator it = m_cells.begin(); it != m_cells.end(); ++it) {
-        if ((*it)->is_available())
-            active_cells.push_back(*it);
-    }
-    
-    popup_vec_t popups = m_popups;
-    std::sort(popups.begin(), popups.end(), _sort_key);
-    popups.resize(active_cells.size());
-    
-    cell_vec_t free_cells;
-    for (cell_vec_t::iterator it = active_cells.begin(); it != active_cells.end(); ++it) {
-        MarginCell* cell = *it;
-        if (cell != NULL) {
-            if (!cell->has_content())
-                free_cells.push_back(cell);
-            
-            else if (std::find(popups.begin(), popups.end(), cell->get_content()) != popups.end())
-                popups.erase(std::find(popups.begin(), popups.end(), cell->get_content()));
-                
-            else {
-                cell->set_content(NULL);
-                free_cells.push_back(cell);
-            }
-        }
-    }
-    
-    assert(free_cells.size() >= popups.size());
-    std::random_shuffle(free_cells.begin(), free_cells.end());
-    
-    for (popup_vec_t::const_iterator it = popups.begin(); it != popups.end(); it++) {
-        MarginPopup* popup = *it;
-        if (popup != NULL) {
-            MarginCell* last_cell = popup->get_last_cell();
-            if (last_cell != NULL && std::find(free_cells.begin(), free_cells.end(), last_cell) != free_cells.end() && last_cell->is_free()) {
-                last_cell->set_content(popup);
-                free_cells.erase(std::find(free_cells.begin(), free_cells.end(), last_cell));
-            } else {
-                free_cells.back()->set_content(popup);
-                free_cells.pop_back();
-            }
-        }
-    }
-}
-
 bool MarginManager::_sort_key(MarginPopup* lhs, MarginPopup* rhs) {
     MarginManager_cat.debug() << "_sort_key(MarginPopup lhs, MarginPopup rhs)" << std::endl;
-    if ((lhs == NULL) || (rhs == NULL)) {
+    if (((lhs == nullptr) || (rhs == nullptr)) || ((lhs == NULL) || (rhs == NULL))) {
         return false;
     }
     
@@ -249,7 +249,7 @@ bool MarginManager::get_cell_available(int cell_index) {
     MarginManager_cat.debug() << "get_cell_available(" << cell_index << ")" << std::endl;
     MarginCell* cell = m_cells.at(cell_index);
     
-    if (cell == NULL) {
+    if ((cell == nullptr) || (cell == NULL)) {
         return false;
     }
     
@@ -262,7 +262,7 @@ bool MarginManager::get_cell_available(int cell_index) {
 
 bool MarginManager::get_cell_available(MarginCell* cell) { 
     MarginManager_cat.debug() << "get_cell_available(MarginCell cell)" << std::endl;
-    if (cell == NULL) {
+    if ((cell == nullptr) || (cell == NULL)) {
         return false;
     }
     
@@ -271,4 +271,11 @@ bool MarginManager::get_cell_available(MarginCell* cell) {
         return false;
     
     return cell->get_available();
+}
+
+MarginManager* MarginManager::get_global_ptr() {
+    if ((_global_ptr == nullptr) || (_global_ptr == NULL)) {
+        _global_ptr = new MarginManager;
+    }
+    return _global_ptr;
 }

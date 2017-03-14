@@ -3,24 +3,26 @@
 #include "util.h"
 #include <pandabase.h>
 #include <nodePath.h>
+#include <pandaNode.h>
 #include <typedObject.h>
 
 class MarginManager; 
-class MarginPopup; 
+class MarginPopup;
 
-class MarginCell : public NodePath, public TypedObject {
+class MarginCell : public NodePath, public virtual TypedObject {
     PUBLISHED:
         MarginCell(MarginManager* manager);
         ~MarginCell();
         
     public:
         void set_available(bool available);
-        bool get_available();
-        
         void set_content(MarginPopup* content);
-        bool has_content();
+        void set_content_nodepath(PandaNode* path);
+        
         MarginPopup* get_content();
         
+        bool get_available();
+        bool has_content();
         bool is_available();
         bool is_free();
         

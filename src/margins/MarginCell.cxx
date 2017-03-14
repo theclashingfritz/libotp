@@ -1,10 +1,11 @@
 #include "MarginCell.h"
 #include "MarginPopup.h"
 #include "ClickablePopup.h"
+#include "WhisperPopup.h"
 
 TypeHandle MarginCell::_type_handle;
 
-MarginCell::MarginCell(MarginManager* manager): NodePath("cell"), m_manager(manager), m_content(NULL) {
+MarginCell::MarginCell(MarginManager* manager): NodePath("cell"), m_manager(manager), m_content(nullptr) {
     
 }
 
@@ -13,8 +14,9 @@ MarginCell::~MarginCell() {
 }
         
 void MarginCell::set_available(bool available) {
-    if (!available && has_content())
-        set_content(NULL);
+    if (!available && has_content()) {
+        set_content(nullptr);
+    }
         
     m_available = available;  
 }
@@ -24,30 +26,54 @@ bool MarginCell::get_available() {
 }
        
 void MarginCell::set_content(MarginPopup* content) {
-    if (has_content())
-    {
-        m_content->set_assigned_cell(NULL);
+    if (content == nullptr || content == NULL) {
+        return;
+    }  
+
+    if (has_content()) {
+        m_content->set_assigned_cell(nullptr);
         m_content_np.remove_node();
         m_content->margin_visibility_changed();
     }
     
-    if (content != NULL)
-    {
+    if (content != nullptr && content != NULL) {
         content->set_assigned_cell(this);
         content->set_last_cell(this);
-        m_content_np = attach_new_node(DCAST(PandaNode, content));
+        std::string m_content_np_name = "m_content_np";
+        m_content_np = attach_new_node(new PandaNode(m_content_np_name));
         content->margin_visibility_changed();
     }
     
     m_content = content;
 }
 
+void MarginCell::set_content_nodepath(PandaNode* path) {
+    if (path == nullptr || path == NULL) {
+        return;
+    }  
+
+    if (has_content()) {
+        m_content_np.remove_node();
+    }
+    
+    m_content_np = attach_new_node(path);
+    
+    if (has_content()) {
+        m_content->margin_visibility_changed();
+    }
+}
+
+
 bool MarginCell::has_content() {   
-    return m_content != NULL;
+    return (m_content != nullptr && m_content != NULL);
 }
 
 MarginPopup* MarginCell::get_content() {
-    return m_content;
+    if (has_content()) {
+        return m_content;
+    } else {
+        return nullptr;
+    }
 }
         
 bool MarginCell::is_available() {

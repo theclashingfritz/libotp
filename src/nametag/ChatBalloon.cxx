@@ -28,7 +28,7 @@ NodePath ChatBalloon::generate(const std::wstring& text, PT(TextFont) font, LVec
     NodePath bottom = balloon.find("**/bottom");
     
     LVecBase4f bcolor;
-    if (balloon_color == NULL)
+    if (balloon_color == nullptr)
         bcolor = LVecBase4f(1);
         
     else
@@ -39,7 +39,7 @@ NodePath ChatBalloon::generate(const std::wstring& text, PT(TextFont) font, LVec
         balloon.set_transparency(TransparencyAttrib::M_alpha);
     
     LVecBase4f tcolor;
-    if (text_color == NULL)
+    if (text_color == nullptr)
         tcolor = LVecBase4f(0, 0, 0, 1);
         
     else
@@ -59,7 +59,7 @@ NodePath ChatBalloon::generate(const std::wstring& text, PT(TextFont) font, LVec
     text_np.set_x(text_np, g_text_shift_prop * width);
     text_np.set_z(height);
     
-    if (button != NULL)
+    if (button != nullptr)
     {
         NodePath button_np = button->copy_to(root);
         button_np.set_pos(text_np, width, 0, -height);
