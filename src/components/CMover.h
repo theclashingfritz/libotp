@@ -9,6 +9,7 @@
 #include <typedReferenceCount.h>
 #include <pandabase.h>
 #include <nodePath.h>
+#include <clockObject.h>
 #include "CImpulse.h"
 
 NotifyCategoryDecl(CMover, EXPCL_LIBOTP, EXPTP_LIBOTP);
@@ -26,7 +27,7 @@ class EXPCL_LIBOTP CMover : public TypedReferenceCount {
         void set_fwd_speed(float speed);
         void set_rot_speed(float speed);
         void set_node_path(NodePath np);
-        void set_dt(float dt);
+        void set_dt(double dt);
         void reset_dt();
         void add_c_impulse(string name, CImpulse impulse);
         void remove_c_impulse(string name);
@@ -39,7 +40,7 @@ class EXPCL_LIBOTP CMover : public TypedReferenceCount {
         void integrate(); 
         float get_fwd_speed();
         float get_rot_speed();
-        float get_dt();
+        double get_dt();
         CImpulse get_c_impulse(string name);
         NodePath get_node_path();
         
@@ -49,7 +50,6 @@ class EXPCL_LIBOTP CMover : public TypedReferenceCount {
     private:
         float m_fwdSpeed;
         float m_rotSpeed;
-        float m_dt;
         float m_distance;
         
         pmap<std::string, CImpulse> m_c_impulses;

@@ -2,6 +2,8 @@
 
 TypeHandle NametagGlobals::_type_handle;
 
+NotifyCategoryDef(NametagGlobals, "");
+
 //template class pmap<unsigned int, state_map_t>;
 
 PT(MouseWatcher) NametagGlobals::m_mouse_watcher = nullptr;
@@ -27,10 +29,6 @@ NametagGlobals* NametagGlobals::_global_ptr = nullptr;
 
 VBase4 NametagGlobals::m_nametag_frame = VBase4(-0.5, 0.5, -0.5, 0.5);
 
-uint8_t NametagGlobals::CName = 1;
-uint8_t NametagGlobals::CSpeech = 2;
-uint8_t NametagGlobals::CThought = 4;
-
 buttons_map_t NametagGlobals::page_buttons;
 buttons_map_t NametagGlobals::quit_buttons;
 
@@ -41,8 +39,8 @@ bool NametagGlobals::m_want_active_nametags = 1;
 bool NametagGlobals::m_force_2d_nametags = 0;
 bool NametagGlobals::m_force_onscreen_chat = 0;
 
-NametagGlobals::NametagGlobals() {   
-
+NametagGlobals::NametagGlobals() { 
+    NametagGlobals_cat.debug() << "__init__()" << std::endl;
 }
 
 NametagGlobals::~NametagGlobals() {
@@ -53,6 +51,7 @@ NametagGlobals::~NametagGlobals() {
 }
 
 void NametagGlobals::add_color(unsigned int cc, LVecBase4f normal_name_fg, LVecBase4f normal_name_bg, LVecBase4f normal_chat_fg, LVecBase4f normal_chat_bg, LVecBase4f click_name_fg, LVecBase4f click_name_bg, LVecBase4f click_chat_fg, LVecBase4f click_chat_bg, LVecBase4f hover_name_fg, LVecBase4f hover_name_bg, LVecBase4f hover_chat_fg, LVecBase4f hover_chat_bg, LVecBase4f disabled_name_fg, LVecBase4f disabled_name_bg, LVecBase4f disabled_chat_fg, LVecBase4f disabled_chat_bg) {
+    NametagGlobals_cat.debug() << "add_color() -- If you want to see all of these parameters. Add your own debug message!" << std::endl;
     color_tuple_t normal_name(2);
     normal_name[0] = normal_name_fg;
     normal_name[1] = normal_name_bg;
@@ -111,6 +110,7 @@ void NametagGlobals::add_color(unsigned int cc, LVecBase4f normal_name_fg, LVecB
 }
 
 void NametagGlobals::add_whisper_color(unsigned int wt, LVecBase4f normal_fg, LVecBase4f normal_bg, LVecBase4f click_fg, LVecBase4f click_bg, LVecBase4f hover_fg, LVecBase4f hover_bg, LVecBase4f disabled_fg, LVecBase4f disabled_bg) {
+    NametagGlobals_cat.debug() << "add_whisper_color() -- If you want to see all of these parameters. Add your own debug message!" << std::endl;
     color_tuple_t normal(2);
     normal[0] = normal_fg;
     normal[1] = normal_bg;
@@ -137,55 +137,68 @@ void NametagGlobals::add_whisper_color(unsigned int wt, LVecBase4f normal_fg, LV
 }
 
 void NametagGlobals::set_speech_balloon_3d(ChatBalloon* sb3d) {
+    NametagGlobals_cat.debug() << "set_speech_balloon_3d(ChatBalloon ballon)" << std::endl;
     speech_balloon_3d = sb3d;
 }
 
 void NametagGlobals::set_thought_balloon_3d(ChatBalloon* tb3d) {
+    NametagGlobals_cat.debug() << "set_thought_balloon_3d(ChatBalloon ballon)" << std::endl;
     thought_balloon_3d = tb3d;
 }
 
 void NametagGlobals::set_speech_balloon_2d(ChatBalloon* sb2d) {
+    NametagGlobals_cat.debug() << "set_speech_balloon_2d(ChatBalloon ballon)" << std::endl;
     speech_balloon_2d = sb2d;
 }
 
 void NametagGlobals::set_thought_balloon_2d(ChatBalloon* tb2d) {
+    NametagGlobals_cat.debug() << "set_thought_balloon_2d(ChatBalloon ballon)" << std::endl;
     thought_balloon_2d = tb2d;
 }
 
 void NametagGlobals::set_toon(NodePath& toon) {
+    NametagGlobals_cat.debug() << "set_toon(NodePath toon)" << std::endl;
     m_nodepath = toon;
 }
 
 void NametagGlobals::set_arrow_model(NodePath& node) {
+    NametagGlobals_cat.debug() << "set_arrow_model(NodePath node)" << std::endl;
     m_arrow_nodepath = node;
 }
 
 void NametagGlobals::set_card_model(NodePath& node) {
+    NametagGlobals_cat.debug() << "set_card_model(NodePath node)" << std::endl;
     m_card_nodepath = node;
 }
 
 void NametagGlobals::set_nametag_card(NodePath& model, VBase4 frame) {
+    NametagGlobals_cat.debug() << "set_nametag_card(NodePath model, VBase4 frame)" << std::endl;
     m_nametag_frame = frame;
     m_card_nodepath = model;
 }
 
 void NametagGlobals::set_mouse_watcher(MouseWatcher& watcher) {
+    NametagGlobals_cat.debug() << "set_mouse_watcher(MouseWatcher watcher)" << std::endl;
     m_mouse_watcher = &watcher;
 }
 
 void NametagGlobals::set_mouse_watcher(NodePath& np) {
+    NametagGlobals_cat.debug() << "set_mouse_watcher(NodePath np)" << std::endl;
     m_mouse_watcher = DCAST(MouseWatcher, np.node());
 }
 
 void NametagGlobals::set_camera(NodePath& node) {
+    NametagGlobals_cat.debug() << "set_camera(NodePath node)" << std::endl;
     m_camera_nodepath = node;
 }
 
 void NametagGlobals::set_page_button(int state, NodePath& model) {
+    NametagGlobals_cat.debug() << "set_page_button(" << state << " NodePath model)" << std::endl;
     page_buttons[state] = model;
 }
 
 void NametagGlobals::set_page_button(NodePath& model, NodePath& model1, NodePath& model2, NodePath& model3) {
+    NametagGlobals_cat.debug() << "set_page_button(NodePath model, NodePath model1, NodePath model2, NodePath model3)" << std::endl;
     page_buttons[0] = model;
     page_buttons[1] = model1;
     page_buttons[2] = model2;
@@ -193,10 +206,12 @@ void NametagGlobals::set_page_button(NodePath& model, NodePath& model1, NodePath
 }
 
 void NametagGlobals::set_quit_button(int state, NodePath& model) {
+    NametagGlobals_cat.debug() << "set_quit_button(" << state << " NodePath model)" << std::endl;
     quit_buttons[state] = model;
 }
 
 void NametagGlobals::set_quit_button(NodePath& model, NodePath& model1, NodePath& model2, NodePath& model3) {
+    NametagGlobals_cat.debug() << "set_quit_button(NodePath model, NodePath model1, NodePath model2, NodePath model3)" << std::endl;
     quit_buttons[0] = model;
     quit_buttons[1] = model1;
     quit_buttons[2] = model2;
@@ -204,71 +219,88 @@ void NametagGlobals::set_quit_button(NodePath& model, NodePath& model1, NodePath
 }
 
 void NametagGlobals::set_want_active_nametags(bool want) {
+    NametagGlobals_cat.debug() << "set_want_active_nametags(" << want << ")" << std::endl;
     m_want_active_nametags = want;
 }
 
 void NametagGlobals::set_force_onscreen_chat(bool want) {
+    NametagGlobals_cat.debug() << "set_force_onscreen_chat(" << want << ")" << std::endl;
     m_force_onscreen_chat = want;
 }
 
 void NametagGlobals::set_force_2d_nametags(bool want) {
+    NametagGlobals_cat.debug() << "set_force_2d_nametags(" << want << ")" << std::endl;
     m_force_2d_nametags = want;
 }
 
 void NametagGlobals::set_click_sound(PT(AudioSound) sound) {
+    NametagGlobals_cat.debug() << "set_click_sound(AudioSound sound)" << std::endl;
     m_click_sound = sound;
 }
 
 void NametagGlobals::set_rollover_sound(PT(AudioSound) sound) {
+    NametagGlobals_cat.debug() << "set_rollover_sound(AudioSound sound)" << std::endl;
     m_rollover_sound = sound;
 }
 
 PT(AudioSound) NametagGlobals::get_click_sound() {
+    NametagGlobals_cat.debug() << "get_click_sound()" << std::endl;
     return m_click_sound;
 }
 
 PT(AudioSound) NametagGlobals::get_rollover_sound() {
+    NametagGlobals_cat.debug() << "get_rollover_sound()" << std::endl;
     return m_rollover_sound;
 }
 
 NodePath& NametagGlobals::get_toon() {
+    NametagGlobals_cat.debug() << "get_toon()" << std::endl;
     return m_nodepath;
 }
 
 NodePath& NametagGlobals::get_arrow_model() {
+    NametagGlobals_cat.debug() << "get_arrow_model()" << std::endl;
     return m_arrow_nodepath;
 }
 
 NodePath& NametagGlobals::get_card_model() {
+    NametagGlobals_cat.debug() << "get_card_model()" << std::endl;
     return m_card_nodepath;
 }
 
 NodePath& NametagGlobals::get_nametag_card() {
+    NametagGlobals_cat.debug() << "get_nametag_card()" << std::endl;
     return m_card_nodepath;
 }
 
 NodePath& NametagGlobals::get_chat_balloon_3d_model() {
+    NametagGlobals_cat.debug() << "get_chat_balloon_3d_model()" << std::endl;
     return m_card_balloon_3d_nodepath;;
 }
 
 NodePath& NametagGlobals::get_chat_balloon_2d_model() {
+    NametagGlobals_cat.debug() << "get_chat_balloon_2d_model()" << std::endl;
     return m_card_balloon_2d_nodepath;;
 }
 
 NodePath& NametagGlobals::get_thought_balloon_model() {
+    NametagGlobals_cat.debug() << "get_thought_balloon_model()" << std::endl;
     return m_thought_balloon_nodepath;
 }
 
 NodePath& NametagGlobals::get_camera() {
+    NametagGlobals_cat.debug() << "get_camera()" << std::endl;
     return m_camera_nodepath;
 }
 
 VBase4 NametagGlobals::get_nametag_card_frame() {
+    NametagGlobals_cat.debug() << "get_nametag_card_frame()" << std::endl;
     return m_nametag_frame;
 }
 
-LVecBase4f NametagGlobals::get_name_fg(unsigned int cc, int clickstate)
-{
+LVecBase4f NametagGlobals::get_name_fg(unsigned int cc, int clickstate) {
+    NametagGlobals_cat.debug() << "get_name_fg(" << cc << " " << clickstate << ")" << std::endl;
+    
     if (clickstate < CLICKSTATE_NORMAL || clickstate > CLICKSTATE_DISABLED) {
         return LVecBase4f(1);
     }
@@ -280,8 +312,8 @@ LVecBase4f NametagGlobals::get_name_fg(unsigned int cc, int clickstate)
     return nametag_colors[cc][clickstate][0][0];
 }
 
-color_tuple_t NametagGlobals::get_whisper_colors(unsigned int wt, int clickstate)
-{
+color_tuple_t NametagGlobals::get_whisper_colors(unsigned int wt, int clickstate) {
+    NametagGlobals_cat.debug() << "get_whisper_colors(" << wt << " " << clickstate << ")" << std::endl;
     if (clickstate < CLICKSTATE_NORMAL || clickstate > CLICKSTATE_DISABLED) {
         color_tuple_t ret(2);
         ret[0] = LVecBase4f(1);
@@ -300,26 +332,32 @@ color_tuple_t NametagGlobals::get_whisper_colors(unsigned int wt, int clickstate
 }
 
 bool NametagGlobals::get_want_active_nametags() {
+    NametagGlobals_cat.debug() << "get_want_active_nametags()" << std::endl;
     return m_want_active_nametags;
 }
 
 bool NametagGlobals::get_force_onscreen_chat() {
+    NametagGlobals_cat.debug() << "get_force_onscreen_chat()" << std::endl;
     return m_force_onscreen_chat;
 }
 
 bool NametagGlobals::get_force_2d_nametags() {
+    NametagGlobals_cat.debug() << "get_force_2d_nametags()" << std::endl;
     return m_force_2d_nametags;
 }
 
 bool NametagGlobals::does_color_code_exist(unsigned int cc) {
+    NametagGlobals_cat.debug() << "does_color_code_exist(" << cc << ")" << std::endl;
     return nametag_colors.count(cc) == 1;
 }
 
 bool NametagGlobals::does_whisper_type_exist(unsigned int wt) {
+    NametagGlobals_cat.debug() << "does_whisper_type_exist(" << wt << ")" << std::endl;
     return whisper_colors.count(wt) == 1;
 }
 
 NametagGlobals* NametagGlobals::get_global_ptr() {
+    NametagGlobals_cat.debug() << "get_global_ptr()" << std::endl;
     if ((_global_ptr == nullptr) || (_global_ptr == NULL)) {
         _global_ptr = new NametagGlobals;
     }

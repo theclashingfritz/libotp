@@ -4,7 +4,10 @@
 #include <pandabase.h>
 #include <nodePath.h>
 #include <pandaNode.h>
+#include <notifyCategoryProxy.h>
 #include <typedObject.h>
+
+NotifyCategoryDecl(MarginCell, EXPCL_LIBOTP, EXPTP_LIBOTP);
 
 class MarginManager; 
 class MarginPopup;

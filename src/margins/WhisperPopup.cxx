@@ -57,6 +57,7 @@ void WhisperPopup::update_contents() {
 }
 
 void WhisperPopup::set_clickable(const std::wstring& sender_name, unsigned int from_id, bool todo) {
+    WhisperPopup_cat.debug() << "set_clickable(string sender_name " << from_id << " " << todo << ")" << std::endl;
     m_active = true;
     m_from_id = from_id;
     update_contents();
@@ -64,8 +65,33 @@ void WhisperPopup::set_clickable(const std::wstring& sender_name, unsigned int f
 }
 
 void WhisperPopup::__update_click_region() {
+    WhisperPopup_cat.debug() << "__update_click_region()" << std::endl;
     if (is_displayed() && m_active != false && m_from_id != 0) {
-        update_click_region(frame.get_x(), frame.get_y(), frame.get_z(), frame.get_w());
+        float x = *new float(frame.get_x());
+        if (x > 1) {
+            x = x * 0.10;
+        } else if (x < 0) {
+            x = x * -1;
+        }
+        float y = *new float(frame.get_y());
+        if (y > 1) {
+            y = y * 0.10;
+        } else if (y < 0) {
+            y = y * -1;
+        }
+        float z = *new float(frame.get_z());
+        if (z > 1) {
+            z = z * 0.10;
+        } else if (z < 0) {
+            z =  z * -1;
+        }
+        float w = *new float(frame.get_w());
+        if (w > 1) {
+            w = w * 0.10;
+        } else if (w < 0) {
+            w = w * -1;
+        }
+        update_click_region(x, y, z, w);
     } else {
         return;
     }

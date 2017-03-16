@@ -23,10 +23,14 @@ ClickablePopup::ClickablePopup(NodePath* camera) : PandaNode("popup"), EventRece
         m_region_name += "-region";
         m_region = new MouseWatcherRegion(m_region_name, 0, 0, 0, 0);
         
-        std::string mouse_enter_name = "mouse-enter-%r";
-        std::string mouse_leave_name = "mouse-leave-%r";
-        std::string button_down_name = "button-down-%r";
-        std::string button_up_name = "button-up-%r";
+        std::string mouse_enter_name = "mouse-enter-";
+        mouse_enter_name += m_name;
+        std::string mouse_leave_name = "mouse-leave-";
+        mouse_leave_name += m_name;
+        std::string button_down_name = "button-down-";
+        button_down_name += m_name;
+        std::string button_up_name = "button-up-";
+        button_up_name += m_name;
         
         m_mouse_watcher->set_enter_pattern(mouse_enter_name);
         m_mouse_watcher->set_leave_pattern(mouse_leave_name);
@@ -45,13 +49,13 @@ ClickablePopup::ClickablePopup(NodePath* camera) : PandaNode("popup"), EventRece
         }
     
         ClickablePopup_cat.debug() << "Accepting Enter Pattern!" << std::endl;
-        accept(get_event(m_mouse_watcher->get_enter_pattern()));
+        accept(mouse_enter_name);
         ClickablePopup_cat.debug() << "Accepting Leave Pattern!" << std::endl;
-        accept(get_event(m_mouse_watcher->get_leave_pattern()));
+        accept(mouse_leave_name);
         ClickablePopup_cat.debug() << "Accepting Button Down Pattern!" << std::endl;
-        accept(get_event(m_mouse_watcher->get_button_down_pattern()));
+        accept(button_down_name);
         ClickablePopup_cat.debug() << "Accepting Button Up Pattern!" << std::endl;
-        accept(get_event(m_mouse_watcher->get_button_up_pattern()));
+        accept(button_up_name);
         ClickablePopup_cat.debug() << "Finished Initializing!" << std::endl;
     }
 }
@@ -95,7 +99,7 @@ int ClickablePopup::get_click_state() {
 
 const std::string ClickablePopup::get_event(const std::string& pattern) {
     ClickablePopup_cat.debug() << "get_event(string pattern)" << std::endl;
-    std::string result = pattern;
+    std::string result = *new std::string(pattern);
     result.replace(result.find("%r"), m_name.size(), m_name);
     return result;
 }

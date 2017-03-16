@@ -9,6 +9,7 @@
 #include <typedReferenceCount.h>
 #include <pandabase.h>
 #include <nodePath.h>
+#include <clockObject.h>
 #include "CMover.h"
 
 NotifyCategoryDecl(CMoverGroup, EXPCL_LIBOTP, EXPTP_LIBOTP);
@@ -24,14 +25,12 @@ class EXPCL_LIBOTP CMoverGroup : public TypedReferenceCount {
         void remove_c_mover(string name);
         void process_c_impulses();
         void process_c_impulses_and_integrate();
-        void set_dt(float dt);
+        void set_dt(double dt);
         void set_dt();
         void reset_dt();
-        float get_dt();
+        double get_dt();
         
     private:
-        float m_dt;
-        
         pmap<std::string, CMover*> m_c_movers;
     
     TYPE_HANDLE(CMoverGroup, TypedObject);

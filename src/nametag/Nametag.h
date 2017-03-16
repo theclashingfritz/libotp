@@ -28,6 +28,12 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup {
         Nametag(bool is_3d=false);
         ~Nametag();
         
+        enum { 
+            CName = 1,
+            CSpeech = 2,
+            CThought = 4
+        };
+        
         friend bool operator==(const Nametag& tag1, const Nametag& tag2);
 
         void set_draw_order(uint8_t draw_order);
@@ -56,10 +62,6 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup {
         virtual void tick()=0;
         
         std::wstring get_display_name();
-    
-        uint8_t CSpeech;
-        uint8_t CThought;
-        uint8_t CName;
         
         static const float name_padding;
         static const float chat_alpha;

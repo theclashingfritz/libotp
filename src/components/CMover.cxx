@@ -32,12 +32,14 @@ void CMover::set_rot_speed(float speed) {
     m_rotSpeed = speed;
 }
 
-void CMover::set_dt(float dt) {
-    m_dt = dt;
+void CMover::set_dt(double dt) {
+    ClockObject *co = ClockObject::get_global_clock();
+    co->set_dt(dt);
 }
 
 void CMover::reset_dt() {
-    m_dt = 0.0;
+    ClockObject *co = ClockObject::get_global_clock();
+    co->set_dt(0);
 }
 
 void CMover::add_c_impulse(string name, CImpulse impulse) {
@@ -91,7 +93,8 @@ void CMover::add_shove(Vec3 shove) {
     if (!m_nodepath.is_empty()) {
         CMover_cat.debug() << "add_shove(Vec3 shove)" << std::endl;
         vel = shove;
-        step = vel + (Vec3::zero() * m_dt);
+        rot_mat = Mat3::rotate_mat_normaxis(m_nodepath.get_h(), Vec3::up());
+        step = (Vec3::zero() * get_dt()) + rot_mat.xform(vel);
         m_nodepath.set_fluid_pos(Point3(m_nodepath.get_pos() + step));
     } else {
         CMover_cat.warning() << "add_shove(Vec3 shove) -- Can't push a empty nodepath!" << std::endl;
@@ -102,7 +105,7 @@ void CMover::add_rot_shove(Vec3 shove) {
     if (!m_nodepath.is_empty()) {
         CMover_cat.debug() << "add_rot_shove(Vec3 shove)" << std::endl;
         vel = shove;
-        rotation = vel + (Vec3::zero() * m_dt);
+        rotation = vel + (Vec3::zero() * get_dt());
         m_nodepath.set_hpr(Point3(m_nodepath.get_hpr() + rotation));
     } else {
         CMover_cat.warning() << "add_rot_shove(Vec3 shove) -- Can't rotate a empty nodepath!" << std::endl;
@@ -125,8 +128,9 @@ float CMover::get_rot_speed() {
     return m_rotSpeed;
 }
 
-float CMover::get_dt() {
-    return m_dt;
+double CMover::get_dt() {
+    ClockObject *co = ClockObject::get_global_clock();
+    return co->get_dt();
 }
 
 CImpulse CMover::get_c_impulse(string name) {

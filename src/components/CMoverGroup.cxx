@@ -51,18 +51,22 @@ void CMoverGroup::process_c_impulses_and_integrate() {
     }
 }
 
-void CMoverGroup::set_dt(float dt) {
-    m_dt = dt;
+void CMoverGroup::set_dt(double dt) {
+    ClockObject *co = ClockObject::get_global_clock();
+    co->set_dt(dt);
 }
 
 void CMoverGroup::set_dt() {
-    m_dt = 0.0;
+    ClockObject *co = ClockObject::get_global_clock();
+    co->set_dt(0.0);
 }
 
 void CMoverGroup::reset_dt() {
-    m_dt = 0.0;
+    ClockObject *co = ClockObject::get_global_clock();
+    co->set_dt(0.0);
 }
 
-float CMoverGroup::get_dt() {
-    return m_dt;
+double CMoverGroup::get_dt() {
+    ClockObject *co = ClockObject::get_global_clock();
+    return co->get_dt();
 }

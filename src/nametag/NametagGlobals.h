@@ -9,7 +9,10 @@
 #include <filename.h>
 #include <mouseWatcher.h>
 #include <typedObject.h>
+#include <notifyCategoryProxy.h>
 #include <pandabase.h>
+
+NotifyCategoryDecl(NametagGlobals, EXPCL_LIBOTP, EXPTP_LIBOTP);
 
 class NametagGlobals;
 
@@ -51,14 +54,16 @@ class EXPCL_LIBOTP NametagGlobals : public virtual TypedObject {
             CFNoQuitButton = 256
         };
         
+        enum { 
+            CName = 1,
+            CSpeech = 2,
+            CThought = 4
+        };
+        
         //EXPORT_TEMPLATE_CLASS(EXPCL_LIBOTP, EXPTP_LIBOTP, pmap<unsigned int, state_map_t>)
         
         static color_map_t nametag_colors;
         static whisper_color_map_t whisper_colors;
-        
-        static uint8_t CName;
-        static uint8_t CSpeech;
-        static uint8_t CThought;
        
         static void set_toon(NodePath& toon);
         static void set_arrow_model(NodePath& node);
