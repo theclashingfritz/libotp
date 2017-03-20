@@ -1,9 +1,13 @@
 #pragma once
 
-#include "util.h"
-#include "nametagGlobals.h"
 #include <cstdint>
 #include <cassert>
+#include <exception>
+#include <stdexcept>
+
+#include "util.h"
+#include "nametagGlobals.h"
+
 #include <audioSound.h>
 #include <pandabase.h>
 #include <pandaNode.h>
@@ -53,7 +57,6 @@ class EXPCL_LIBOTP ClickablePopup : public virtual EventReceiver, public PandaNo
         int m_click_state;
         std::string m_click_event;
         std::string m_name;
-        std::string m_region_name;
         PT(MouseWatcherRegion) m_region;
     
     private:

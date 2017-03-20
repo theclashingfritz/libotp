@@ -111,6 +111,8 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup {
         NodePath m_inner_np;
         NodePath m_icon;
         
+        LVecBase4f frame;
+        
         buttons_map_t m_buttons;
         
         std::wstring m_name;

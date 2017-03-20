@@ -29,5 +29,7 @@ class EXPCL_LIBOTP Nametag3d : public virtual Nametag {
         
         float m_bb_offset;
         
+        LVecBase4f frame;
+        
     TYPE_HANDLE(Nametag3d, TypedObject);
 };

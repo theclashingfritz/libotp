@@ -7,6 +7,10 @@
 #include <nodePath.h>
 #include <stdio.h>
 
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
+
 #pragma warning (disable : 4273)
 #pragma warning (disable : 4275)
 #pragma warning (disable : 4217)

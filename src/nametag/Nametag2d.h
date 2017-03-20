@@ -40,5 +40,8 @@ class EXPCL_LIBOTP Nametag2d : public virtual Nametag, public MarginPopup {
         
         NodePath* m_arrow;
         
+    private:
+        static unsigned int Nametag_serial;
+        
     TYPE_HANDLE(Nametag2d, TypedObject);
 };
