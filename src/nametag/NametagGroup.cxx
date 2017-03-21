@@ -13,7 +13,7 @@ NotifyCategoryDef(NametagGroup, "");
 TypeHandle NametagGroup::_type_handle;
 unsigned int NametagGroup::NametagGroup_serial;
 
-NametagGroup::NametagGroup() : m_icon(new PandaNode("icon")), m_chat_timeout_task(nullptr), m_stomp_flags(0), m_color_code(NametagGlobals::CCNormal), m_chat_flags(0), m_font(nullptr), m_avatar(nullptr), m_manager(nullptr), m_qt_color(LVecBase4f(1)), m_active(true), m_chat_page(0), m_visible_3d(true), m_stomp_task(nullptr) {
+NametagGroup::NametagGroup() : m_icon(new PandaNode("icon")), m_chat_timeout_task(nullptr), m_stomp_flags(0), m_color_code(NametagGlobals::CCNormal), m_chat_flags(0), m_font(nullptr), m_manager(nullptr), m_avatar(nullptr), m_qt_color(LVecBase4f(1)), m_active(true), m_chat_page(0), m_visible_3d(true), m_stomp_task(nullptr) {
     NametagGroup_cat.debug() << "__init__()" << std::endl;
     m_nametag_2d = new Nametag2d();
     m_nametag_3d = new Nametag3d();
@@ -32,12 +32,13 @@ NametagGroup::~NametagGroup() {
         delete m_icon;
         m_icon = nullptr;
     }
+    if (m_avatar != NULL && m_avatar != nullptr) {
+        m_avatar = nullptr;
+    }
     if (m_nametag_2d != NULL && m_nametag_2d != nullptr) {
-        delete m_nametag_2d;
         m_nametag_2d = nullptr;
     }
     if (m_nametag_3d != NULL && m_nametag_3d != nullptr) {
-        delete m_nametag_3d;
         m_nametag_3d = nullptr;
     }
     if (m_tick_task != NULL && m_tick_task != nullptr) {

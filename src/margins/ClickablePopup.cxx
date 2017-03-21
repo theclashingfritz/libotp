@@ -17,31 +17,23 @@ ClickablePopup::ClickablePopup(NodePath* camera) : PandaNode("popup"), EventRece
     m_name += ClickablePopup::ClickablePopup_serial++;
     m_from_id = 0;
     m_event_parameter = EventParameter(0);
+    m_region = new MouseWatcherRegion(m_name, 0, 0, 0, 0);
     
     if (m_mouse_watcher != nullptr && m_mouse_watcher != NULL) {
-        try {
-            m_region = new MouseWatcherRegion(m_name, 0, 0, 0, 0);
-        } catch (const std::exception &exc) {
-            ClickablePopup_cat.warning() << exc.what() << std::endl;
-            return;
-        }
-        
         if (m_region != nullptr && m_region != NULL) {
             if (m_mouse_watcher != nullptr && m_mouse_watcher != NULL) {
                 try {
                     m_mouse_watcher->sort_regions();
-                } catch (const std::exception &exc) {
-                        ClickablePopup_cat.warning() << exc.what() << std::endl;
-                        return;
+                } catch (...) {
+                    ClickablePopup_cat.error() << "An unexpected error has occured!" << std::endl;
+                    return;
                 }
-                if (!m_mouse_watcher->has_region(m_region)) {
-                    ClickablePopup_cat.debug() << "Adding Region with a size of " << sizeof(m_region) << "!" << std::endl;
-                    try {
-                        m_mouse_watcher->add_region(m_region);
-                    } catch (const std::exception &exc) {
-                        ClickablePopup_cat.warning() << exc.what() << std::endl;
-                        return;
-                    }
+                ClickablePopup_cat.debug() << "Adding Region with a size of " << sizeof(m_region) << "!" << std::endl;
+                try {
+                    m_mouse_watcher->add_region(m_region);
+                } catch (const std::exception &exc) {
+                    ClickablePopup_cat.error() << exc.what() << std::endl;
+                    return;
                 }
             }
         }
@@ -82,7 +74,7 @@ ClickablePopup::~ClickablePopup() {
 
 void ClickablePopup::destroy() {
     ClickablePopup_cat.debug() << "destory()" << std::endl;
-    this->~ClickablePopup();
+    ignore_all();
 }
 
 void ClickablePopup::set_click_region_event(const std::string& event, int do_id) {
@@ -166,6 +158,9 @@ void ClickablePopup::ignore_all() {
 }
 
 void ClickablePopup::update_click_region(float left, float right, float bottom, float top) {
+    if (left == 0.0 && right == 0.0 && bottom == 0.0 && top == 0.0) {
+        return;
+    }
     ClickablePopup_cat.debug() << "update_click_region(" << left << " " << right << " " << bottom << " " << top << ")" << std::endl;
     CPT(TransformState) transform = NodePath::any_path(this).get_net_transform();
     if (m_cam != nullptr && m_cam != NULL && !m_cam->is_empty()) {
@@ -188,9 +183,7 @@ void ClickablePopup::update_click_region(float left, float right, float bottom, 
         PT(Lens) lens = DCAST(Camera, m_cam->node())->get_lens();
         
         if (!lens->project(LPoint3f(c_top_left), s_top_left) || !lens->project(LPoint3f(c_bottom_right), s_bottom_right)) {
-            if (m_region != nullptr && m_region != NULL) {
-                m_region->set_active(false);
-            }
+            disable_click_region();
             return;
         }
     } else {
@@ -244,6 +237,12 @@ void ClickablePopup::button_up(const Event* ev) {
     }
 }
 
+void ClickablePopup::disable_click_region() {
+    ClickablePopup_cat.debug() << "disable_click_region()" << std::endl;
+    if (m_region != nullptr && m_region != NULL) {
+        m_region->set_active(false);
+    }
+}
 
 void ClickablePopup::handle_event(const Event* ev, void* data) {
     ClickablePopup_cat.debug() << "handle_event(const Event ev, void* data)" << std::endl;

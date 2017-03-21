@@ -44,6 +44,7 @@ NametagGlobals::NametagGlobals() {
 }
 
 NametagGlobals::~NametagGlobals() {
+    m_nodepath EMPTY_NODEPATH;
     delete m_click_sound;
     m_click_sound = nullptr;
     delete m_rollover_sound;

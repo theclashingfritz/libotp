@@ -45,6 +45,7 @@ class EXPCL_LIBOTP ClickablePopup : public virtual EventReceiver, public PandaNo
         const std::string get_event(const std::string& pattern);
         void update_click_state();
         void update_click_region(float left, float right, float bottom, float top);
+        void disable_click_region();
 
         PT(MouseWatcher) m_mouse_watcher;
         PT(AudioSound) m_click_sound, m_rollover_sound;
@@ -57,7 +58,7 @@ class EXPCL_LIBOTP ClickablePopup : public virtual EventReceiver, public PandaNo
         int m_click_state;
         std::string m_click_event;
         std::string m_name;
-        PT(MouseWatcherRegion) m_region;
+        MouseWatcherRegion* m_region;
     
     private:
         static unsigned int ClickablePopup_serial;

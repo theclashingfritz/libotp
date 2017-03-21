@@ -19,7 +19,9 @@ Nametag::Nametag(bool is_3d) : ClickablePopup(is_3d ? &NametagGlobals::m_camera_
 }
 
 Nametag::~Nametag() {
-
+    if (m_avatar != NULL && m_avatar != nullptr) {
+        m_avatar = nullptr;
+    }
 }
 
 /**

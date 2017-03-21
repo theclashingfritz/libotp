@@ -97,6 +97,8 @@ set(LIBPFX "")
 if(WIN32)
     set(LIBPFX "lib")
     add_definitions(/wd4275)
+    add_definitions(/EHa)
+    add_definitions(/GF)
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
