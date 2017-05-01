@@ -13,6 +13,9 @@
 #define CLICKSTATE_HOVER     2
 #define CLICKSTATE_DISABLED  3
 
+#define ROL(x, y) __asm{rol x, y}
+#define ROR(x, y) __asm{ror x, y}
+
 // Handy typedefs.
 typedef LPoint3f LVertexf;
 typedef LVector3f LNormalf;

@@ -30,7 +30,7 @@ class EXPCL_LIBOTP ClickablePopup : public virtual EventReceiver, public PandaNo
     
     PUBLISHED:
         ClickablePopup(NodePath* camera=NULL);
-        ~ClickablePopup();
+        virtual ~ClickablePopup();
         
     public:
         virtual void destroy();

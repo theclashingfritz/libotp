@@ -17,7 +17,7 @@ NotifyCategoryDecl(MarginManager, EXPCL_LIBOTP, EXPTP_LIBOTP);
 class MarginManager : public PandaNode {
     PUBLISHED:
         MarginManager();
-        ~MarginManager();
+        virtual ~MarginManager();
         
         void set_cell_available(int cell_index, bool available);
         void set_cell_available(MarginCell* cell, bool available);

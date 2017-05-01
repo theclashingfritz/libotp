@@ -24,6 +24,9 @@ ClickablePopup::ClickablePopup(NodePath* camera) : PandaNode("popup"), EventRece
             if (m_mouse_watcher != nullptr && m_mouse_watcher != NULL) {
                 try {
                     m_mouse_watcher->sort_regions();
+                } catch (const std::exception &exc) {
+                    ClickablePopup_cat.error() << exc.what() << std::endl;
+                    return;
                 } catch (...) {
                     ClickablePopup_cat.error() << "An unexpected error has occured!" << std::endl;
                     return;
@@ -33,6 +36,9 @@ ClickablePopup::ClickablePopup(NodePath* camera) : PandaNode("popup"), EventRece
                     m_mouse_watcher->add_region(m_region);
                 } catch (const std::exception &exc) {
                     ClickablePopup_cat.error() << exc.what() << std::endl;
+                    return;
+                } catch (...) {
+                    ClickablePopup_cat.error() << "An unexpected error has occured!" << std::endl;
                     return;
                 }
             }
