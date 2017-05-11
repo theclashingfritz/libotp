@@ -126,6 +126,8 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 endif()
 
 add_definitions(-DBUILDING_LIBOTP)
+add_definitions(/O2)
+add_definitions(/Ob1)
 
 set(PANDA_LIBS
     ${LIBPFX}p3framework

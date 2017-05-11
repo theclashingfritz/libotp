@@ -152,15 +152,15 @@ void Nametag::click_state_changed() {
 }
 
 void Nametag::manage(MarginManager* manager) {
-    
+    return;
 }
 
 void Nametag::unmanage(MarginManager* manager) {
-    
+    return;
 }
 
 void Nametag::set_visible(bool flag) {
-    
+    return;
 }
        
 NodePath Nametag::get_button() {

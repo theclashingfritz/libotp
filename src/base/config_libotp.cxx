@@ -34,6 +34,8 @@ void init_libotp() {
 
     initialized = true;
     
+    srand(static_cast<unsigned int>(time(0) + _getpid()));
+    
     ERR_load_crypto_strings();
     OpenSSL_add_all_algorithms();
     OPENSSL_config(NULL);
@@ -57,6 +59,15 @@ void init_libotp() {
     Settings::init_type();
 }
 
+template <class T>
+void * get_address_of(T thing) {
+    return std::addressof(thing);
+}
+
+template <class T>
+std::string get_type_name(T thing) {
+    return typeid(thing).name();
+}
 
 // multi byte to wide char:
 std::wstring s2ws(const std::string& str) {
@@ -97,6 +108,7 @@ PyObject* list_process_modules() {
    DWORD aProcesses[1024], cbNeeded, cProcesses;
    std::vector<std::string> processNames;
   
+#ifdef WIN32
    //This returns a list of handles to processes running on the system as an array.
    if (!EnumProcesses(aProcesses, sizeof(aProcesses), &cbNeeded)) {
       return vectorToList_String(processNames);
@@ -114,11 +126,13 @@ PyObject* list_process_modules() {
          }
       }
    }
+#endif
    
    return vectorToList_String(processNames);
 }
 END_PUBLISH
 
+#ifdef WIN32
 std::pair<std::string, DWORD> GetProcessNameAndID(DWORD processID) {
    TCHAR szProcessName[MAX_PATH] = TEXT("<unknown>");
    std::pair<std::string, DWORD> result;
@@ -181,6 +195,7 @@ std::string GetProcessName(DWORD processID) {
    
    return processName;
 }
+#endif
 
 int process_AES_encrypt(char* data, int size, char* key, char* iv, char* ciphertext) {
     EVP_CIPHER_CTX *ctx;
@@ -194,28 +209,28 @@ int process_AES_encrypt(char* data, int size, char* key, char* iv, char* ciphert
         goto error;
 
     if (keySize == 32 && ivSize == 16) {
-        if (EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, (unsigned char*)key, (unsigned char*)iv) != 1) {
+        if (EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, reinterpret_cast<unsigned char*>(key), reinterpret_cast<unsigned char*>(iv)) != 1) {
             goto error;
         }
     } else if (keySize == 24 && ivSize == 16) {
-        if (EVP_EncryptInit_ex(ctx, EVP_aes_192_cbc(), NULL, (unsigned char*)key, (unsigned char*)iv) != 1) {
+        if (EVP_EncryptInit_ex(ctx, EVP_aes_192_cbc(), NULL, reinterpret_cast<unsigned char*>(key), reinterpret_cast<unsigned char*>(iv)) != 1) {
             goto error;
         }   
     } else if (keySize == 16 && ivSize == 16) {
-        if (EVP_EncryptInit_ex(ctx, EVP_aes_128_cbc(), NULL, (unsigned char*)key, (unsigned char*)iv) != 1) {
+        if (EVP_EncryptInit_ex(ctx, EVP_aes_128_cbc(), NULL, reinterpret_cast<unsigned char*>(key), reinterpret_cast<unsigned char*>(iv)) != 1) {
             goto error;
         }   
     } else {
-        libotp_cat.warning() << "Key (" << keySize * 8 << ") or IV (" << ivSize * 8 << ") is not a correct bit size!" << std::endl;
+        libotp_cat.warning() << "Key (" << keySize << ") or IV (" << ivSize << ") is not a correct byte size!" << std::endl;
         return -1;
     }
 
-    if (EVP_EncryptUpdate(ctx, (unsigned char*)ciphertext, &len, (unsigned char*)data, size) != 1)
+    if (EVP_EncryptUpdate(ctx, reinterpret_cast<unsigned char*>(ciphertext), &len, reinterpret_cast<unsigned char*>(data), size) != 1)
         goto error;
 
     ciphertext_len = len;
 
-    unsigned char * fCiphertext = (unsigned char*)ciphertext;
+    unsigned char * fCiphertext = reinterpret_cast<unsigned char*>(ciphertext);
     if (EVP_EncryptFinal_ex(ctx, &fCiphertext[len], &len) != 1)
         goto error;
 
@@ -240,28 +255,29 @@ int process_AES_decrypt(char* data, int size, char* key, char* iv, char* plainte
         goto error;
     
     if (keySize == 32 && ivSize == 16) {
-        if (EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, (unsigned char*)key, (unsigned char*)iv) != 1) {
+        if (EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, reinterpret_cast<unsigned char*>(key), reinterpret_cast<unsigned char*>(iv)) != 1) {
             goto error;
         }
     } else if (keySize == 24 && ivSize == 16) {
-        if (EVP_DecryptInit_ex(ctx, EVP_aes_192_cbc(), NULL, (unsigned char*)key, (unsigned char*)iv) != 1) {
+        if (EVP_DecryptInit_ex(ctx, EVP_aes_192_cbc(), NULL, reinterpret_cast<unsigned char*>(key), reinterpret_cast<unsigned char*>(iv)) != 1) {
             goto error;
         }
     } else if (keySize == 16 && ivSize == 16) {
-        if (EVP_DecryptInit_ex(ctx, EVP_aes_128_cbc(), NULL, (unsigned char*)key, (unsigned char*)iv) != 1) {
+        if (EVP_DecryptInit_ex(ctx, EVP_aes_128_cbc(), NULL, reinterpret_cast<unsigned char*>(key), reinterpret_cast<unsigned char*>(iv)) != 1) {
             goto error;
         }
     } else {
-        libotp_cat.warning() << "Key (" << keySize * 8 << ") or IV (" << ivSize * 8 << ") is not a correct bit size!" << std::endl;
+        libotp_cat.warning() << "Key (" << keySize << ") or IV (" << ivSize << ") is not a correct byte size!" << std::endl;
         return -1;
     }
 
-    if (EVP_DecryptUpdate(ctx, (unsigned char*)plaintext, &len, (unsigned char*)data, size) != 1)
+    if (EVP_DecryptUpdate(ctx, reinterpret_cast<unsigned char*>(plaintext), &len, reinterpret_cast<unsigned char*>(data), size) != 1)
         goto error;
 
     plaintext_len = len;
 
-    if (EVP_DecryptFinal_ex(ctx, (unsigned char*)plaintext + len, &len) != 1)
+    unsigned char * fPlaintext = reinterpret_cast<unsigned char*>(plaintext);
+    if (EVP_DecryptFinal_ex(ctx, fPlaintext + len, &len) != 1)
         goto error;
 
     EVP_CIPHER_CTX_free(ctx);
@@ -272,6 +288,90 @@ error:
     ERR_print_errors_fp(stderr);
     return -1;
 }
+
+char* AES_encrypt(char* data, char* key, char* iv) {
+    int size, keysize, ivsize, cipherkeysize;
+    std::string sData = *new string(data);
+    std::string sKey = *new string(key);
+    std::string sIv = *new string(iv);
+    
+    PyObject* args = PyTuple_New(3);
+    if (!args) {
+        Py_DECREF(args);
+        throw logic_error("Unable to allocate memory for Python tuple");
+    }
+    
+    PyObject* pdata = Py_BuildValue("s#", data, sData.length());
+    PyObject* pkey = Py_BuildValue("s#", key, sKey.length());
+    PyObject* piv = Py_BuildValue("s#", iv, sIv.length());
+    
+    PyTuple_SET_ITEM(args, 0, pdata);
+    PyTuple_SET_ITEM(args, 1, pkey);
+    PyTuple_SET_ITEM(args, 2, piv);
+
+    if (!PyArg_ParseTuple(args, "s#s#s#", &data, &size, &key, &keysize, &iv, &ivsize)) {
+        return NULL;
+    }
+
+    if (ivsize <= 15 || keysize <= 15) {
+        libotp_cat.warning() << "iv must be 16 bytes and key must be either 16, 24, or 32 bytes. (" << keysize << ", " << ivsize << ") " << std::endl;
+        return NULL;
+    }
+
+    cipherkeysize = ivsize;
+
+    char* ciphertext = new char[size + cipherkeysize];
+
+    int ciphertext_len = process_AES_encrypt(data, size, key, iv, ciphertext);
+    if (ciphertext_len == -1) {
+        delete[] ciphertext;
+        return NULL;
+    }
+
+    return ciphertext;
+};
+
+char* AES_decrypt(char* data, char* key, char* iv) {
+    int size, keysize, ivsize, cipherkeysize;
+    std::string sData = *new string(data);
+    std::string sKey = *new string(key);
+    std::string sIv = *new string(iv);
+    
+    PyObject* args = PyTuple_New(3);
+    if (!args) {
+        Py_DECREF(args);
+        throw logic_error("Unable to allocate memory for Python tuple");
+    }
+    
+    PyObject* pdata = Py_BuildValue("s#", data, sData.length());
+    PyObject* pkey = Py_BuildValue("s#", key, sKey.length());
+    PyObject* piv = Py_BuildValue("s#", iv, sIv.length());
+    
+    PyTuple_SET_ITEM(args, 0, pdata);
+    PyTuple_SET_ITEM(args, 1, pkey);
+    PyTuple_SET_ITEM(args, 2, piv);
+
+    if (!PyArg_ParseTuple(args, "s#s#s#", &data, &size, &key, &keysize, &iv, &ivsize)) {
+        return NULL;
+    }
+
+    if (ivsize <= 15 || keysize <= 15) {
+        libotp_cat.warning() << "iv must be 16 bytes and key must be either 16, 24, or 32 bytes. (" << keysize << ", " << ivsize << ") " << std::endl;
+        return NULL;
+    }
+    
+    cipherkeysize = ivsize;
+
+    char* plaintext = new char[size + cipherkeysize];
+
+    int plaintext_len = process_AES_decrypt(data, size, key, iv, plaintext);
+    if (plaintext_len == -1) {
+        delete[] plaintext;
+        return NULL;
+    }
+
+    return plaintext;
+};
 
 BEGIN_PUBLISH
 PyObject* AES_encrypt(PyObject* pdata, PyObject* pkey, PyObject* piv) {
@@ -299,12 +399,7 @@ PyObject* AES_encrypt(PyObject* pdata, PyObject* pkey, PyObject* piv) {
         return NULL;
     }
     
-    if (ivsize != keysize) {
-        PyErr_Format(PyExc_ValueError, "iv and key are not equal sizes!");
-        return NULL;
-    } else {
-        cipherkeysize = ivsize;
-    }
+    cipherkeysize = ivsize;
 
     char* ciphertext = new char[size + cipherkeysize];
 
@@ -346,12 +441,7 @@ PyObject* AES_decrypt(PyObject* pdata, PyObject* pkey, PyObject* piv) {
         return NULL;
     }
     
-    if (ivsize != keysize) {
-        PyErr_Format(PyExc_ValueError, "iv and key are not equal sizes!");
-        return NULL;
-    } else {
-        cipherkeysize = ivsize;
-    }
+    cipherkeysize = ivsize;
 
     char* plaintext = new char[size + cipherkeysize];
 

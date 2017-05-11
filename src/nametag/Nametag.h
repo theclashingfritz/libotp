@@ -44,7 +44,6 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup {
         void set_avatar(NodePath *avatar);
         void clear_avatar();
         
-        //These are filler commands below
         void manage(MarginManager* manager);
         void unmanage(MarginManager* manager);
         void set_visible(bool flag);

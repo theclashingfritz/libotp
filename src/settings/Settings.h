@@ -24,7 +24,6 @@ class EXPCL_LIBOTP Settings : public TypedReferenceCount {
         Settings();
         ~Settings();
         
-        //Before we set any functions let's define PUBLISHED variables.
         unsigned int GL;
         unsigned int DX9;
         unsigned int TINYDISPLAY;
@@ -32,8 +31,7 @@ class EXPCL_LIBOTP Settings : public TypedReferenceCount {
         unsigned int PRODUCTION;
         unsigned int DEBUG;
         unsigned int DEVELOPMENT;
-        
-        //Now let's do our functions!
+
         void read_settings();
         void write_settings();
         void set_music(bool mode);
