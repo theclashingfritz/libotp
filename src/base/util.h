@@ -1,6 +1,7 @@
 #pragma once
 
 #include "config_libotp.h"
+
 #include <stdint.h>
 #include <pandabase.h>
 #include <nodepath.h>
@@ -12,6 +13,9 @@
 #define CLICKSTATE_CLICK     1
 #define CLICKSTATE_HOVER     2
 #define CLICKSTATE_DISABLED  3
+
+#define ROL(x, y) __asm{rol x, y}
+#define ROR(x, y) __asm{ror x, y}
 
 // Handy typedefs.
 typedef LPoint3f LVertexf;

@@ -67,33 +67,27 @@ void WhisperPopup::set_clickable(const std::wstring& sender_name, unsigned int f
 void WhisperPopup::__update_click_region() {
     WhisperPopup_cat.debug() << "__update_click_region()" << std::endl;
     if (is_displayed() && m_active != false && m_from_id != 0) {
-        float x = *new float(frame.get_x());
-        if (x > 1) {
-            x = x * 0.10;
-        } else if (x < 0) {
-            x = x * -1;
-        }
-        float y = *new float(frame.get_y());
-        if (y > 1) {
-            y = y * 0.10;
-        } else if (y < 0) {
-            y = y * -1;
-        }
         float z = *new float(frame.get_z());
         if (z > 1) {
-            z = z * 0.10;
-        } else if (z < 0) {
-            z =  z * -1;
+            z = 1.00;
+        } else if (z < -1) {
+            z = -1.00;
+        }
+        if (z != z) {
+            z = 1.00;
         }
         float w = *new float(frame.get_w());
         if (w > 1) {
-            w = w * 0.10;
-        } else if (w < 0) {
-            w = w * -1;
+            w = 1.00;
+        } else if (w < -1) {
+            w = -1.00;
         }
-        update_click_region(x, y, z, w);
+        if (w != w) {
+            w = 1.00;
+        }
+        update_click_region(-1, 1, z, w);
     } else {
-        return;
+        disable_click_region();
     }
 }
 

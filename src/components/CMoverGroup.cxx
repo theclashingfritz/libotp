@@ -58,12 +58,12 @@ void CMoverGroup::set_dt(double dt) {
 
 void CMoverGroup::set_dt() {
     ClockObject *co = ClockObject::get_global_clock();
-    co->set_dt(0.0);
+    co->reset();
 }
 
 void CMoverGroup::reset_dt() {
     ClockObject *co = ClockObject::get_global_clock();
-    co->set_dt(0.0);
+    co->reset();
 }
 
 double CMoverGroup::get_dt() {

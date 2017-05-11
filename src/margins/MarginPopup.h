@@ -15,7 +15,7 @@ class MarginCell;
 class MarginPopup  {
     PUBLISHED:
         MarginPopup();
-        ~MarginPopup();
+        virtual ~MarginPopup();
 
         void set_visible(bool flag);
         bool get_visible();

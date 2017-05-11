@@ -7,7 +7,7 @@ NotifyCategoryDef(Nametag3d, "");
 
 TypeHandle Nametag3d::_type_handle;
 
-Nametag3d::Nametag3d() : Nametag(), m_bb_offset(3) {
+Nametag3d::Nametag3d() : Nametag(true), m_bb_offset(3) {
     Nametag3d_cat.debug() << "__init__()" << std::endl;
     m_contents = Nametag::CName | Nametag::CSpeech | Nametag3d::CThought;
     billboard();
@@ -68,24 +68,78 @@ Nametag3d& Nametag3d::operator=(const Nametag3d& tag) {
 
 void Nametag3d::tick() {
     Nametag3d_cat.debug() << "tick()" << std::endl;
+    if (NametagGlobals::m_camera_nodepath.is_empty()) {
+        return;
+    }
     double dist = m_inner_np.get_pos(NametagGlobals::m_camera_nodepath).length();
     dist = (dist > 50 ? 50 : dist) < 1 ? 1: dist;
-    m_inner_np.set_scale(sqrt(dist) * .055);
+    float scale = sqrt(dist) * .055;
+    m_inner_np.set_scale(scale);
     
-    update_click_region(-1, 1, -1, 1);
+    float x = *new float(frame.get_x());
+    if (x > 1) {
+        x = 1.00;
+    } else if (x < -1) {
+        x = -1.00;
+    }
+    x = x * scale;
+    if (x != x) {
+        x = 1.00;
+    }
+    float y = *new float(frame.get_y());
+    if (y > 1) {
+        y = 1.00;
+    } else if (y < -1) {
+        y = -1.00;
+    }
+    y = y * scale;
+    if (y != y) {
+        y = 1.00;
+    }
+    float z = *new float(frame.get_z());
+    if (z > 1) {
+        z = 1.00;
+    } else if (z < -1) {
+        z = -1.00;
+    }
+    z = z * scale;
+    if (z != z) {
+        z = 1.00;
+    }
+    float w = *new float(frame.get_w());
+    if (w > 1) {
+        w = 1.00;
+    } else if (w < -1) {
+        w = -1.00;
+    }
+    w = w * scale;
+    if (w != w) {
+        w = 1.00;
+    }
+    
+    update_click_region(x, y, z, w);
 }
 
 void Nametag3d::billboard() {
     Nametag3d_cat.debug() << "billboard()" << std::endl;
+    if (NametagGlobals::m_camera_nodepath.is_empty()) {
+        return;
+    }
     m_inner_np.set_effect(BillboardEffect::make(LVecBase3f(0, 0, 1), true, false, m_bb_offset, NametagGlobals::m_camera_nodepath, LPoint3f(0)));
 }
 
 ChatBalloon* Nametag3d::get_speech_balloon() {
     Nametag3d_cat.debug() << "get_speech_balloon()" << std::endl;
+    if (NametagGlobals::speech_balloon_3d == nullptr || NametagGlobals::speech_balloon_3d == NULL) {
+        return nullptr;
+    }
     return NametagGlobals::speech_balloon_3d;
 }
 
 ChatBalloon* Nametag3d::get_thought_balloon() {
     Nametag3d_cat.debug() << "get_thought_balloon()" << std::endl;
+    if (NametagGlobals::thought_balloon_3d == nullptr || NametagGlobals::thought_balloon_3d == NULL) {
+        return nullptr;
+    }
     return NametagGlobals::thought_balloon_3d;
 }

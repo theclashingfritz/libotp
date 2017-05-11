@@ -15,7 +15,7 @@ class MarginPopup;
 class MarginCell : public NodePath, public virtual TypedObject {
     PUBLISHED:
         MarginCell(MarginManager* manager);
-        ~MarginCell();
+        virtual ~MarginCell();
         
     public:
         void set_available(bool available);

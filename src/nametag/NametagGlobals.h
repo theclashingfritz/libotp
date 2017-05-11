@@ -59,9 +59,7 @@ class EXPCL_LIBOTP NametagGlobals : public virtual TypedObject {
             CSpeech = 2,
             CThought = 4
         };
-        
-        //EXPORT_TEMPLATE_CLASS(EXPCL_LIBOTP, EXPTP_LIBOTP, pmap<unsigned int, state_map_t>)
-        
+
         static color_map_t nametag_colors;
         static whisper_color_map_t whisper_colors;
        

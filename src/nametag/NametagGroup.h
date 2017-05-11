@@ -8,8 +8,11 @@
 #include <nodepath.h>
 #include <namable.h>
 #include <genericAsyncTask.h>
+#include <notifyCategoryProxy.h>
 #include <typedObject.h>
 #include <pandabase.h>
+
+NotifyCategoryDecl(NametagGroup, EXPCL_LIBOTP, EXPTP_LIBOTP);
 
 class NametagGroup;
 class Nametag2d;
@@ -24,6 +27,18 @@ class EXPCL_LIBOTP NametagGroup : public virtual TypedObject {
     PUBLISHED:
         NametagGroup();
         ~NametagGroup();
+        
+        enum {
+            CCNormal = 0,
+            CCNoChat = 1,
+            CCNonPlayer = 2,
+            CCSuit = 3,
+            CCToonBuilding = 4,
+            CCSuitBuilding = 5,
+            CCHouseBuilding = 6,
+            CCSpeedChat = 7,
+            CCFreeChat = 8
+        };
         
         enum {
             CFSpeech = 1,

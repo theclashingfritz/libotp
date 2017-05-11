@@ -39,7 +39,7 @@ void CMover::set_dt(double dt) {
 
 void CMover::reset_dt() {
     ClockObject *co = ClockObject::get_global_clock();
-    co->set_dt(0);
+    co->reset();
 }
 
 void CMover::add_c_impulse(string name, CImpulse impulse) {

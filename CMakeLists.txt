@@ -19,6 +19,10 @@ endif()
 
 ### Panda3D dir ###
 SET(PANDA_DIR "C:\\Panda3D-1.10.0" CACHE STRING "Panda3D directory.")
+
+### OpenSSL dir ###
+SET(OPEN_SSL_DIR "C:\\openssl" CACHE STRING "OpenSSL directory.")
+
 execute_process(COMMAND ${PYTHON2_EXECUTABLE} "${CMAKE_SOURCE_DIR}/src/run_interrogate.py" "${PANDA_DIR}")
 
 ### Define core components ###
@@ -75,6 +79,13 @@ set(SETTINGS_FILES
     src/settings/Settings.h
 )
 
+set(SECURE_FILES
+    src/secure/KeyDeobfuscator.cxx
+    src/secure/KeyDeobfuscator.h
+    src/secure/KeyScrambler.cxx
+    src/secure/KeyScrambler.h
+)
+
 set(IGATE_FILES
     src/base_igate.cxx
     src/components_igate.cxx
@@ -88,15 +99,20 @@ include_directories(src/base)
 include_directories(src/nametag)
 include_directories(src/margins)
 include_directories(src/settings)
+include_directories(src/secure)
 include_directories(src/components)
 include_directories(${PANDA_DIR}/include)
+include_directories(${OPEN_SSL_DIR}/include)
 include_directories(${PYTHON_INCLUDE_DIR})
 link_directories(${PANDA_DIR}/lib)
+link_directories(${OPEN_SSL_DIR}/lib)
 
 set(LIBPFX "")
 if(WIN32)
     set(LIBPFX "lib")
     add_definitions(/wd4275)
+    add_definitions(/EHa)
+    add_definitions(/GF)
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
@@ -110,6 +126,8 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 endif()
 
 add_definitions(-DBUILDING_LIBOTP)
+add_definitions(/O2)
+add_definitions(/Ob1)
 
 set(PANDA_LIBS
     ${LIBPFX}p3framework
@@ -121,6 +139,15 @@ set(PANDA_LIBS
     ${LIBPFX}p3direct
     ${LIBPFX}p3pandatoolbase
 )
+
+set(OPEN_SSL_LIBS
+    ${LIBPFX}pandaeay
+    ${LIBPFX}pandassl
+)
+if(WIN32)
+    LIST(APPEND OPEN_SSL_LIBS crypt32)
+    LIST(APPEND OPEN_SSL_LIBS psapi)
+endif()
 
 # Add p3interrogatedb, if it exists
 find_library(HAVE_P3INTERROGATEDB
@@ -140,6 +167,7 @@ add_library(libotp SHARED
     ${NAMETAG_FILES}
     ${MARGINS_FILES}
     ${SETTINGS_FILES}
+    ${SECURE_FILES}
     ${IGATE_FILES}
 )
 
@@ -147,7 +175,7 @@ if(WIN32)
     SET_TARGET_PROPERTIES(libotp PROPERTIES SUFFIX ".pyd")
 endif()
 
-target_link_libraries(libotp ${PANDA_LIBS} ${PYTHON_LIBRARY})
+target_link_libraries(libotp ${PANDA_LIBS} ${OPEN_SSL_LIBS} ${PYTHON_LIBRARY})
 
 add_custom_command(TARGET libotp
                    PRE_BUILD
@@ -160,4 +188,5 @@ source_group("components" FILES ${COMPONENTS_FILES})
 source_group("nametag" FILES ${NAMETAG_FILES})
 source_group("margins" FILES ${MARGINS_FILES})
 source_group("settings" FILES ${SETTINGS_FILES})
+source_group("secure" FILES ${SECURE_FILES})
 source_group("interrogate_files" FILES ${IGATE_FILES})
