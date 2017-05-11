@@ -72,7 +72,7 @@ void Settings::read_settings() {
     }
     m_vfs->read_file(found, m_data, true);
     if (m_data.size() <= 12) {
-        Settings_cat.debug() << "Settings detected to be to small." << std::endl;
+        Settings_cat.debug() << "Settings detected to be too small." << std::endl;
         write_settings();
         return;
     };

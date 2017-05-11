@@ -61,16 +61,19 @@ void init_libotp() {
 
 template <class T>
 void * get_address_of(T thing) {
+    libotp_cat.debug() << "get_address_of(T thing)" << std::endl;
     return std::addressof(thing);
 }
 
 template <class T>
 std::string get_type_name(T thing) {
+    libotp_cat.debug() << "get_type_name(T thing)" << std::endl;
     return typeid(thing).name();
 }
 
 // multi byte to wide char:
 std::wstring s2ws(const std::string& str) {
+    libotp_cat.debug() << "s2ws(const std::string& str)" << std::endl;
     int size_needed = MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), NULL, 0);
     std::wstring wstrTo(size_needed, 0);
     MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), &wstrTo[0], size_needed);
@@ -79,6 +82,7 @@ std::wstring s2ws(const std::string& str) {
 
 // wide char to multi byte:
 std::string ws2s(const std::wstring& wstr) {
+    libotp_cat.debug() << "ws2s(const std::wstring& wstr)" << std::endl;
     int size_needed = WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), int(wstr.length() + 1), 0, 0, 0, 0); 
     std::string strTo(size_needed, 0);
     WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), int(wstr.length() + 1), &strTo[0], size_needed, 0, 0); 
@@ -86,6 +90,7 @@ std::string ws2s(const std::wstring& wstr) {
 }
 
 PyObject* vectorToList_String(std::vector<std::string> &data) {
+    libotp_cat.debug() << "vectorToList_String(std::vector<std::string> &data)" << std::endl;
     PyObject* listObj = PyList_New(data.size());
 	if (!listObj) {
         throw logic_error("Unable to allocate memory for Python list");
@@ -104,6 +109,7 @@ PyObject* vectorToList_String(std::vector<std::string> &data) {
 
 BEGIN_PUBLISH
 PyObject* list_process_modules() {
+   libotp_cat.debug() << "list_process_modules()" << std::endl;
    // Get the list of process identifiers.  
    DWORD aProcesses[1024], cbNeeded, cProcesses;
    std::vector<std::string> processNames;
@@ -134,6 +140,7 @@ END_PUBLISH
 
 #ifdef WIN32
 std::pair<std::string, DWORD> GetProcessNameAndID(DWORD processID) {
+   libotp_cat.debug() << " GetProcessNameAndID(DWORD processID)" << std::endl;
    TCHAR szProcessName[MAX_PATH] = TEXT("<unknown>");
    std::pair<std::string, DWORD> result;
    std::string processName;
@@ -167,6 +174,7 @@ std::pair<std::string, DWORD> GetProcessNameAndID(DWORD processID) {
 }
 
 std::string GetProcessName(DWORD processID) {
+   libotp_cat.debug() << " GetProcessName(DWORD processID)" << std::endl;
    TCHAR szProcessName[MAX_PATH] = TEXT("<unknown>");
    std::string processName;
   
@@ -198,6 +206,7 @@ std::string GetProcessName(DWORD processID) {
 #endif
 
 int process_AES_encrypt(char* data, int size, char* key, char* iv, char* ciphertext) {
+    libotp_cat.debug() << "process_AES_encrypt(char* data, int size, char* key, char* iv, char* ciphertext)" << std::endl;
     EVP_CIPHER_CTX *ctx;
     int ciphertext_len, len;
     string keyS = *new string(key);
@@ -244,6 +253,7 @@ error:
 }
 
 int process_AES_decrypt(char* data, int size, char* key, char* iv, char* plaintext) {
+    libotp_cat.debug() << "process_AES_decrypt(char* data, int size, char* key, char* iv, char* plaintext)" << std::endl;
     EVP_CIPHER_CTX *ctx;
     int plaintext_len, len;
     string keyS = *new string(key);
@@ -290,6 +300,7 @@ error:
 }
 
 char* AES_encrypt(char* data, char* key, char* iv) {
+    libotp_cat.debug() << "AES_encrypt(char* data, char* key, char* iv)" << std::endl;
     int size, keysize, ivsize, cipherkeysize;
     std::string sData = *new string(data);
     std::string sKey = *new string(key);
@@ -332,6 +343,7 @@ char* AES_encrypt(char* data, char* key, char* iv) {
 };
 
 char* AES_decrypt(char* data, char* key, char* iv) {
+    libotp_cat.debug() << "AES_decrypt(char* data, char* key, char* iv)" << std::endl;
     int size, keysize, ivsize, cipherkeysize;
     std::string sData = *new string(data);
     std::string sKey = *new string(key);
@@ -375,6 +387,7 @@ char* AES_decrypt(char* data, char* key, char* iv) {
 
 BEGIN_PUBLISH
 PyObject* AES_encrypt(PyObject* pdata, PyObject* pkey, PyObject* piv) {
+    libotp_cat.debug() << "AES_encrypt(PyObject* pdata, PyObject* pkey, PyObject* piv)" << std::endl;
     char* data;
     char* key;
     char* iv;
@@ -417,6 +430,7 @@ PyObject* AES_encrypt(PyObject* pdata, PyObject* pkey, PyObject* piv) {
 };
 
 PyObject* AES_decrypt(PyObject* pdata, PyObject* pkey, PyObject* piv) {
+    libotp_cat.debug() << "AES_decrypt(PyObject* pdata, PyObject* pkey, PyObject* piv)" << std::endl;
     char* data;
     char* key;
     char* iv;
