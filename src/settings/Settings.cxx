@@ -60,7 +60,7 @@ Settings::~Settings() {
 
 void Settings::read_settings() {
     /**
-     * Reads the Settings from the Settings if it exist. If not the 
+     * Reads the Settings from the Settings file if it exist. If not the 
      * default one is created and the default settings are written to it.
      */
     Filename found(m_file);
