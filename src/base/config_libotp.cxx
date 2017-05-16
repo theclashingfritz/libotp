@@ -107,7 +107,7 @@ std::string XOR(std::string value, std::string key) {
 };
 
 char * XOR(char *value, char *key) {
-    if ((char == NULL || nullptr) || (key == NULL || nullptr)) {
+    if ((char == NULL || char == nullptr) || (key == NULL || key == nullptr)) {
         return nullptr;
     }
     char *retval = value;
