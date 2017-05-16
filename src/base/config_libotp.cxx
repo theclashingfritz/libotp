@@ -106,7 +106,10 @@ std::string XOR(std::string value, std::string key) {
     return retval;
 };
 
-char * XOR(char value[], char key[]) {
+char * XOR(char *value, char *key) {
+    if ((char == NULL || nullptr) || (key == NULL || nullptr)) {
+        return nullptr;
+    }
     char *retval = value;
     std::string sk = *new std::string(key);
     std::string sv = *new std::string(value);
@@ -427,9 +430,9 @@ char* AES_encrypt(char* data, char* key, char* iv) {
 char* AES_decrypt(char* data, char* key, char* iv) {
     libotp_cat.debug() << "AES_decrypt(char* data, char* key, char* iv)" << std::endl;
     int size, keysize, ivsize, cipherkeysize;
-    std::string sData = *new string(data);
-    std::string sKey = *new string(key);
-    std::string sIv = *new string(iv);
+    std::string sData = *new std::string(data);
+    std::string sKey = *new std::string(key);
+    std::string sIv = *new std::string(iv);
     
     PyObject* args = PyTuple_New(3);
     if (!args) {

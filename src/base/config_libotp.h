@@ -56,7 +56,7 @@ typedef pmap<unsigned int, state_map_simple_t> whisper_color_map_t; // {wt: stat
 EXPCL_LIBOTP std::wstring s2ws(const std::string& str);
 EXPCL_LIBOTP std::string ws2s(const std::wstring& wstr);
 EXPCL_LIBOTP std::string XOR(std::string value, std::string key);
-EXPTP_LIBOTP char *XOR(char value[], char key[]);
+EXPTP_LIBOTP char *XOR(char *value, char *key);
 
 #ifdef WIN32
 EXPCL_LIBOTP std::pair<std::string, DWORD> GetProcessNameAndID(DWORD processID);
