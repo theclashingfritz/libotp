@@ -6,8 +6,10 @@ TypeHandle Settings::_type_handle;
 
 Settings* Settings::_global_ptr = nullptr;
 
-//Feel free to define your own key and iv here. These are just the defaults.
+//Feel free to define your own keys and iv here. These are just the defaults.
 char m_aes_key[] = {0xE5, 0xE9, 0xFA, 0x1B, 0xA3, 0x1E, 0xCD, 0x1A, 0xE8, 0x4F, 0x75, 0xCA, 0xAA, 0x47, 0x4F, 0x3A, '\0'};
+char m_aes_key1[] = {0xA9, 0x38, 0x7F, 0x9D, 0x28, 0x70, 0x3E, 0x20, 0x93, 0x03, 0xDF, 0x92, 0x07, 0x4C, 0x4A, 0xF7, '\0'};
+char c_constant[] = {0x1F, 0xF9, 0xE9, 0xAA, 0xC5, 0xFE, 0x04, 0x08, 0x02, 0x45, 0x91, 0xDC, 0x5D, 0x52, 0x76, 0x8A, '\0'};
 char c_iv[] = {0xE9, 0x3D, 0xA4, 0x65, 0xB3, 0x09, 0xC5, 0x3F, 0xEC, 0x5F, 0xF9, 0x3C, 0x96, 0x37, 0xDA, 0x58, '\0'};
 
 Settings::Settings() {
@@ -19,7 +21,7 @@ Settings::Settings() {
     m_file = Filename(m_file.to_os_long_name()); //Now let's do the real file.
     
     //Define our Settings Version!
-    m_version = "v1.0.7";
+    m_version = "v1.0.9";
     
     //Now define any PUBLISHED variables
     GL = 1;
@@ -88,7 +90,9 @@ void Settings::read_settings() {
     char * e_data = new char[m_data.length()];
     memcpy(e_data, m_data.c_str(), m_data.length());
     
-    e_data = AES_decrypt(e_data, m_aes_key, c_iv);
+    char *unscrambled_key = unscramble_key(m_aes_key, m_aes_key1, c_constant);
+    
+    e_data = AES_decrypt(e_data, unscrambled_key, c_iv);
     
     if (e_data != NULL && e_data != nullptr) {
         m_data = *new string(e_data);
@@ -159,7 +163,9 @@ void Settings::write_settings() {
     char * e_data = new char[m_data.length()];
     memcpy(e_data, m_data.c_str(), m_data.length());
     
-    e_data = AES_encrypt(e_data, m_aes_key, c_iv);
+    char *unscrambled_key = unscramble_key(m_aes_key, m_aes_key1, c_constant);
+    
+    e_data = AES_encrypt(e_data, unscrambled_key, c_iv);
     
     if (e_data != NULL && e_data != nullptr) {
         m_data = *new string(e_data);

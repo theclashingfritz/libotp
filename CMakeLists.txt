@@ -79,13 +79,6 @@ set(SETTINGS_FILES
     src/settings/Settings.h
 )
 
-set(SECURE_FILES
-    src/secure/KeyDeobfuscator.cxx
-    src/secure/KeyDeobfuscator.h
-    src/secure/KeyScrambler.cxx
-    src/secure/KeyScrambler.h
-)
-
 set(IGATE_FILES
     src/base_igate.cxx
     src/components_igate.cxx
