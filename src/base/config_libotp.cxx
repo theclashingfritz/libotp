@@ -108,8 +108,10 @@ std::string XOR(std::string value, std::string key) {
 
 char * XOR(char value[], char key[]) {
     char *retval = value;
-    long unsigned int klen = strlen(key);
-    long unsigned int vlen = strlen(value);
+    std::string k = *new std::string(key);
+    std::string v = *new std::string(value);
+    long unsigned int klen = k.length();
+    long unsigned int vlen = v.length();
     unsigned long int k = 0;
     unsigned long int v = 0;
     for (; v < vlen; v++) {
@@ -582,7 +584,6 @@ char *unscramble_key(char key1[], char key2[], char C[]) {
     key = XOR((XOR((XOR(key1, key2)), key2)), XOR(key1, key2));
 
     ROL(key, 2);
-    
     
     return key;
 };
