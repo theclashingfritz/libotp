@@ -578,7 +578,7 @@ char *unscramble_key(char key1[], char key2[], char C[]) {
     ROL(key2, 12);
     ROL(C, 32);
     
-    char *key = new char[1024]
+    char *key = new char[1024];
     key = XOR((XOR((XOR(key1, key2)), key2)), XOR(key1, key2));
 
     ROL(key, 2);
