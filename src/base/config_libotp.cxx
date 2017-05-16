@@ -573,14 +573,16 @@ std::string unscramble_key(std::string key1, std::string key2, std::string C) {
 };
 END_PUBLISH
 
-auto unscramble_key(char key1[], char key2[], char C[]) {
+char *unscramble_key(char key1[], char key2[], char C[]) {
     ROL(key1, 56);
     ROL(key2, 12);
     ROL(C, 32);
     
-    char key[] = XOR((XOR((XOR(key1, key2)), key2)), XOR(key1, key2));
+    char *key = new char[1024]
+    key = XOR((XOR((XOR(key1, key2)), key2)), XOR(key1, key2));
 
     ROL(key, 2);
+    
     
     return key;
 };
