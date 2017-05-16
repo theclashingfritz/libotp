@@ -108,10 +108,10 @@ std::string XOR(std::string value, std::string key) {
 
 char * XOR(char value[], char key[]) {
     char *retval = value;
-    std::string k = *new std::string(key);
-    std::string v = *new std::string(value);
-    long unsigned int klen = k.length();
-    long unsigned int vlen = v.length();
+    std::string sk = *new std::string(key);
+    std::string sv = *new std::string(value);
+    long unsigned int klen = sk.length();
+    long unsigned int vlen = sv.length();
     unsigned long int k = 0;
     unsigned long int v = 0;
     for (; v < vlen; v++) {
