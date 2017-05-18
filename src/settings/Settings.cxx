@@ -56,6 +56,10 @@ Settings::~Settings() {
     /**
      * Deconstructs the Settings class.
      */
+    gen_random(m_aes_key, get_char_length(m_aes_key));
+    gen_random(m_aes_key1, get_char_length(m_aes_key1));
+    gen_random(c_constant, get_char_length(c_constant));
+    gen_random(c_iv, get_char_length(c_iv));
     delete[] m_aes_key; 
     delete[] m_aes_key1; 
     delete[] c_constant; 
