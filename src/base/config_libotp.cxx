@@ -61,18 +61,49 @@ void init_libotp() {
     NametagFloat3d::init_type();
     Nametag::init_type();
     Settings::init_type();
+    
+    _CrtDumpMemoryLeaks();
 };
 
 template <class T>
-void * get_address_of(T thing) {
+INLINE void * get_address_of(T thing) {
     libotp_cat.debug() << "get_address_of(T thing)" << std::endl;
     return std::addressof(thing);
 };
 
 template <class T>
-std::string get_type_name(T thing) {
+INLINE std::string get_type_name(T thing) {
     libotp_cat.debug() << "get_type_name(T thing)" << std::endl;
     return typeid(thing).name();
+};
+
+INLINE int get_char_length(char * chr) {
+    libotp_cat.debug() << "get_char_length(char * chr)" << std::endl;
+    if (chr == NULL || chr == nullptr) {
+        return 0;
+    }
+    std::string chr_string(chr);
+    return chr_string.length();
+};
+
+INLINE unsigned char rolcharleft(unsigned char x, int n) {
+    return (x << n) | (x >> (8 - n));
+};
+
+INLINE unsigned char rolcharright(unsigned char x, int n) {
+    return (x >> n) | (x << (8 - n));
+};
+
+void rotatecharleft(char *s, const int len, int amount) {
+    for (int i = 0; i < len; ++i) {
+        s[i] = static_cast<char>(rolcharleft(static_cast<unsigned char>(s[i]), amount));
+    }
+};
+
+void rotatecharright(char *s, const int len, int amount) {
+    for (int i = 0; i < len; ++i) {
+        s[i] = static_cast<char>(rolcharright(static_cast<unsigned char>(s[i]), amount));
+    }
 };
 
 // multi byte to wide char:
@@ -97,24 +128,6 @@ std::string XOR(std::string value, std::string key) {
     std::string retval(value);
     long unsigned int klen = key.length();
     long unsigned int vlen = value.length();
-    unsigned long int k = 0;
-    unsigned long int v = 0;
-    for (; v < vlen; v++) {
-      retval[v] = value[v] ^ key[k];
-      k = (++k < klen ? k : 0);
-    }
-    return retval;
-};
-
-char * XOR(char *value, char *key) {
-    if ((value == NULL || value == nullptr) || (key == NULL || key == nullptr)) {
-        return nullptr;
-    }
-    char *retval = value;
-    std::string sk = *new std::string(key);
-    std::string sv = *new std::string(value);
-    long unsigned int klen = sk.length();
-    long unsigned int vlen = sv.length();
     unsigned long int k = 0;
     unsigned long int v = 0;
     for (; v < vlen; v++) {
@@ -294,10 +307,8 @@ int process_AES_encrypt(char* data, int size, char* key, char* iv, char* ciphert
     libotp_cat.debug() << "process_AES_encrypt(char* data, int size, char* key, char* iv, char* ciphertext)" << std::endl;
     EVP_CIPHER_CTX *ctx;
     int ciphertext_len, len;
-    string keyS = *new string(key);
-    string ivS = *new string(iv);
-    unsigned int keySize = keyS.length();
-    unsigned int ivSize = ivS.length();
+    unsigned int keySize = get_char_length(key);
+    unsigned int ivSize = get_char_length(iv);
 
     if (!(ctx = EVP_CIPHER_CTX_new()))
         goto error;
@@ -341,10 +352,8 @@ int process_AES_decrypt(char* data, int size, char* key, char* iv, char* plainte
     libotp_cat.debug() << "process_AES_decrypt(char* data, int size, char* key, char* iv, char* plaintext)" << std::endl;
     EVP_CIPHER_CTX *ctx;
     int plaintext_len, len;
-    string keyS = *new string(key);
-    string ivS = *new string(iv);
-    unsigned int keySize = keyS.length();
-    unsigned int ivSize = ivS.length();
+    unsigned int keySize = get_char_length(key);
+    unsigned int ivSize = get_char_length(iv);
 
     if (!(ctx = EVP_CIPHER_CTX_new()))
         goto error;
@@ -387,9 +396,6 @@ error:
 char* AES_encrypt(char* data, char* key, char* iv) {
     libotp_cat.debug() << "AES_encrypt(char* data, char* key, char* iv)" << std::endl;
     int size, keysize, ivsize, cipherkeysize;
-    std::string sData = *new string(data);
-    std::string sKey = *new string(key);
-    std::string sIv = *new string(iv);
     
     PyObject* args = PyTuple_New(3);
     if (!args) {
@@ -397,9 +403,9 @@ char* AES_encrypt(char* data, char* key, char* iv) {
         throw logic_error("Unable to allocate memory for Python tuple");
     }
     
-    PyObject* pdata = Py_BuildValue("s#", data, sData.length());
-    PyObject* pkey = Py_BuildValue("s#", key, sKey.length());
-    PyObject* piv = Py_BuildValue("s#", iv, sIv.length());
+    PyObject* pdata = Py_BuildValue("s#", data, get_char_length(data));
+    PyObject* pkey = Py_BuildValue("s#", key, get_char_length(key));
+    PyObject* piv = Py_BuildValue("s#", iv, get_char_length(iv));
     
     PyTuple_SET_ITEM(args, 0, pdata);
     PyTuple_SET_ITEM(args, 1, pkey);
@@ -410,7 +416,7 @@ char* AES_encrypt(char* data, char* key, char* iv) {
     }
 
     if (ivsize <= 15 || keysize <= 15) {
-        libotp_cat.warning() << "iv must be 16 bytes and key must be either 16, 24, or 32 bytes. (" << keysize << ", " << ivsize << ") " << std::endl;
+        libotp_cat.warning() << "iv (" << iv << ") must be 16 bytes and key (" << key << ") must be either 16, 24, or 32 bytes. (" << keysize << ", " << ivsize << ") " << std::endl;
         return NULL;
     }
 
@@ -430,9 +436,6 @@ char* AES_encrypt(char* data, char* key, char* iv) {
 char* AES_decrypt(char* data, char* key, char* iv) {
     libotp_cat.debug() << "AES_decrypt(char* data, char* key, char* iv)" << std::endl;
     int size, keysize, ivsize, cipherkeysize;
-    std::string sData = *new std::string(data);
-    std::string sKey = *new std::string(key);
-    std::string sIv = *new std::string(iv);
     
     PyObject* args = PyTuple_New(3);
     if (!args) {
@@ -440,9 +443,9 @@ char* AES_decrypt(char* data, char* key, char* iv) {
         throw logic_error("Unable to allocate memory for Python tuple");
     }
     
-    PyObject* pdata = Py_BuildValue("s#", data, sData.length());
-    PyObject* pkey = Py_BuildValue("s#", key, sKey.length());
-    PyObject* piv = Py_BuildValue("s#", iv, sIv.length());
+    PyObject* pdata = Py_BuildValue("s#", data, get_char_length(data));
+    PyObject* pkey = Py_BuildValue("s#", key, get_char_length(key));
+    PyObject* piv = Py_BuildValue("s#", iv, get_char_length(iv));
     
     PyTuple_SET_ITEM(args, 0, pdata);
     PyTuple_SET_ITEM(args, 1, pkey);
@@ -453,7 +456,7 @@ char* AES_decrypt(char* data, char* key, char* iv) {
     }
 
     if (ivsize <= 15 || keysize <= 15) {
-        libotp_cat.warning() << "iv must be 16 bytes and key must be either 16, 24, or 32 bytes. (" << keysize << ", " << ivsize << ") " << std::endl;
+        libotp_cat.warning() << "iv (" << iv << ") must be 16 bytes and key (" << key << ") must be either 16, 24, or 32 bytes. (" << keysize << ", " << ivsize << ") " << std::endl;
         return NULL;
     }
     
@@ -577,19 +580,6 @@ std::string unscramble_key(std::string key1, std::string key2, std::string C) {
     return key;
 };
 END_PUBLISH
-
-char *unscramble_key(char key1[], char key2[], char C[]) {
-    ROL(key1, 56);
-    ROL(key2, 12);
-    ROL(C, 32);
-    
-    char *key = new char[1024];
-    key = XOR((XOR((XOR(key1, key2)), key2)), XOR(key1, key2));
-
-    ROL(key, 2);
-    
-    return key;
-};
 
 std::string process_key_chunks(std::string chunk1, std::string chunk2, std::string chunk3, std::string chunk4) {
     /*

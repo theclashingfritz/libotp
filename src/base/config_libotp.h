@@ -24,6 +24,10 @@
 #include <process.h>
 #include <Python.h>
 
+#define _CRTDBG_MAP_ALLOC  
+#include <crtdbg.h>  
+
+
 #ifdef NDEBUG
 #undef NDEBUG
 #endif
@@ -56,7 +60,6 @@ typedef pmap<unsigned int, state_map_simple_t> whisper_color_map_t; // {wt: stat
 EXPCL_LIBOTP std::wstring s2ws(const std::string& str);
 EXPCL_LIBOTP std::string ws2s(const std::wstring& wstr);
 EXPCL_LIBOTP std::string XOR(std::string value, std::string key);
-EXPTP_LIBOTP char *XOR(char *value, char *key);
 
 #ifdef WIN32
 EXPCL_LIBOTP std::pair<std::string, DWORD> GetProcessNameAndID(DWORD processID);
@@ -68,10 +71,18 @@ EXPCL_LIBOTP int process_AES_encrypt(char* data, int size, char* key, char* iv, 
 EXPCL_LIBOTP int process_AES_decrypt(char* data, int size, char* key, char* iv, char* ciphertext);
 
 template <class T>
-EXPCL_LIBOTP void * get_address_of(T thing);
+EXPCL_LIBOTP INLINE void * get_address_of(T thing);
 
 template <class T>
-EXPCL_LIBOTP std::string get_type_name(T thing);
+EXPCL_LIBOTP INLINE std::string get_type_name(T thing);
+
+EXPCL_LIBOTP INLINE int get_char_length(char * chr);
+
+EXPTP_LIBOTP INLINE unsigned char rolcharleft(unsigned char x, int n);
+EXPTP_LIBOTP INLINE unsigned char rolcharright(unsigned char x, int n);
+
+EXPTP_LIBOTP void rotatecharleft(char *s, const int len, int amount);
+EXPTP_LIBOTP void rotatecharright(char *s, const int len, int amount);
 
 EXPCL_LIBOTP char* AES_encrypt(char* data, char* key, char* iv);
 EXPCL_LIBOTP char* AES_decrypt(char* data, char* key, char* iv);
@@ -84,8 +95,6 @@ EXPCL_LIBOTP std::string unscramble_key(std::string key1, std::string key2, std:
 EXPCL_LIBOTP std::string caculate_deobfuscated_key(std::string chunk1, std::string chunk2, std::string chunk3, std::string chunk4);
 EXPCL_LIBOTP std::string caculate_deobfuscated_key(std::string key);
 END_PUBLISH
-
-EXPCL_LIBOTP char * unscramble_key(char key1[], char key2[], char C[]);
 
 NotifyCategoryDecl(libotp, EXPCL_LIBOTP, EXPTP_LIBOTP);
 extern void init_libotp();

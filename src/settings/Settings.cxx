@@ -57,6 +57,8 @@ Settings::~Settings() {
      * Deconstructs the Settings class.
      */
     delete[] m_aes_key; 
+    delete[] m_aes_key1; 
+    delete[] c_constant; 
     delete[] c_iv;
 }
 
@@ -90,9 +92,9 @@ void Settings::read_settings() {
     char * e_data = new char[m_data.length()];
     memcpy(e_data, m_data.c_str(), m_data.length());
     
-    char *unscrambled_key = unscramble_key(m_aes_key, m_aes_key1, c_constant);
+    rotatecharright(m_aes_key, get_char_length(m_aes_key), 2);
     
-    e_data = AES_decrypt(e_data, unscrambled_key, c_iv);
+    e_data = AES_decrypt(e_data, m_aes_key, c_iv);
     
     if (e_data != NULL && e_data != nullptr) {
         m_data = *new string(e_data);
@@ -163,9 +165,9 @@ void Settings::write_settings() {
     char * e_data = new char[m_data.length()];
     memcpy(e_data, m_data.c_str(), m_data.length());
     
-    char *unscrambled_key = unscramble_key(m_aes_key, m_aes_key1, c_constant);
+    rotatecharright(m_aes_key, get_char_length(m_aes_key), 2);
     
-    e_data = AES_encrypt(e_data, unscrambled_key, c_iv);
+    e_data = AES_encrypt(e_data, m_aes_key, c_iv);
     
     if (e_data != NULL && e_data != nullptr) {
         m_data = *new string(e_data);
