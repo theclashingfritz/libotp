@@ -61,8 +61,6 @@ void init_libotp() {
     NametagFloat3d::init_type();
     Nametag::init_type();
     Settings::init_type();
-    
-    _CrtDumpMemoryLeaks();
 };
 
 template <class T>
