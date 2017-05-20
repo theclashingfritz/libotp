@@ -20,8 +20,10 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef WIN32
 #include <psapi.h>
 #include <process.h>
+#endif
 #include <Python.h>
 
 #define _CRTDBG_MAP_ALLOC  
@@ -60,6 +62,15 @@ typedef pmap<unsigned int, state_map_simple_t> whisper_color_map_t; // {wt: stat
 EXPCL_LIBOTP std::wstring s2ws(const std::string& str);
 EXPCL_LIBOTP std::string ws2s(const std::wstring& wstr);
 EXPCL_LIBOTP std::string XOR(std::string value, std::string key);
+EXPCL_LIBOTP char *XOR(char *value, char *key);
+
+EXPCL_LIBOTP INLINE std::string char_to_string(char * chr);
+
+EXPCL_LIBOTP std::string string_to_hex(const std::string& input);
+EXPCL_LIBOTP std::string hex_to_string(const std::string& input);
+EXPCL_LIBOTP std::string hex_str_XOR(std::string const & s1, std::string const & s2);
+
+EXPCL_LIBOTP INLINE unsigned int value(char c);
 
 #ifdef WIN32
 EXPCL_LIBOTP std::pair<std::string, DWORD> GetProcessNameAndID(DWORD processID);
@@ -77,6 +88,10 @@ template <class T>
 EXPCL_LIBOTP INLINE std::string get_type_name(T thing);
 
 EXPCL_LIBOTP INLINE int get_char_length(char * chr);
+
+EXPCL_LIBOTP void gen_random(char *s, const int len);
+EXPCL_LIBOTP char gen_random_char();
+EXPCL_LIBOTP std::string gen_random_string(const int len);
 
 EXPTP_LIBOTP INLINE unsigned char rolcharleft(unsigned char x, int n);
 EXPTP_LIBOTP INLINE unsigned char rolcharright(unsigned char x, int n);

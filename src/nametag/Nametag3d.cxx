@@ -68,10 +68,10 @@ Nametag3d& Nametag3d::operator=(const Nametag3d& tag) {
 
 void Nametag3d::tick() {
     Nametag3d_cat.debug() << "tick()" << std::endl;
-    if (NametagGlobals::m_camera_nodepath.is_empty()) {
+    if (NametagGlobals::m_camera_nodepath->is_empty()) {
         return;
     }
-    double dist = m_inner_np.get_pos(NametagGlobals::m_camera_nodepath).length();
+    double dist = m_inner_np.get_pos(*NametagGlobals::m_camera_nodepath).length();
     dist = (dist > 50 ? 50 : dist) < 1 ? 1: dist;
     float scale = sqrt(dist) * .055;
     m_inner_np.set_scale(scale);
@@ -122,10 +122,10 @@ void Nametag3d::tick() {
 
 void Nametag3d::billboard() {
     Nametag3d_cat.debug() << "billboard()" << std::endl;
-    if (NametagGlobals::m_camera_nodepath.is_empty()) {
+    if (NametagGlobals::m_camera_nodepath->is_empty()) {
         return;
     }
-    m_inner_np.set_effect(BillboardEffect::make(LVecBase3f(0, 0, 1), true, false, m_bb_offset, NametagGlobals::m_camera_nodepath, LPoint3f(0)));
+    m_inner_np.set_effect(BillboardEffect::make(LVecBase3f(0, 0, 1), true, false, m_bb_offset, *NametagGlobals::m_camera_nodepath, LPoint3f(0)));
 }
 
 ChatBalloon* Nametag3d::get_speech_balloon() {

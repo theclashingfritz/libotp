@@ -12,7 +12,7 @@ const float Nametag::chat_alpha = 1;
 
 unsigned int Nametag::Nametag_serial = 0;
 
-Nametag::Nametag(bool is_3d) : ClickablePopup(is_3d ? &NametagGlobals::m_camera_nodepath : nullptr), m_contents(0), m_inner_np(NodePath::any_path(this).attach_new_node("nametag_contents")), m_wordwrap(7.5), m_chat_wordwrap(10), m_font(nullptr), m_qt_color(LVecBase4f(1)), m_color_code(NametagGlobals::CCNormal), m_avatar(nullptr), m_icon(NodePath("icon")), m_name_fg(LVecBase4f(0, 0, 0, 1)), m_name_bg(LVecBase4f(1)), m_chat_fg(LVecBase4f(0, 0, 0, 1)), m_chat_bg(LVecBase4f(1)), m_chat_flags(0) {
+Nametag::Nametag(bool is_3d) : ClickablePopup(is_3d ? NametagGlobals::m_camera_nodepath : &NodePath()), m_contents(0), m_inner_np(NodePath::any_path(this).attach_new_node("nametag_contents")), m_wordwrap(7.5), m_chat_wordwrap(10), m_font(nullptr), m_qt_color(LVecBase4f(1)), m_color_code(NametagGlobals::CCNormal), m_avatar(nullptr), m_icon(NodePath("icon")), m_name_fg(LVecBase4f(0, 0, 0, 1)), m_name_bg(LVecBase4f(1)), m_chat_fg(LVecBase4f(0, 0, 0, 1)), m_chat_bg(LVecBase4f(1)), m_chat_flags(0) {
     Nametag_cat.debug() << "__init__(" << is_3d << ")" << std::endl;
     m_serial = Nametag::Nametag_serial++;
     frame = LVecBase4f(0.0, 0.0, 0.0, 0.0);
@@ -88,7 +88,7 @@ void Nametag::show_name() {
     t.set_transparency(m_name_fg.get_w() < 1 ? TransparencyAttrib::M_alpha : TransparencyAttrib::M_none);
     t.set_y(-0.25);
 
-    NodePath panel = NametagGlobals::m_nametag_model_nodepath.copy_to(m_inner_np);
+    NodePath panel = NametagGlobals::m_nametag_model_nodepath->copy_to(m_inner_np);
     panel.set_x((tn->get_left() + tn->get_right()) / 2.);
     panel.set_z((tn->get_top() + tn->get_bottom()) / 2.);
     panel.set_scale(width + name_padding, 1, height + name_padding);

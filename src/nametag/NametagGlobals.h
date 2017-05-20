@@ -89,14 +89,14 @@ class EXPCL_LIBOTP NametagGlobals : public virtual TypedObject {
         static VBase4 get_nametag_card_frame();
         static LVecBase4f get_name_fg(unsigned int cc, int clickstate);
         static color_tuple_t get_whisper_colors(unsigned int wt, int clickstate);
-        static NodePath& get_toon();
-        static NodePath& get_arrow_model();
-        static NodePath& get_card_model();
-        static NodePath& get_nametag_card();
-        static NodePath& get_chat_balloon_3d_model();
-        static NodePath& get_chat_balloon_2d_model();
-        static NodePath& get_thought_balloon_model();
-        static NodePath& get_camera();
+        static NodePath get_toon();
+        static NodePath get_arrow_model();
+        static NodePath get_card_model();
+        static NodePath get_nametag_card();
+        static NodePath get_chat_balloon_3d_model();
+        static NodePath get_chat_balloon_2d_model();
+        static NodePath get_thought_balloon_model();
+        static NodePath get_camera();
         static bool get_want_active_nametags();
         static bool get_force_onscreen_chat();
         static bool get_force_2d_nametags();
@@ -122,15 +122,15 @@ class EXPCL_LIBOTP NametagGlobals : public virtual TypedObject {
         static ChatBalloon *thought_balloon_2d;
         static ChatBalloon *thought_balloon_3d;
         
-        static NodePath &m_nodepath;
-        static NodePath &m_nametag_model_nodepath;
-        static NodePath &m_arrow_nodepath;
-        static NodePath &m_card_nodepath;
-        static NodePath &m_card_balloon_3d_nodepath;
-        static NodePath &m_card_balloon_2d_nodepath;
-        static NodePath &m_thought_balloon_nodepath;
-        static NodePath &m_page_button_nodepath;
-        static NodePath &m_camera_nodepath;
+        static NodePath *m_nodepath;
+        static NodePath *m_nametag_model_nodepath;
+        static NodePath *m_arrow_nodepath;
+        static NodePath *m_card_nodepath;
+        static NodePath *m_card_balloon_3d_nodepath;
+        static NodePath *m_card_balloon_2d_nodepath;
+        static NodePath *m_thought_balloon_nodepath;
+        static NodePath *m_page_button_nodepath;
+        static NodePath *m_camera_nodepath;
         
         static bool m_want_active_nametags;
         static bool m_force_onscreen_chat;

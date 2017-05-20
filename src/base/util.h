@@ -7,7 +7,8 @@
 #include <nodepath.h>
 #include <luse.h>
 
-#define EMPTY_NODEPATH =NodePath()
+#define EMPTY_NODEPATH NodePath()
+#define PT_EMPTY_NODEPATH &NodePath()
 
 #define CLICKSTATE_NORMAL    0
 #define CLICKSTATE_CLICK     1

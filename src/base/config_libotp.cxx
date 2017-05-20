@@ -86,6 +86,14 @@ INLINE int get_char_length(char * chr) {
     return chr_string.length();
 };
 
+INLINE std::string char_to_string(char * chr) {
+    if (chr == NULL || chr == nullptr) {
+        return "NULL";
+    }
+    std::string chr_string(chr);
+    return chr_string;
+};
+
 INLINE unsigned char rolcharleft(unsigned char x, int n) {
     return (x << n) | (x >> (8 - n));
 };
@@ -124,6 +132,61 @@ std::string ws2s(const std::wstring& wstr) {
     return strTo;
 };
 
+std::string string_to_hex(const std::string& input) {
+    static const char* const lut = "0123456789ABCDEF";
+    size_t len = input.length();
+
+    std::string output;
+    output.reserve(2 * len);
+    for (size_t i = 0; i < len; ++i) {
+        const unsigned char c = input[i];
+        output.push_back(lut[c >> 4]);
+        output.push_back(lut[c & 15]);
+    }
+    return output;
+};
+
+std::string hex_to_string(const std::string& input) {
+    static const char* const lut = "0123456789ABCDEF";
+    size_t len = input.length();
+    if (len & 1) throw std::invalid_argument("odd length");
+
+    std::string output;
+    output.reserve(len / 2);
+    for (size_t i = 0; i < len; i += 2) {
+        char a = input[i];
+        const char* p = std::lower_bound(lut, lut + 16, a);
+        if (*p != a) throw std::invalid_argument("not a hex digit");
+
+        char b = input[i + 1];
+        const char* q = std::lower_bound(lut, lut + 16, b);
+        if (*q != b) throw std::invalid_argument("not a hex digit");
+
+        output.push_back(((p - lut) << 4) | (q - lut));
+    }
+    return output;
+};
+
+INLINE unsigned int value(char c) {
+    if (c >= '0' && c <= '9') {return c - '0';}
+    if (c >= 'a' && c <= 'f') {return c - 'a' + 10;}
+    if (c >= 'A' && c <= 'F') {return c - 'A' + 10;}
+    return -1;
+};
+
+std::string hex_str_XOR(std::string const & s1, std::string const & s2) {
+    static char const alphabet[] = "0123456789abcdef";
+
+    std::string result;
+    result.reserve(s1.length());
+
+    for (std::size_t i = 0; i != s1.length(); ++i) { 
+        unsigned int v = value(s1[i]) ^ value(s2[i]);
+        result.push_back(alphabet[v]);
+    }
+    return result;
+};
+
 std::string XOR(std::string value, std::string key) {
     std::string retval(value);
     long unsigned int klen = key.length();
@@ -136,6 +199,21 @@ std::string XOR(std::string value, std::string key) {
     }
     return retval;
 };
+
+char *XOR(char *value, char *key) {
+    long unsigned int klen = get_char_length(key);
+    long unsigned int vlen = get_char_length(value);
+    unsigned long int k = 0;
+    unsigned long int v = 0;
+    char *retval = new char[vlen + 12]; //Tack on a extra 12 just to be sure.
+    strcpy(retval, value);
+    for (; v < vlen; v++) {
+      retval[v] = value[v] ^ key[k];
+      k = (++k < klen ? k : 0);
+    }
+    return retval;
+};
+
 
 void gen_random(char *s, const int len) {
     /*

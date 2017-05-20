@@ -438,12 +438,12 @@ AsyncTask::DoneStatus NametagGroup::tick() {
     } else if (NametagGlobals::m_force_onscreen_chat && m_chat_flags & NametagGlobals::CFSpeech) {
         visible_3d = false;
     } else {
-        if (!NametagGlobals::m_camera_nodepath.is_empty()) {
+        if (!NametagGlobals::m_camera_nodepath->is_empty()) {
             LPoint3f min_corner, max_corner;
             m_avatar->calc_tight_bounds(min_corner, max_corner);
             PT(BoundingBox) avatar_bounds = new BoundingBox(min_corner, max_corner);
-            PT(BoundingHexahedron) camera_bounds = DCAST(BoundingHexahedron, DCAST(Camera, NametagGlobals::m_camera_nodepath.node())->get_lens()->make_bounds());
-            camera_bounds->xform(NametagGlobals::m_camera_nodepath.get_mat(m_avatar->get_parent()));
+            PT(BoundingHexahedron) camera_bounds = DCAST(BoundingHexahedron, DCAST(Camera, NametagGlobals::m_camera_nodepath->node())->get_lens()->make_bounds());
+            camera_bounds->xform(NametagGlobals::m_camera_nodepath->get_mat(m_avatar->get_parent()));
             visible_3d = (camera_bounds->contains(avatar_bounds) & BoundingVolume::IF_some);
         } else {
             visible_3d = false;

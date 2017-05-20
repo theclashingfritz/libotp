@@ -10,22 +10,22 @@ PT(MouseWatcher) NametagGlobals::m_mouse_watcher = nullptr;
 PT(AudioSound) NametagGlobals::m_click_sound = nullptr;
 PT(AudioSound) NametagGlobals::m_rollover_sound = nullptr;
 
-NodePath& NametagGlobals::m_camera_nodepath EMPTY_NODEPATH;
-NodePath& NametagGlobals::m_arrow_nodepath EMPTY_NODEPATH;
-NodePath& NametagGlobals::m_card_nodepath EMPTY_NODEPATH;
-NodePath& NametagGlobals::m_card_balloon_3d_nodepath EMPTY_NODEPATH;
-NodePath& NametagGlobals::m_card_balloon_2d_nodepath EMPTY_NODEPATH;
-NodePath& NametagGlobals::m_thought_balloon_nodepath EMPTY_NODEPATH;
-NodePath& NametagGlobals::m_nametag_model_nodepath EMPTY_NODEPATH;
-NodePath& NametagGlobals::m_page_button_nodepath EMPTY_NODEPATH;
-NodePath& NametagGlobals::m_nodepath EMPTY_NODEPATH;
+NodePath *NametagGlobals::m_camera_nodepath = PT_EMPTY_NODEPATH;
+NodePath *NametagGlobals::m_arrow_nodepath = PT_EMPTY_NODEPATH;
+NodePath *NametagGlobals::m_card_nodepath = PT_EMPTY_NODEPATH;
+NodePath *NametagGlobals::m_card_balloon_3d_nodepath = PT_EMPTY_NODEPATH;
+NodePath *NametagGlobals::m_card_balloon_2d_nodepath = PT_EMPTY_NODEPATH;
+NodePath *NametagGlobals::m_thought_balloon_nodepath = PT_EMPTY_NODEPATH;
+NodePath *NametagGlobals::m_nametag_model_nodepath = PT_EMPTY_NODEPATH;
+NodePath *NametagGlobals::m_page_button_nodepath = PT_EMPTY_NODEPATH;
+NodePath *NametagGlobals::m_nodepath = PT_EMPTY_NODEPATH;
 
-ChatBalloon* NametagGlobals::speech_balloon_2d = nullptr;
-ChatBalloon* NametagGlobals::speech_balloon_3d = nullptr;
-ChatBalloon* NametagGlobals::thought_balloon_2d = nullptr;
-ChatBalloon* NametagGlobals::thought_balloon_3d = nullptr;
+ChatBalloon *NametagGlobals::speech_balloon_2d = nullptr;
+ChatBalloon *NametagGlobals::speech_balloon_3d = nullptr;
+ChatBalloon *NametagGlobals::thought_balloon_2d = nullptr;
+ChatBalloon *NametagGlobals::thought_balloon_3d = nullptr;
 
-NametagGlobals* NametagGlobals::_global_ptr = nullptr;
+NametagGlobals *NametagGlobals::_global_ptr = nullptr;
 
 VBase4 NametagGlobals::m_nametag_frame = VBase4(-0.5, 0.5, -0.5, 0.5);
 
@@ -44,7 +44,7 @@ NametagGlobals::NametagGlobals() {
 }
 
 NametagGlobals::~NametagGlobals() {
-    m_nodepath EMPTY_NODEPATH;
+    m_nodepath = PT_EMPTY_NODEPATH;
     delete m_click_sound;
     m_click_sound = nullptr;
     delete m_rollover_sound;
@@ -159,23 +159,23 @@ void NametagGlobals::set_thought_balloon_2d(ChatBalloon* tb2d) {
 
 void NametagGlobals::set_toon(NodePath& toon) {
     NametagGlobals_cat.debug() << "set_toon(NodePath toon)" << std::endl;
-    m_nodepath = toon;
+    m_nodepath = &toon;
 }
 
 void NametagGlobals::set_arrow_model(NodePath& node) {
     NametagGlobals_cat.debug() << "set_arrow_model(NodePath node)" << std::endl;
-    m_arrow_nodepath = node;
+    m_arrow_nodepath = &node;
 }
 
 void NametagGlobals::set_card_model(NodePath& node) {
     NametagGlobals_cat.debug() << "set_card_model(NodePath node)" << std::endl;
-    m_card_nodepath = node;
+    m_card_nodepath = &node;
 }
 
 void NametagGlobals::set_nametag_card(NodePath& model, VBase4 frame) {
     NametagGlobals_cat.debug() << "set_nametag_card(NodePath model, VBase4 frame)" << std::endl;
     m_nametag_frame = frame;
-    m_card_nodepath = model;
+    m_card_nodepath = &model;
 }
 
 void NametagGlobals::set_mouse_watcher(MouseWatcher& watcher) {
@@ -190,7 +190,7 @@ void NametagGlobals::set_mouse_watcher(NodePath& np) {
 
 void NametagGlobals::set_camera(NodePath& node) {
     NametagGlobals_cat.debug() << "set_camera(NodePath node)" << std::endl;
-    m_camera_nodepath = node;
+    m_camera_nodepath = &node;
 }
 
 void NametagGlobals::set_page_button(int state, NodePath& model) {
@@ -254,44 +254,68 @@ PT(AudioSound) NametagGlobals::get_rollover_sound() {
     return m_rollover_sound;
 }
 
-NodePath& NametagGlobals::get_toon() {
+NodePath NametagGlobals::get_toon() {
     NametagGlobals_cat.debug() << "get_toon()" << std::endl;
-    return m_nodepath;
+    if (m_nodepath == nullptr || m_nodepath == NULL) {
+        return EMPTY_NODEPATH;
+    }
+    return *m_nodepath;
 }
 
-NodePath& NametagGlobals::get_arrow_model() {
+NodePath NametagGlobals::get_arrow_model() {
     NametagGlobals_cat.debug() << "get_arrow_model()" << std::endl;
-    return m_arrow_nodepath;
+    if (m_arrow_nodepath == nullptr || m_arrow_nodepath == NULL) {
+        return EMPTY_NODEPATH;
+    }
+    return *m_arrow_nodepath;
 }
 
-NodePath& NametagGlobals::get_card_model() {
+NodePath NametagGlobals::get_card_model() {
     NametagGlobals_cat.debug() << "get_card_model()" << std::endl;
-    return m_card_nodepath;
+    if (m_card_nodepath == nullptr || m_card_nodepath == NULL) {
+        return EMPTY_NODEPATH;
+    }
+    return *m_card_nodepath;
 }
 
-NodePath& NametagGlobals::get_nametag_card() {
+NodePath NametagGlobals::get_nametag_card() {
     NametagGlobals_cat.debug() << "get_nametag_card()" << std::endl;
-    return m_card_nodepath;
+    if (m_card_nodepath == nullptr || m_card_nodepath == NULL) {
+        return EMPTY_NODEPATH;
+    }
+    return *m_card_nodepath;
 }
 
-NodePath& NametagGlobals::get_chat_balloon_3d_model() {
+NodePath NametagGlobals::get_chat_balloon_3d_model() {
     NametagGlobals_cat.debug() << "get_chat_balloon_3d_model()" << std::endl;
-    return m_card_balloon_3d_nodepath;;
+    if (m_card_balloon_3d_nodepath == nullptr || m_card_balloon_3d_nodepath == NULL) {
+        return EMPTY_NODEPATH;
+    }
+    return *m_card_balloon_3d_nodepath;
 }
 
-NodePath& NametagGlobals::get_chat_balloon_2d_model() {
+NodePath NametagGlobals::get_chat_balloon_2d_model() {
     NametagGlobals_cat.debug() << "get_chat_balloon_2d_model()" << std::endl;
-    return m_card_balloon_2d_nodepath;;
+    if (m_card_balloon_2d_nodepath == nullptr || m_card_balloon_2d_nodepath == NULL) {
+        return EMPTY_NODEPATH;
+    }
+    return *m_card_balloon_2d_nodepath;
 }
 
-NodePath& NametagGlobals::get_thought_balloon_model() {
+NodePath NametagGlobals::get_thought_balloon_model() {
     NametagGlobals_cat.debug() << "get_thought_balloon_model()" << std::endl;
-    return m_thought_balloon_nodepath;
+    if (m_thought_balloon_nodepath == nullptr || m_thought_balloon_nodepath == NULL) {
+        return EMPTY_NODEPATH;
+    }
+    return *m_thought_balloon_nodepath;
 }
 
-NodePath& NametagGlobals::get_camera() {
+NodePath NametagGlobals::get_camera() {
     NametagGlobals_cat.debug() << "get_camera()" << std::endl;
-    return m_camera_nodepath;
+    if (m_camera_nodepath == nullptr || m_camera_nodepath == NULL) {
+        return EMPTY_NODEPATH;
+    }
+    return *m_camera_nodepath;
 }
 
 VBase4 NametagGlobals::get_nametag_card_frame() {

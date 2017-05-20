@@ -98,7 +98,7 @@ void Nametag2d::show_name() {
     
     set_priority(0);
 
-    m_arrow = &NametagGlobals::m_arrow_nodepath.copy_to(m_inner_np);
+    m_arrow = &NametagGlobals::m_arrow_nodepath->copy_to(m_inner_np);
     m_arrow->set_z(arrow_offset + DCAST(TextNode, m_inner_np.find("**/+TextNode").node())->get_bottom());
     m_arrow->set_scale(arrow_scale);
     m_arrow->set_color(m_name_fg);
@@ -159,8 +159,8 @@ void Nametag2d::tick() {
         return;
     }
         
-    NodePath camera = NametagGlobals::m_camera_nodepath;
-    NodePath toon = NametagGlobals::m_nodepath.is_empty() ? camera : NametagGlobals::m_nodepath;
+    NodePath camera = *NametagGlobals::m_camera_nodepath;
+    NodePath toon = NametagGlobals::m_nodepath->is_empty() ? camera : *NametagGlobals::m_nodepath;
     
     if (m_avatar->is_empty()) {
         return;
