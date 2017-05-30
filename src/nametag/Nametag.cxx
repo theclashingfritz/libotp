@@ -1,3 +1,5 @@
+#include "util.h"
+
 #include "Nametag.h"
 #include "NametagGroup.h"
 #include "ChatBalloon.h"

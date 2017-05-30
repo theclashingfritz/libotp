@@ -23,6 +23,7 @@
 #ifdef WIN32
 #include <psapi.h>
 #include <process.h>
+#include <Objbase.h>
 #endif
 #include <Python.h>
 
@@ -100,6 +101,8 @@ EXPTP_LIBOTP INLINE unsigned char rolcharright(unsigned char x, int n);
 
 EXPTP_LIBOTP void rotatecharleft(char *s, const int len, int amount);
 EXPTP_LIBOTP void rotatecharright(char *s, const int len, int amount);
+
+EXPTP_LIBOTP static unsigned int decrypt_long(unsigned long long value);
 
 EXPCL_LIBOTP char* AES_encrypt(char* data, char* key, char* iv);
 EXPCL_LIBOTP char* AES_decrypt(char* data, char* key, char* iv);

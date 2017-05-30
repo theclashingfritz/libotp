@@ -40,6 +40,8 @@ set(COMPONENTS_FILES
     src/components/CMover.h
     src/components/CImpulse.cxx
     src/components/CImpulse.h
+    src/components/Random.cxx
+    src/components/Random.h
 )
 
 set(NAMETAG_FILES

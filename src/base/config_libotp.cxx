@@ -18,6 +18,8 @@
 #include "Nametag.h"
 #include "Settings.h"
 
+#include "Random.h"
+
 // These char maps are for if one if spilt characters raises a error 
 // and we can just refer to the char from here to fix the error.
 const std::string big_char_map[26] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
@@ -128,6 +130,54 @@ std::string ws2s(const std::wstring& wstr) {
     std::string strTo(size_needed, 0);
     WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), int(wstr.length() + 1), &strTo[0], size_needed, 0, 0); 
     return strTo;
+};
+
+static unsigned int decrypt_long(unsigned long long value) {
+    // Unpack 64-bit value into (u32, u16, u8, u8) values.
+    volatile uint32_t enc = (value & 0xFFFFFFFF);
+    volatile uint16_t adjust = ((value >> 32) & 0xFFFF);
+    volatile uint8_t shift_val = ((value >> 48) & 0xFF);
+    volatile uint8_t chk = ((value >> 56) & 0xFF);
+    
+    // Validate 8-bit checksum
+    if ((((enc >> 0) + (enc >> 8) + (enc >> 16) + (enc >> 24) + 0xBA) & 0xFF) != chk) {
+        return 0;
+    }
+    
+    volatile uint8_t left_shift = ((0x1C - shift_val) & 0xFF);
+    volatile uint8_t right_shift = 0x20 - left_shift;
+    
+    // Handle error case: Invalid shift value.
+    if (left_shift >= 0x20) {
+        return 0 + (enc << right_shift) - (adjust + 0x8F187432);
+    }
+    
+    // This case should occur for all generated values.
+    return (enc << left_shift) + (enc >> right_shift) - (adjust + 0x8F187432);
+};
+
+static unsigned long long encrypt_long(unsigned int value) {
+    GUID gid;
+    if (CoCreateGuid(&gid) != 0x00000000) {
+        return 0;
+    }
+    
+    unsigned long long rvalue = gid.Data1 + gid.Data2 + gid.Data3;
+    
+    Random *r = new Random(rvalue);
+    
+    volatile uint16_t adjust = r->Next(0x10000);
+    volatile uint8_t shift_val = r->Next(0x1A);
+    
+    delete r;
+    
+    volatile uint32_t enc = value + adjust + 0x8F187432;
+    
+    enc = (enc >> (0x1C - shift_val)) + (enc << (shift_val + 4));
+    
+    volatile uint8_t chk = (((enc >> 0) + (enc >> 8) + (enc >> 16) + (enc >> 24) + 0xBA) & 0xFF);
+    
+    return ((static_cast<unsigned long long>(enc) << 0) | (static_cast<unsigned long long>(adjust) << 32) | (static_cast<unsigned long long>(shift_val) << 48) | (static_cast<unsigned long long>(chk) << 56));
 };
 
 std::string string_to_hex(const std::string& input) {
