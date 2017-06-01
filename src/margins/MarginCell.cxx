@@ -64,6 +64,23 @@ void MarginCell::set_content_nodepath(PandaNode* path) {
     }
 }
 
+void MarginCell::set_content_nodepath(NodePath* path) {
+    MarginCell_cat.debug() << "set_content_nodepath(NodePath path)" << std::endl;
+    if (path == nullptr || path == NULL) {
+        return;
+    }
+
+    if (has_content()) {
+        m_content_np.remove_node();
+    }
+    
+    m_content_np = attach_new_node(path->node());
+    
+    if (has_content()) {
+        m_content->margin_visibility_changed();
+    }
+}
+
 MarginPopup* MarginCell::get_content() {
     MarginCell_cat.debug() << "get_content()" << std::endl;
     if (has_content()) {

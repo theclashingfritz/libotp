@@ -18,6 +18,19 @@
 #define ROL(x, y) __asm{rol x, y}
 #define ROR(x, y) __asm{ror x, y}
 
+#define CONCATE_(X, Y) X##Y
+#define CONCATE(X, Y) CONCATE_(X, Y)
+
+#define ALLOW_ACCESS(CLASS, TYPE, MEMBER) \
+  template<typename Only, TYPE CLASS::*Member> \
+  struct CONCATE(MEMBER, __LINE__) { friend TYPE (CLASS::*Access(Only*)) { return Member; } }; \
+  template<typename> struct Only_##MEMBER; \
+  template<> struct Only_##MEMBER<CLASS> { friend TYPE (CLASS::*Access(Only_##MEMBER<CLASS>*)); }; \
+  template struct CONCATE(MEMBER, __LINE__)<Only_##MEMBER<CLASS>, &CLASS::MEMBER>
+
+#define ACCESS(OBJECT, MEMBER) \
+(OBJECT).*Access((Only_##MEMBER<std::remove_reference<decltype(OBJECT)>::type>*)nullptr)
+
 // Handy typedefs.
 typedef LPoint3f LVertexf;
 typedef LVector3f LNormalf;

@@ -11,7 +11,7 @@ TypeHandle WhisperPopup::_type_handle;
 
 WhisperPopup::WhisperPopup(const std::wstring& text, PT(TextFont) font, const unsigned int whisper_type, const float timeout): ClickablePopup(), MarginPopup(), m_text(text), m_font(font), m_whisper_type(whisper_type), m_timeout(timeout) {
     WhisperPopup_cat.debug() << "__init__(" << text << " " << "TextFont font" << " " << "NametagGlobals::WhisperType whisper_type" << " " << timeout << ")" << std::endl;
-    m_inner_np = NodePath::any_path(this).attach_new_node("inner_np");
+    m_inner_np = this->attach_new_node("inner_np");
     m_inner_np.set_scale(.25);
     m_from_id = 0;
     m_active = false;

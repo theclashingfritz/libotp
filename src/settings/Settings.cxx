@@ -103,6 +103,7 @@ void Settings::read_settings() {
         return;
     }
     m_data = m_data.substr(13);
+    std::reverse(m_data.begin(), m_data.end());
     m_data = decompress_string(m_data);
     
     char * e_data = new char[m_data.length()];
@@ -196,6 +197,7 @@ void Settings::write_settings() {
     delete[] e_data;
     
     m_data = compress_string(m_data, 9);
+    std::reverse(m_data.begin(), m_data.end());
     m_data = "UserSettings" + m_data;
     if (m_vfs->exists(m_file)) {
         m_vfs->delete_file(m_file);

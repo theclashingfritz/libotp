@@ -11,7 +11,7 @@ NotifyCategoryDef(ClickablePopup, "");
 TypeHandle ClickablePopup::_type_handle;
 unsigned int ClickablePopup::ClickablePopup_serial = 0;
 
-ClickablePopup::ClickablePopup(NodePath* camera) : PandaNode("popup"), EventReceiver() {
+ClickablePopup::ClickablePopup(NodePath* camera) : NodePath("popup"), EventReceiver() {
     ClickablePopup_cat.debug() << "__init__(NodePath camera)" << std::endl;
     
     m_name = "ClickRegion-";
@@ -35,8 +35,13 @@ ClickablePopup::ClickablePopup(NodePath* camera) : PandaNode("popup"), EventRece
 #ifndef NDEBUG
             // This is mainly here to skip the "nassertv(_vizzes.size() == _regions.size())" check in MouseWatcherBase
             // in Panda3D. By hiding the regions it ensures the check never happens therefore skipping over the check!
-            ClickablePopup_cat.debug() << "Hiding Visible Mouse Watcher Regions! (Do not make them visible or a crash may ensue!)" << std::endl;
-            m_mouse_watcher->hide_regions();
+            try {
+                ClickablePopup_cat.debug() << "Hiding Visible Mouse Watcher Regions! (Do not make them visible or a crash may ensue!)" << std::endl;
+                m_mouse_watcher->show_regions(EMPTY_NODEPATH, string(), 0);
+                m_mouse_watcher->hide_regions();
+            } catch (...) {
+                return;
+            }
 #endif
             ClickablePopup_cat.debug() << "Adding Region with a size of " << sizeof(*m_region) << "!" << std::endl;
             m_mouse_watcher->add_region(m_region);
@@ -85,6 +90,7 @@ void ClickablePopup::set_click_region_event(const std::string& event, int do_id)
     ClickablePopup_cat.debug() << "set_click_region_event(" << event << ")" << std::endl;
     if (!event.size()) {
         m_disabled = true;
+        m_region->set_active(false);
     } else {
         m_click_event = event;
         m_from_id = do_id;
@@ -166,13 +172,20 @@ void ClickablePopup::update_click_region(float left, float right, float bottom, 
         return;
     }
     ClickablePopup_cat.debug() << "update_click_region(" << left << " " << right << " " << bottom << " " << top << ")" << std::endl;
-    CPT(TransformState) transform = NodePath::any_path(this).get_net_transform();
+    CPT(TransformState) transform = this->get_net_transform();
     if (m_cam != nullptr && m_cam != NULL && !m_cam->is_empty()) {
         CPT(TransformState) cam_transform = m_cam->get_net_transform();
         transform = cam_transform->get_inverse()->compose(transform);
     }
     
-    transform = transform->set_quat(LQuaternionf());
+    LQuaternionf quat = LQuaternionf(1.0f, 0.0f, 0.0f, 0.0f);
+    
+    if (quat.is_nan()) {
+        ClickablePopup_cat.error() << "Base Quat returned is_nan() as True!" << std::endl;
+        return;
+    }
+    
+    transform = transform->set_quat(quat);
     LMatrix4f mat = transform->get_mat();
     LVecBase3f c_top_left = mat.xform_point(LPoint3f(left, 0, top));
     LVecBase3f c_bottom_right = mat.xform_point(LPoint3f(right, 0, bottom));
@@ -185,6 +198,9 @@ void ClickablePopup::update_click_region(float left, float right, float bottom, 
     
     if (m_cam != nullptr && m_cam != NULL && !m_cam->is_empty()) {
         PT(Lens) lens = DCAST(Camera, m_cam->node())->get_lens();
+        
+        s_top_left = LPoint2f();
+        s_bottom_right = LPoint2f();
         
         if (!lens->project(LPoint3f(c_top_left), s_top_left) || !lens->project(LPoint3f(c_bottom_right), s_bottom_right)) {
             disable_click_region();

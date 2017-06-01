@@ -74,7 +74,7 @@ void Nametag2d::show_balloon(ChatBalloon* balloon, const std::wstring& text) {
     Nametag::show_balloon(balloon, ss.str());
     
     NodePath balloon_np, text_np;
-    balloon_np = NodePath::any_path(this).find("*/balloon");
+    balloon_np = this->find("*/balloon");
     text_np = balloon_np.find("**/+TextNode");
     
     PT(TextNode) tn = DCAST(TextNode, text_np.node());
@@ -145,8 +145,16 @@ void Nametag2d::margin_visibility_changed() {
 
 void Nametag2d::consider_update_click_region() {
     Nametag2d_cat.debug() << "consider_update_click_region()" << std::endl;
-    if (is_displayed())
-        update_click_region(-1, 1, -1, 1);
+    if (is_displayed()) {
+        float x = *new float(frame.get_x() * scale_2d);
+        float y = *new float(frame.get_y() * scale_2d);
+        float z = *new float(frame.get_z() * scale_2d);
+        float w = *new float(frame.get_w() * scale_2d);
+        
+        update_click_region(x, y, z, w);
+    } else {
+        disable_click_region();
+    }
 }
 
 void Nametag2d::tick() {
@@ -155,16 +163,12 @@ void Nametag2d::tick() {
         return;
     }
         
-    if (m_avatar == nullptr || m_avatar == NULL) {
+    if ((m_avatar == nullptr || m_avatar == NULL) || (m_avatar->is_empty())) {
         return;
     }
         
     NodePath camera = *NametagGlobals::m_camera_nodepath;
     NodePath toon = NametagGlobals::m_nodepath->is_empty() ? camera : *NametagGlobals::m_nodepath;
-    
-    if (m_avatar->is_empty()) {
-        return;
-    }
         
     LVecBase3f pos = toon.get_quat(camera).xform(m_avatar->get_pos());
     double angle = atan(pos.get_x() / pos.get_y()) / 3.14159265 * 180;

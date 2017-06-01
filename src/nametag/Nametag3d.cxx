@@ -76,48 +76,16 @@ void Nametag3d::tick() {
     float scale = sqrt(dist) * .055;
     m_inner_np.set_scale(scale);
     
-    float x = *new float(frame.get_x());
-    if (x > 1) {
-        x = 1.00;
-    } else if (x < -1) {
-        x = -1.00;
+    if ((this->is_hidden()) || (this->get_top() != NametagGlobals::m_camera_nodepath->get_top() && this->get_top().get_name() != "render2d")) {
+        disable_click_region();
+    } else {
+        float x = *new float(frame.get_x() * scale);
+        float y = *new float(frame.get_y() * scale);
+        float z = *new float(frame.get_z() * scale);
+        float w = *new float(frame.get_w() * scale);
+
+        update_click_region(x, y, z, w);
     }
-    x = x * scale;
-    if (x != x) {
-        x = 1.00;
-    }
-    float y = *new float(frame.get_y());
-    if (y > 1) {
-        y = 1.00;
-    } else if (y < -1) {
-        y = -1.00;
-    }
-    y = y * scale;
-    if (y != y) {
-        y = 1.00;
-    }
-    float z = *new float(frame.get_z());
-    if (z > 1) {
-        z = 1.00;
-    } else if (z < -1) {
-        z = -1.00;
-    }
-    z = z * scale;
-    if (z != z) {
-        z = 1.00;
-    }
-    float w = *new float(frame.get_w());
-    if (w > 1) {
-        w = 1.00;
-    } else if (w < -1) {
-        w = -1.00;
-    }
-    w = w * scale;
-    if (w != w) {
-        w = 1.00;
-    }
-    
-    update_click_region(x, y, z, w);
 }
 
 void Nametag3d::billboard() {

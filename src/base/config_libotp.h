@@ -99,6 +99,12 @@ EXPCL_LIBOTP std::string gen_random_string(const int len);
 EXPTP_LIBOTP INLINE unsigned char rolcharleft(unsigned char x, int n);
 EXPTP_LIBOTP INLINE unsigned char rolcharright(unsigned char x, int n);
 
+template <typename T>
+EXPTP_LIBOTP INLINE T wrap_rotate_left(T x,T amount);
+
+template <typename T>
+EXPTP_LIBOTP INLINE T wrap_rotate_right(T x,T amount);
+
 EXPTP_LIBOTP void rotatecharleft(char *s, const int len, int amount);
 EXPTP_LIBOTP void rotatecharright(char *s, const int len, int amount);
 

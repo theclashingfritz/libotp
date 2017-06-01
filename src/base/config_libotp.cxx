@@ -22,9 +22,9 @@
 
 // These char maps are for if one if spilt characters raises a error 
 // and we can just refer to the char from here to fix the error.
-const std::string big_char_map[26] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
-const std::string small_char_map[26] = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
-const std::string number_char_map[10] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+const char big_char_map[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+const char small_char_map[26] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+const char number_char_map[10] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
 Configure(config_libotp);
 NotifyCategoryDef(libotp, "");
@@ -101,6 +101,34 @@ INLINE unsigned char rolcharleft(unsigned char x, int n) {
 INLINE unsigned char rolcharright(unsigned char x, int n) {
     return (x >> n) | (x << (8 - n));
 };
+
+template <typename T>
+INLINE T wrap_rotate_left(T x,T amount) {
+	const unsigned bits=sizeof(T)*8;
+#if POWER_SIZES
+	amount&=bits-1;
+#else
+	amount%=bits;
+#endif
+	if (amount) {
+		return (x<<amount)|(x>>(bits-amount));
+    }
+	return x;
+}
+
+template <typename T>
+INLINE T wrap_rotate_right(T x,T amount) {
+	const unsigned bits=sizeof(T)*8;
+#if POWER_SIZES
+	amount&=bits-1;
+#else
+	amount%=bits;
+#endif
+	if (amount) {
+		return (x>>amount)|(x<<(bits-amount));
+    }
+	return x;
+}
 
 void rotatecharleft(char *s, const int len, int amount) {
     for (int i = 0; i < len; ++i) {
@@ -256,6 +284,9 @@ char *XOR(char *value, char *key) {
     char *retval = new char[vlen + 12]; //Tack on a extra 12 just to be sure.
     strcpy(retval, value);
     for (; v < vlen; v++) {
+      if (value[v] == key[k]) {
+          
+      }
       retval[v] = value[v] ^ key[k];
       k = (++k < klen ? k : 0);
     }
@@ -269,16 +300,8 @@ void gen_random(char *s, const int len) {
     */
     
 	for (int i = 0; i < len; ++i) {
-		int randomChar = rand() % (26 + 26 + 10);
-		if (randomChar < 26) {
-			s[i] = 'a' + randomChar;
-		}
-		else if (randomChar < 26 + 26) {
-			s[i] = 'A' + randomChar - 26;
-		}
-		else {
-			s[i] = '0' + randomChar - 26 - 26;
-		}
+        int randomChar = rand() % (256);
+		s[i] = 0x00 + randomChar;
 	}
 	s[len] = 0;
 };
@@ -287,17 +310,8 @@ char gen_random_char() {
     /*
     This function returns a random char.
     */
-    
-	int randomChar = rand() % (26 + 26 + 10);
-	if (randomChar < 26) {
-		return 'a' + randomChar;
-	}
-	else if (randomChar < 26 + 26) {
-		return 'A' + randomChar - 26;
-	}
-	else {
-		return '0' + randomChar - 26 - 26;
-	}
+	int randomChar = rand() % (256);
+    return 0x00 + randomChar;
 };
 
 std::string gen_random_string(const int len) {

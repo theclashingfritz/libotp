@@ -36,9 +36,11 @@ NametagGroup::~NametagGroup() {
         m_avatar = nullptr;
     }
     if (m_nametag_2d != NULL && m_nametag_2d != nullptr) {
+        delete m_nametag_2d;
         m_nametag_2d = nullptr;
     }
     if (m_nametag_3d != NULL && m_nametag_3d != nullptr) {
+        delete m_nametag_3d;
         m_nametag_3d = nullptr;
     }
     if (m_tick_task != NULL && m_tick_task != nullptr) {

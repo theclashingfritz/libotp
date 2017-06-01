@@ -21,6 +21,7 @@ class MarginCell : public NodePath, public virtual TypedObject {
         void set_available(bool available);
         void set_content(MarginPopup* content);
         void set_content_nodepath(PandaNode* path);
+        void set_content_nodepath(NodePath* path);
         
         MarginPopup* get_content();
         

@@ -20,7 +20,7 @@ class ChatBalloon;
 class NametagGroup; 
 class MarginManager;
 
-class EXPCL_LIBOTP Nametag : public virtual ClickablePopup {
+class EXPCL_LIBOTP Nametag : public virtual ClickablePopup, public virtual TypedObject {
     
     friend class NametagGroup;
     
