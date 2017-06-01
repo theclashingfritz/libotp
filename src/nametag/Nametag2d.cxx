@@ -33,8 +33,8 @@ Nametag2d::Nametag2d(const Nametag2d& tag) : Nametag(), MarginPopup(), m_arrow(n
     m_name_bg = LVecBase4f(tag.m_name_bg);
     m_chat_fg = LVecBase4f(tag.m_chat_fg);
     m_chat_bg = LVecBase4f(tag.m_chat_bg);
-    m_avatar = tag.m_avatar; 
-    m_group = tag.m_group;
+    m_avatar = &*tag.m_avatar;
+    m_group = &*tag.m_group;
     m_font = tag.m_font; 
     m_has_group = tag.m_has_group;
     m_active = tag.m_active;

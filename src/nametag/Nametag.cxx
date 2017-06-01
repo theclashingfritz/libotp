@@ -24,6 +24,9 @@ Nametag::~Nametag() {
     if (m_avatar != NULL && m_avatar != nullptr) {
         m_avatar = nullptr;
     }
+    if (m_group != NULL && m_group != nullptr) {
+        m_group = nullptr;
+    }
 }
 
 /**
