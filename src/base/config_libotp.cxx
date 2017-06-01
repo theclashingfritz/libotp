@@ -284,9 +284,6 @@ char *XOR(char *value, char *key) {
     char *retval = new char[vlen + 12]; //Tack on a extra 12 just to be sure.
     strcpy(retval, value);
     for (; v < vlen; v++) {
-      if (value[v] == key[k]) {
-          
-      }
       retval[v] = value[v] ^ key[k];
       k = (++k < klen ? k : 0);
     }
