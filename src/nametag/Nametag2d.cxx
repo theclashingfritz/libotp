@@ -21,23 +21,23 @@ Nametag2d::Nametag2d() : Nametag(), MarginPopup(), m_arrow(nullptr) {
 Nametag2d::Nametag2d(const Nametag2d& tag) : Nametag(), MarginPopup(), m_arrow(nullptr) {
     Nametag2d_cat.debug() << "__init__(Nametag2d)" << std::endl;
     m_inner_np.set_scale(scale_2d);
-    m_contents = *new int(tag.m_contents);
-    m_chat_flags = *new int(tag.m_chat_flags);
-    m_color_code = *new unsigned int(tag.m_color_code);
-    m_name = *new std::wstring(tag.m_name);
-    m_display_name = *new std::wstring(tag.m_display_name);
-    m_chat_string = *new std::wstring(tag.m_chat_string);
-    m_chat_wordwrap = *new float(tag.m_chat_wordwrap);
-    m_wordwrap = *new float(tag.m_wordwrap);
-    m_name_fg = *new LVecBase4f(tag.m_name_fg);
-    m_name_bg = *new LVecBase4f(tag.m_name_bg);
-    m_chat_fg = *new LVecBase4f(tag.m_chat_fg);
-    m_chat_bg = *new LVecBase4f(tag.m_chat_bg);
+    m_contents = tag.m_contents;
+    m_chat_flags = tag.m_chat_flags;
+    m_color_code = tag.m_color_code;
+    m_name = std::wstring(tag.m_name);
+    m_display_name = std::wstring(tag.m_display_name);
+    m_chat_string = std::wstring(tag.m_chat_string);
+    m_chat_wordwrap = tag.m_chat_wordwrap;
+    m_wordwrap = tag.m_wordwrap;
+    m_name_fg = LVecBase4f(tag.m_name_fg);
+    m_name_bg = LVecBase4f(tag.m_name_bg);
+    m_chat_fg = LVecBase4f(tag.m_chat_fg);
+    m_chat_bg = LVecBase4f(tag.m_chat_bg);
     m_avatar = tag.m_avatar; 
     m_group = tag.m_group;
     m_font = tag.m_font; 
-    m_has_group = bool(*new int(tag.m_has_group));
-    m_active = bool(*new int(tag.m_active));
+    m_has_group = tag.m_has_group;
+    m_active = tag.m_active;
 }
 
 Nametag2d::~Nametag2d() {
@@ -47,23 +47,23 @@ Nametag2d::~Nametag2d() {
  * This little guy is a overload operator. We use this to assign a Nametag object to this object!
  */
 Nametag2d& Nametag2d::operator=(const Nametag2d& tag) {
-    m_contents = *new int(tag.m_contents);
-    m_chat_flags = *new int(tag.m_chat_flags);
-    m_color_code = *new unsigned int(tag.m_color_code);
-    m_name = *new std::wstring(tag.m_name);
-    m_display_name = *new std::wstring(tag.m_display_name);
-    m_chat_string = *new std::wstring(tag.m_chat_string);
-    m_chat_wordwrap = *new float(tag.m_chat_wordwrap);
-    m_wordwrap = *new float(tag.m_wordwrap);
-    m_name_fg = *new LVecBase4f(tag.m_name_fg);
-    m_name_bg = *new LVecBase4f(tag.m_name_bg);
-    m_chat_fg = *new LVecBase4f(tag.m_chat_fg);
-    m_chat_bg = *new LVecBase4f(tag.m_chat_bg);
-    m_avatar = tag.m_avatar; 
-    m_group = tag.m_group;
+    m_contents = tag.m_contents;
+    m_chat_flags = tag.m_chat_flags;
+    m_color_code = tag.m_color_code;
+    m_name = std::wstring(tag.m_name);
+    m_display_name = std::wstring(tag.m_display_name);
+    m_chat_string = std::wstring(tag.m_chat_string);
+    m_chat_wordwrap = tag.m_chat_wordwrap;
+    m_wordwrap = tag.m_wordwrap;
+    m_name_fg = LVecBase4f(tag.m_name_fg);
+    m_name_bg = LVecBase4f(tag.m_name_bg);
+    m_chat_fg = LVecBase4f(tag.m_chat_fg);
+    m_chat_bg = LVecBase4f(tag.m_chat_bg);
+    m_avatar = &*tag.m_avatar; 
+    m_group = &*tag.m_group;
     m_font = tag.m_font; 
-    m_has_group = bool(*new int(tag.m_has_group));
-    m_active = bool(*new int(tag.m_active));
+    m_has_group = tag.m_has_group;
+    m_active = tag.m_active;
     return *this;
 }
 
