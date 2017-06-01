@@ -108,7 +108,7 @@ class EXPCL_LIBOTP NametagGlobals : public virtual TypedObject {
         static bool does_color_code_exist(unsigned int cc);
         static bool does_whisper_type_exist(unsigned int wt);
         
-        static PT(MouseWatcher) m_mouse_watcher;
+        static MouseWatcher *m_mouse_watcher;
         static PT(AudioSound) m_click_sound;
         static PT(AudioSound) m_rollover_sound;
         

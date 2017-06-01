@@ -44,14 +44,23 @@ NametagGroup::~NametagGroup() {
         m_nametag_3d = nullptr;
     }
     if (m_tick_task != NULL && m_tick_task != nullptr) {
+        if (g_task_mgr->has_task(m_tick_task)) {
+            g_task_mgr->remove(m_tick_task);
+        }
         delete m_tick_task;
         m_tick_task = nullptr;
     }
     if (m_stomp_task != NULL && m_stomp_task != nullptr) {
+        if (g_task_mgr->has_task(m_stomp_task)) {
+            g_task_mgr->remove(m_stomp_task);
+        }
         delete m_stomp_task;
         m_stomp_task = nullptr;
     }
     if (m_chat_timeout_task != NULL && m_chat_timeout_task != nullptr) {
+        if (g_task_mgr->has_task(m_chat_timeout_task)) {
+            g_task_mgr->remove(m_chat_timeout_task);
+        }
         delete m_chat_timeout_task;
         m_chat_timeout_task = nullptr;
     }
@@ -61,11 +70,19 @@ void NametagGroup::destroy() {
     NametagGroup_cat.debug() << "destory()" << std::endl;
     if (m_tick_task != NULL && m_tick_task != nullptr) {
         m_tick_task->remove();
+        delete m_tick_task;
         m_tick_task = nullptr;
+    }
+    
+    if (m_chat_timeout_task != NULL && m_chat_timeout_task != nullptr) {
+        m_chat_timeout_task->remove();
+        delete m_chat_timeout_task;
+        m_chat_timeout_task = nullptr;
     }
     
     if (m_stomp_task != NULL && m_stomp_task != nullptr) {
         m_stomp_task->remove();
+        delete m_stomp_task;
         m_stomp_task = nullptr;
     }
     

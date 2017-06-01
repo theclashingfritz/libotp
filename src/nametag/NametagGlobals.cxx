@@ -6,7 +6,7 @@ NotifyCategoryDef(NametagGlobals, "");
 
 //template class pmap<unsigned int, state_map_t>;
 
-PT(MouseWatcher) NametagGlobals::m_mouse_watcher = nullptr;
+MouseWatcher *NametagGlobals::m_mouse_watcher = nullptr;
 PT(AudioSound) NametagGlobals::m_click_sound = nullptr;
 PT(AudioSound) NametagGlobals::m_rollover_sound = nullptr;
 
