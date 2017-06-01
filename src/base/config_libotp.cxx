@@ -160,7 +160,7 @@ std::string ws2s(const std::wstring& wstr) {
     return strTo;
 };
 
-static unsigned int decrypt_long(unsigned long long value) {
+unsigned int decrypt_long(unsigned long long value) {
     // Unpack 64-bit value into (u32, u16, u8, u8) values.
     volatile uint32_t enc = (value & 0xFFFFFFFF);
     volatile uint16_t adjust = ((value >> 32) & 0xFFFF);
@@ -184,13 +184,23 @@ static unsigned int decrypt_long(unsigned long long value) {
     return (enc << left_shift) + (enc >> right_shift) - (adjust + 0x8F187432);
 };
 
-static unsigned long long encrypt_long(unsigned int value) {
+unsigned long long encrypt_int(unsigned int value) {
+#ifdef WIN32
     GUID gid;
     if (CoCreateGuid(&gid) != 0x00000000) {
         return 0;
     }
     
     unsigned long long rvalue = gid.Data1 + gid.Data2 + gid.Data3;
+#else
+    unsigned long long rvalue = 0;
+
+    for (int i = 0; i < 5; ++i) {
+        r = (r << 15) | (rand() & 0x7FFF);
+    }
+
+    rvalue = rvalue & 0xFFFFFFFFFFFFFFFFULL;
+#endif
     
     Random *r = new Random(rvalue);
     

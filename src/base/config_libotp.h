@@ -108,7 +108,8 @@ EXPTP_LIBOTP INLINE T wrap_rotate_right(T x,T amount);
 EXPTP_LIBOTP void rotatecharleft(char *s, const int len, int amount);
 EXPTP_LIBOTP void rotatecharright(char *s, const int len, int amount);
 
-EXPTP_LIBOTP static unsigned int decrypt_long(unsigned long long value);
+EXPTP_LIBOTP unsigned int decrypt_long(unsigned long long value);
+EXPCL_LIBOTP unsigned long long encrypt_int(unsigned int value);
 
 EXPCL_LIBOTP char* AES_encrypt(char* data, char* key, char* iv);
 EXPCL_LIBOTP char* AES_decrypt(char* data, char* key, char* iv);

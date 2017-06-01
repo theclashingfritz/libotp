@@ -25,7 +25,7 @@ Settings::Settings() {
     m_file = Filename(m_file.to_os_long_name()); //Now let's do the real file.
     
     //Define our Settings Version!
-    m_version = "v1.0.9";
+    m_version = "v1.1.0";
     
     //Now define any PUBLISHED variables
     GL = 1;
@@ -49,11 +49,12 @@ Settings::Settings() {
     m_accepting_non_friend_whispers = 1;
     m_sfx_volume = 100.0f;
     m_music_volume = 100.0f;
-    m_current_driver = 0;
-    m_resolution = 1;
-    m_windowed_mode = 0;
-    m_resolution_dimensions[0] = 800;
-    m_resolution_dimensions[1] = 600;
+    m_current_driver = encrypt_int(0);
+    m_resolution = encrypt_int(1);
+    m_windowed_mode = encrypt_int(0);
+    m_server_type = encrypt_int(1);
+    m_resolution_dimensions[0] = encrypt_int(800);
+    m_resolution_dimensions[1] = encrypt_int(600);
 }
 
 Settings::~Settings() {
@@ -143,12 +144,12 @@ void Settings::read_settings() {
     m_accepting_non_friend_whispers = dgi.get_bool();
     m_sfx_volume = dgi.get_stdfloat();
     m_music_volume = dgi.get_stdfloat();
-    m_server_type = dgi.get_uint8();
-    m_current_driver = dgi.get_uint8();
-    m_resolution = dgi.get_uint8();
-    m_windowed_mode = dgi.get_uint8();
-    m_resolution_dimensions[0] = dgi.get_uint16();
-    m_resolution_dimensions[1] = dgi.get_uint16();
+    m_server_type = encrypt_int(dgi.get_uint8());
+    m_current_driver = encrypt_int(dgi.get_uint8());
+    m_resolution = encrypt_int(dgi.get_uint8());
+    m_windowed_mode = encrypt_int(dgi.get_uint8());
+    m_resolution_dimensions[0] = encrypt_int(dgi.get_uint16());
+    m_resolution_dimensions[1] = encrypt_int(dgi.get_uint16());
 }
 
 void Settings::write_settings() {
@@ -170,12 +171,12 @@ void Settings::write_settings() {
     dg.add_bool(m_accepting_non_friend_whispers);
     dg.add_stdfloat(m_sfx_volume);
     dg.add_stdfloat(m_music_volume);
-    dg.add_uint8(m_server_type);
-    dg.add_uint8(m_current_driver);
-    dg.add_uint8(m_resolution);
-    dg.add_uint8(m_windowed_mode);
-    dg.add_uint16(m_resolution_dimensions[0]);
-    dg.add_uint16(m_resolution_dimensions[1]);
+    dg.add_uint8(decrypt_long(m_server_type));
+    dg.add_uint8(decrypt_long(m_current_driver));
+    dg.add_uint8(decrypt_long(m_resolution));
+    dg.add_uint8(decrypt_long(m_windowed_mode));
+    dg.add_uint16(decrypt_long(m_resolution_dimensions[0]));
+    dg.add_uint16(decrypt_long(m_resolution_dimensions[1]));
     DatagramIterator dgi(dg);
     
     m_data = dgi.get_remaining_bytes();
@@ -260,46 +261,46 @@ void Settings::set_music_volume(float volume) {
     m_music_volume = volume;
 }
 
-void Settings::set_server_type(int type) {
-    m_server_type = type;
+void Settings::set_server_type(uint8_t type) {
+    m_server_type = encrypt_int(type);
 }
 
-void Settings::set_display_driver(unsigned int driver) {
+void Settings::set_display_driver(uint8_t driver) {
     /**
      * Sets the display driver by using it corrosponding ID.
      */
-    m_current_driver = driver;
+    m_current_driver = encrypt_int(driver);
 }
 
-void Settings::set_windowed_mode(unsigned int mode) {
-    m_windowed_mode = mode;
+void Settings::set_windowed_mode(uint8_t mode) {
+    m_windowed_mode = encrypt_int(mode);
 }
 
-void Settings::set_resolution(unsigned int resolution) {
+void Settings::set_resolution(uint8_t resolution) {
     /**
      * Sets the Resolution Mode.
      */
-    m_resolution = resolution;
+    m_resolution = encrypt_int(resolution);
 }
 
-void Settings::set_resolution_dimensions(unsigned int xsize, unsigned int ysize) {
+void Settings::set_resolution_dimensions(uint16_t xsize, uint16_t ysize) {
     /**
      * Sets the Resolution Dimensions.
      */
-    m_resolution_dimensions[0] = xsize;
-    m_resolution_dimensions[1] = ysize;
+    m_resolution_dimensions[0] = encrypt_int(xsize);
+    m_resolution_dimensions[1] = encrypt_int(ysize);
 }
 
-int Settings::server_type() {
-    return m_server_type;
+uint8_t Settings::server_type() {
+    return decrypt_long(m_server_type);
 }
 
-int Settings::get_resolution() {
-    return m_resolution;
+uint8_t Settings::get_resolution() {
+    return decrypt_long(m_resolution);
 }
 
-int Settings::get_windowed_mode() {
-    return m_windowed_mode;
+uint8_t Settings::get_windowed_mode() {
+    return decrypt_long(m_windowed_mode);
 }
 
 bool Settings::get_music() {

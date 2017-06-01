@@ -46,15 +46,15 @@ class EXPCL_LIBOTP Settings : public TypedReferenceCount {
         void set_accepting_non_friend_whispers(bool mode);
         void set_sfx_volume(float volume);
         void set_music_volume(float volume);
-        void set_server_type(int type);
-        void set_display_driver(unsigned int driver);
-        void set_windowed_mode(unsigned int mode);
-        void set_resolution(unsigned int resolution);
-        void set_resolution_dimensions(unsigned int xsize, unsigned int ysize);
+        void set_server_type(uint8_t type);
+        void set_display_driver(uint8_t driver);
+        void set_windowed_mode(uint8_t mode);
+        void set_resolution(uint8_t resolution);
+        void set_resolution_dimensions(uint16_t xsize, uint16_t ysize);
         static Settings* get_global_ptr();
-        int server_type();
-        int get_resolution();
-        int get_windowed_mode();
+        uint8_t server_type();
+        uint8_t get_resolution();
+        uint8_t get_windowed_mode();
         float get_sfx_volume();
         float get_music_volume();
         bool get_music();
@@ -69,11 +69,11 @@ class EXPCL_LIBOTP Settings : public TypedReferenceCount {
         bool do_saved_settings_exist();
         
     protected:
-        unsigned int m_resolution_dimensions[2];
-        unsigned int m_resolution;
-        unsigned int m_windowed_mode;
-        unsigned int m_server_type;
-        unsigned int m_current_driver;
+        unsigned long long m_resolution_dimensions[2];
+        unsigned long long m_resolution;
+        unsigned long long m_windowed_mode;
+        unsigned long long m_server_type;
+        unsigned long long m_current_driver;
         bool m_want_music;
         bool m_want_sfx;
         bool m_force_sw_midi;
