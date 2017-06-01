@@ -3,6 +3,8 @@
 #include <math.h>
 #include <stdexcept>
 
+TypeHandle Random::_type_handle;
+
 const int MBIG = INT_MAX;
 const int MSEED = 161803398;
 const int MZ = 0;
