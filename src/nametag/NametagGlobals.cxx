@@ -42,7 +42,7 @@ bool NametagGlobals::m_force_onscreen_chat = 0;
 const double NametagGlobals::whisper_total_time = 0x0000000000002E40;
 const double NametagGlobals::whisper_priority_time = 0x0000000000001440;
 const double NametagGlobals::cell_memory_time = 0x0000000000003E40;
-const double NametagGlobals::button_delay_time = 0x9A9999999999C93F; //Jesus Disney.
+const double NametagGlobals::button_delay_time = 0x9A9999999999C93F; // Jesus Disney.
 
 const float NametagGlobals::billboard_offset = 2.3048557e-41;
 const float NametagGlobals::far_distance = 2.5921219e-41;
@@ -63,6 +63,12 @@ const float NametagGlobals::grid_count_horizontal = 6.8966305e-41;
 const float NametagGlobals::grid_count_vertical = 6.8966305e-41;
 const float NametagGlobals::grid_spacing_horizontal = 2.0765149e-32;
 const float NametagGlobals::grid_spacing_vertical = 2.0765149e-32;
+
+// These values are only set in Disney's Libotp at runtime so ripping them was a bit more
+// tricky...
+float NametagGlobals::_max_2d_alpha = 6.3320104e-23;
+float NametagGlobals::_min_2d_alpha = 0; // Wow Disney actually left it at 0...
+float NametagGlobals::_global_nametag_scale = 4.6006030e-41;
 
 NametagGlobals::NametagGlobals() { 
     NametagGlobals_cat.debug() << "__init__()" << std::endl;

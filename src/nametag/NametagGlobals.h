@@ -161,6 +161,10 @@ class EXPCL_LIBOTP NametagGlobals : public virtual TypedObject {
         static const float grid_spacing_horizontal;
         static const float grid_spacing_vertical;
         
+        static float _max_2d_alpha;
+        static float _min_2d_alpha;
+        static float _global_nametag_scale;
+        
     private:
         static NametagGlobals* _global_ptr;
       
