@@ -11,6 +11,7 @@ static PT(AsyncTaskManager) g_task_mgr = AsyncTaskManager::get_global_ptr();
 NotifyCategoryDef(NametagGroup, "");
 
 TypeHandle NametagGroup::_type_handle;
+
 unsigned int NametagGroup::NametagGroup_serial;
 
 NametagGroup::NametagGroup() : m_icon(new PandaNode("icon")), m_chat_timeout_task(nullptr), m_stomp_flags(0), m_color_code(NametagGlobals::CCNormal), m_chat_flags(0), m_font(nullptr), m_manager(nullptr), m_avatar(nullptr), m_qt_color(LVecBase4f(1)), m_active(true), m_chat_page(0), m_visible_3d(true), m_stomp_task(nullptr) {
@@ -340,6 +341,10 @@ unsigned int NametagGroup::get_num_chat_pages() {
     }
         
     return m_chat_pages.size();
+}
+
+int NametagGroup::get_nametag3d_flag() {
+    return 0;
 }
 
 float NametagGroup::get_stomp_delay() {

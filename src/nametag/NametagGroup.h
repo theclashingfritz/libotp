@@ -109,6 +109,8 @@ class EXPCL_LIBOTP NametagGroup : public virtual TypedObject {
         static AsyncTask::DoneStatus do_chat_timeout_task(GenericAsyncTask* task, void* data);
         static AsyncTask::DoneStatus tick_task(GenericAsyncTask* task, void* data);
         
+        int get_nametag3d_flag();
+        
         Nametag2d* m_nametag_2d;
         Nametag3d* m_nametag_3d;
         
@@ -135,6 +137,7 @@ class EXPCL_LIBOTP NametagGroup : public virtual TypedObject {
         int m_chat_page;
         int m_chat_flags;
         int m_stomp_flags;
+        int _unique_index;
         
         unsigned int m_serial;
         

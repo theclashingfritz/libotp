@@ -1,5 +1,6 @@
 #include "Settings.h"
 
+
 NotifyCategoryDef(Settings, "");
 
 TypeHandle Settings::_type_handle;
@@ -110,9 +111,13 @@ void Settings::read_settings() {
     char * e_data = new char[m_data.length()];
     memcpy(e_data, m_data.c_str(), m_data.length());
     
-    rotatecharright(m_aes_key, get_char_length(m_aes_key), 2);
+    char *mFixedKey = unscramble_key(m_aes_key, m_aes_key1, c_constant);
     
-    e_data = AES_decrypt(e_data, m_aes_key, c_iv);
+    e_data = AES_decrypt(e_data, mFixedKey, c_iv);
+    
+    delete mFixedKey;
+    
+    mFixedKey = nullptr;
     
     if (e_data != NULL && e_data != nullptr) {
         m_data = *new string(e_data);
@@ -123,6 +128,8 @@ void Settings::read_settings() {
         return;
     }
     delete[] e_data; 
+    
+    e_data = nullptr;
     
     Datagram dg(m_data);
     DatagramIterator dgi(dg);
@@ -184,9 +191,13 @@ void Settings::write_settings() {
     char * e_data = new char[m_data.length()];
     memcpy(e_data, m_data.c_str(), m_data.length());
     
-    rotatecharright(m_aes_key, get_char_length(m_aes_key), 2);
+    char *mFixedKey = unscramble_key(m_aes_key, m_aes_key1, c_constant);
     
-    e_data = AES_encrypt(e_data, m_aes_key, c_iv);
+    e_data = AES_encrypt(e_data, mFixedKey, c_iv);
+    
+    delete mFixedKey;
+    
+    mFixedKey = nullptr;
     
     if (e_data != NULL && e_data != nullptr) {
         m_data = *new string(e_data);
@@ -196,6 +207,8 @@ void Settings::write_settings() {
         return;
     }
     delete[] e_data;
+    
+    e_data = nullptr;
     
     m_data = compress_string(m_data, 9);
     std::reverse(m_data.begin(), m_data.end());

@@ -18,7 +18,8 @@
 #include "Nametag.h"
 #include "Settings.h"
 
-#include "Random.h"
+#include "Random.h" 
+
 
 // These char maps are for if one if spilt characters raises a error 
 // and we can just refer to the char from here to fix the error.
@@ -63,6 +64,9 @@ void init_libotp() {
     NametagFloat3d::init_type();
     Nametag::init_type();
     Settings::init_type();
+#ifdef _DEBUG
+    _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+#endif
 };
 
 template <class T>
@@ -94,16 +98,8 @@ INLINE std::string char_to_string(char * chr) {
     return chr_string;
 };
 
-INLINE unsigned char rolcharleft(unsigned char x, int n) {
-    return (x << n) | (x >> (8 - n));
-};
-
-INLINE unsigned char rolcharright(unsigned char x, int n) {
-    return (x >> n) | (x << (8 - n));
-};
-
-template <typename T>
-INLINE T wrap_rotate_left(T x,T amount) {
+template <typename T, typename T2>
+INLINE T wrap_rotate_left(T x,T2 amount) {
 	const unsigned bits=sizeof(T)*8;
 #if POWER_SIZES
 	amount&=bits-1;
@@ -116,8 +112,8 @@ INLINE T wrap_rotate_left(T x,T amount) {
 	return x;
 }
 
-template <typename T>
-INLINE T wrap_rotate_right(T x,T amount) {
+template <typename T, typename T2>
+INLINE T wrap_rotate_right(T x,T2 amount) {
 	const unsigned bits=sizeof(T)*8;
 #if POWER_SIZES
 	amount&=bits-1;
@@ -130,16 +126,70 @@ INLINE T wrap_rotate_right(T x,T amount) {
 	return x;
 }
 
-void rotatecharleft(char *s, const int len, int amount) {
+INLINE char *sum_chars(char *a, char *b) {
+    int carry = 0;
+    for (int i = 0; i < get_char_length(a); ++i) {
+        int sum = a[i] + b[i] + carry;
+        a[i] = static_cast<char>(sum & 0xFF);
+        carry = sum >> 8;
+    }
+    return a;
+}
+
+INLINE std::string sum_strings(std::string a, std::string b) {
+    int carry = 0;
+    for (int i = 0; i < a.length(); ++i) {
+        int sum = a[i] + b[i] + carry;
+        a[i] = (sum & 0xFF);
+        carry = sum >> 8;
+    }
+    return a;
+}
+
+INLINE char *rotate_char_left(char *s, const int len, int amount) {
     for (int i = 0; i < len; ++i) {
-        s[i] = static_cast<char>(rolcharleft(static_cast<unsigned char>(s[i]), amount));
+        s[i] = static_cast<char>(wrap_rotate_left(static_cast<unsigned char>(s[i]), amount));
+    }
+    
+    return s;
+};
+
+INLINE void rotate_char_left(char **s, const int len, int amount) {
+    char *d = *s;
+    for (int i = 0; i < len; ++i) {
+        d[i] = static_cast<char>(wrap_rotate_left(static_cast<unsigned char>(d[i]), amount));
     }
 };
 
-void rotatecharright(char *s, const int len, int amount) {
+INLINE char *rotate_char_right(char *s, const int len, int amount) {
     for (int i = 0; i < len; ++i) {
-        s[i] = static_cast<char>(rolcharright(static_cast<unsigned char>(s[i]), amount));
+        s[i] = static_cast<char>(wrap_rotate_right(static_cast<unsigned char>(s[i]), amount));
     }
+    
+    return s;
+};
+
+INLINE void rotate_char_right(char **s, const int len, int amount) {
+    char *d = *s;
+    for (int i = 0; i < len; ++i) {
+        d[i] = static_cast<char>(wrap_rotate_right(static_cast<unsigned char>(d[i]), amount));
+    }
+};
+
+INLINE std::string rotate_string_left(std::string s, const int len, int amount) {
+    for (int i = 0; i < len; ++i) {
+        s[i] = wrap_rotate_right(s[i], amount);
+    }
+    
+    return s;
+};
+
+INLINE std::string rotate_string_right(std::string s, const int len, int amount) {
+    for (int i = 0; i < len; ++i) {
+        s[i] = wrap_rotate_right(s[i], amount);
+    }
+    
+    return s;
 };
 
 // multi byte to wide char:
@@ -708,25 +758,31 @@ PyObject* AES_decrypt(PyObject* pdata, PyObject* pkey, PyObject* piv) {
 };
 
 std::string unscramble_key(std::string key1, std::string key2, std::string C) {
-    ROL(key1, 56);
-    ROL(key2, 12);
-    ROL(C, 32);
-    
-    // Swap the keys to get the real set and confuse anybody trying to decipher
-    // the Key Scrambler.
-    swap(key1, key2);
-    
-    //Create 2 keys to swap for the real key.
-    std::string key = ((((XOR(key1, key2)) + C), key2), XOR(key1, key2));
-    std::string key3 = XOR((XOR(((XOR(key1, key2)) + C), key2)), XOR(key1, key2));
-    
-    //Whoop! Swap the keys again!
-    swap(key, key3);
-    
-    ROL(key, 2);
-    return key;
+    std::string nKey = rotate_string_left(key1, key1.length(), 2);
+    nKey = XOR(nKey, key2);
+    nKey = sum_strings(nKey, C);
+    nKey = rotate_string_left(nKey, nKey.length(), 87);
+
+    return nKey;
 };
 END_PUBLISH
+
+char *unscramble_key(char* key1, char* key2, char* C) {
+    if (get_char_length(key1) >= 1028) {
+        libotp_cat.warning() << "WARNING: key1 size is bigger then char[] size in unscramble_key()!" << std::endl;
+        char* a = new char(2);
+        a += 'a';
+        a += '\0';
+        return a;
+    }
+    char *nKey = new char(1027);
+    nKey = rotate_char_left(key1, get_char_length(key1), 2);
+    nKey = XOR(nKey, key2);
+    nKey = sum_chars(nKey, C);
+    nKey = rotate_char_left(nKey, get_char_length(nKey), 87);
+
+    return nKey;
+};
 
 std::string process_key_chunks(std::string chunk1, std::string chunk2, std::string chunk3, std::string chunk4) {
     /*
@@ -776,7 +832,7 @@ std::string process_key_chunks(std::string chunk1, std::string chunk2, std::stri
 
     char *keyArray = new char[originalKey.length()];
     memcpy(keyArray, originalKey.c_str(), originalKey.length());
-    int size = *new int(originalKey.length());
+    int size = originalKey.length();
 
     // Clean the original key.
     memcpy(&originalKey, &gen_random_string(originalKey.length()), originalKey.length()); 

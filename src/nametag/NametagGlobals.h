@@ -136,6 +136,31 @@ class EXPCL_LIBOTP NametagGlobals : public virtual TypedObject {
         static bool m_force_onscreen_chat;
         static bool m_force_2d_nametags;
         
+        static const double whisper_total_time;
+        static const double whisper_priority_time;
+        static const double cell_memory_time;
+        static const double button_delay_time;
+
+        static const float billboard_offset;
+        static const float far_distance;
+        static const float far_scale;
+        static const float scale_exponent;
+        static const float arrow_scale;
+        static const float arrow_offset;
+        static const float nominal_avatar_width;
+        static const float name_wordwrap;
+        static const float house_name_wordwrap;
+        static const float building_name_wordwrap;
+        static const float chat_2d_wordwrap;
+        static const float chat_3d_wordwrap;
+        static const float balloon_internal_width;
+        static const float balloon_external_width;
+        static const float ballon_min_hscale;
+        static const float grid_count_horizontal;
+        static const float grid_count_vertical;
+        static const float grid_spacing_horizontal;
+        static const float grid_spacing_vertical;
+        
     private:
         static NametagGlobals* _global_ptr;
       

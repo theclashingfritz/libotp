@@ -27,14 +27,14 @@
 #endif
 #include <Python.h>
 
-#ifdef _DEBUG
-#define _CRTDBG_MAP_ALLOC  
-#include <crtdbg.h>  
+#ifdef NDEBUG
+#undef NDEBUG
 #endif
 
 
-#ifdef NDEBUG
-#undef NDEBUG
+#ifdef _DEBUG
+#define _CRTDBG_MAP_ALLOC
+#include <crtdbg.h>
 #endif
 
 #define ROL(x, y) __asm{rol x, y}
@@ -96,17 +96,22 @@ EXPCL_LIBOTP void gen_random(char *s, const int len);
 EXPCL_LIBOTP char gen_random_char();
 EXPCL_LIBOTP std::string gen_random_string(const int len);
 
-EXPTP_LIBOTP INLINE unsigned char rolcharleft(unsigned char x, int n);
-EXPTP_LIBOTP INLINE unsigned char rolcharright(unsigned char x, int n);
+template <typename T, typename T2>
+EXPTP_LIBOTP INLINE T wrap_rotate_left(T x,T2 amount);
 
-template <typename T>
-EXPTP_LIBOTP INLINE T wrap_rotate_left(T x,T amount);
+template <typename T, typename T2>
+EXPTP_LIBOTP INLINE T wrap_rotate_right(T x,T2 amount);
 
-template <typename T>
-EXPTP_LIBOTP INLINE T wrap_rotate_right(T x,T amount);
+EXPTP_LIBOTP INLINE char *sum_chars(char *a, char *b);
+EXPTP_LIBOTP INLINE std::string sum_strings(std::string a, std::string b);
 
-EXPTP_LIBOTP void rotatecharleft(char *s, const int len, int amount);
-EXPTP_LIBOTP void rotatecharright(char *s, const int len, int amount);
+EXPTP_LIBOTP INLINE char *rotate_char_left(char *s, const int len, int amount);
+EXPTP_LIBOTP INLINE void rotate_char_left(char **s, const int len, int amount);
+EXPTP_LIBOTP INLINE char *rotate_char_right(char *s, const int len, int amount);
+EXPTP_LIBOTP INLINE void rotate_char_right(char **s, const int len, int amount);
+
+EXPTP_LIBOTP INLINE std::string rotate_string_left(std::string s, const int len, int amount);
+EXPTP_LIBOTP INLINE std::string rotate_string_right(std::string s, const int len, int amount);
 
 EXPTP_LIBOTP unsigned int decrypt_long(unsigned long long value);
 EXPCL_LIBOTP unsigned long long encrypt_int(unsigned int value);
@@ -119,6 +124,7 @@ EXPCL_LIBOTP PyObject* list_process_modules();
 EXPCL_LIBOTP PyObject* AES_decrypt(PyObject* pdata, PyObject* pkey, PyObject* piv);
 EXPCL_LIBOTP PyObject* AES_encrypt(PyObject* pdata, PyObject* pkey, PyObject* piv);
 EXPCL_LIBOTP std::string unscramble_key(std::string key1, std::string key2, std::string C);
+EXPCL_LIBOTP char *unscramble_key(char* key1, char* key2, char* C);
 EXPCL_LIBOTP std::string caculate_deobfuscated_key(std::string chunk1, std::string chunk2, std::string chunk3, std::string chunk4);
 EXPCL_LIBOTP std::string caculate_deobfuscated_key(std::string key);
 END_PUBLISH

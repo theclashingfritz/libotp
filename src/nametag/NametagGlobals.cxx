@@ -39,6 +39,31 @@ bool NametagGlobals::m_want_active_nametags = 1;
 bool NametagGlobals::m_force_2d_nametags = 0;
 bool NametagGlobals::m_force_onscreen_chat = 0;
 
+const double NametagGlobals::whisper_total_time = 0x0000000000002E40;
+const double NametagGlobals::whisper_priority_time = 0x0000000000001440;
+const double NametagGlobals::cell_memory_time = 0x0000000000003E40;
+const double NametagGlobals::button_delay_time = 0x9A9999999999C93F; //Jesus Disney.
+
+const float NametagGlobals::billboard_offset = 2.3048557e-41;
+const float NametagGlobals::far_distance = 2.5921219e-41;
+const float NametagGlobals::far_scale = 4.8863037e-14;
+const float NametagGlobals::scale_exponent = 8.8281803e-44;
+const float NametagGlobals::arrow_scale = 8.8281803e-44;
+const float NametagGlobals::arrow_offset = 4.6006030e-41;
+const float NametagGlobals::nominal_avatar_width = 5.7486868e-41;
+const float NametagGlobals::name_wordwrap = 8.618546074983355e-41;
+const float NametagGlobals::building_name_wordwrap = 2.9609437e-42;
+const float NametagGlobals::house_name_wordwrap = 1.1570521e-41;
+const float NametagGlobals::chat_2d_wordwrap = 9.1084400e-44;
+const float NametagGlobals::chat_3d_wordwrap = 1.1570521e-41;
+const float NametagGlobals::balloon_internal_width = 5.8308029e-42;
+const float NametagGlobals::balloon_external_width = 1.1570521e-41;
+const float NametagGlobals::ballon_min_hscale = 4.6004629e-41;
+const float NametagGlobals::grid_count_horizontal = 6.8966305e-41;
+const float NametagGlobals::grid_count_vertical = 6.8966305e-41;
+const float NametagGlobals::grid_spacing_horizontal = 2.0765149e-32;
+const float NametagGlobals::grid_spacing_vertical = 2.0765149e-32;
+
 NametagGlobals::NametagGlobals() { 
     NametagGlobals_cat.debug() << "__init__()" << std::endl;
 }
