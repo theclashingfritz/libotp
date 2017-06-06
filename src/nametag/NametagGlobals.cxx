@@ -35,9 +35,14 @@ buttons_map_t NametagGlobals::quit_buttons;
 color_map_t NametagGlobals::nametag_colors;
 whisper_color_map_t NametagGlobals::whisper_colors;
 
+UpdateSeq NametagGlobals::margin_prop_seq = UpdateSeq();
+
 bool NametagGlobals::m_want_active_nametags = 1;
 bool NametagGlobals::m_force_2d_nametags = 0;
 bool NametagGlobals::m_force_onscreen_chat = 0;
+bool NametagGlobals::_master_arrows_on = 1;
+bool NametagGlobals::_master_nametags_active = 1;
+bool NametagGlobals::_master_nametags_visible = 1;
 
 const double NametagGlobals::whisper_total_time = 0x0000000000002E40;
 const double NametagGlobals::whisper_priority_time = 0x0000000000001440;
@@ -260,9 +265,105 @@ void NametagGlobals::set_force_onscreen_chat(bool want) {
     m_force_onscreen_chat = want;
 }
 
+void NametagGlobals::set_master_arrows_on(bool want) {
+    NametagGlobals_cat.debug() << "set_master_arrows_on(" << want << ")" << std::endl;
+    _master_arrows_on = want;
+}
+
+void NametagGlobals::set_master_nametags_active(bool want) {
+    NametagGlobals_cat.debug() << "set_master_nametags_active(" << want << ")" << std::endl;
+    _master_nametags_active = want;
+}
+
+void NametagGlobals::set_master_nametags_visible(bool want) {
+    NametagGlobals_cat.debug() << "set_master_nametags_visible(" << want << ")" << std::endl;
+    _master_nametags_visible = want;
+}
+
 void NametagGlobals::set_force_2d_nametags(bool want) {
     NametagGlobals_cat.debug() << "set_force_2d_nametags(" << want << ")" << std::endl;
     m_force_2d_nametags = want;
+}
+
+void NametagGlobals::set_global_nametag_scale(float scale) {
+    NametagGlobals_cat.debug() << "set_global_nametag_scale(" << scale << ")" << std::endl;
+    _global_nametag_scale = scale;
+}
+
+void NametagGlobals::set_max_2d_alpha(float alpha) {
+  NametagGlobals_cat.debug() << "set_max_2d_alpha(" << alpha << ")" << std::endl;
+  _max_2d_alpha = alpha;
+  // The assembly below is directly ripped from the Disney libotp for the margin_prop_seq part.
+  // The "decompiled" code showed nothing close to what the assembly seems to convey.. So here it is!
+  __asm {mov ecx, margin_prop_seq ; Move contents of ecx into margin_prop_seq
+         lea eax, [ecx+1] ; This will move the effective address ECX + 1 into EAX.
+         lea edx, [eax+1] ; This will move the effective address EAX + 1 into EDX.
+         cmp edx, 2 ; Compare the edx value with 2
+         ja routine2 ; Jump to routine2 if edx >u 2
+         mov eax, 2 ; Moves 2 into eax? 
+routine2:
+          push esi ; Preserve the value of esi
+          mov esi, ecx ; Move contents of esi into ecx
+          mov edx, eax ; Move contents of edx into eax
+          mov margin_prop_seq, edx ; Move contents of margin_prop_seq into edx
+          cmp esi, ecx ; Compare the esi value with ecx
+          jz froutine ; Jump to froutine if 0!
+          nop ; Do nothing!
+routine3:
+          mov esi, eax ; Move contents of esi into eax
+          inc eax ; Increase eax
+          lea ecx, [eax+1] ; This will move the effective address EAX + 1 into ECX.
+          cmp ecx, 2 ; Compare the ecx value with 2
+          ja routine4 ; Jump to routine4 if ecx >u 2
+          mov eax, 2 ; Moves 2 into eax? 
+routine4:
+          mov ecx, edx ; Move contents of ecx into edx
+          mov edx, eax ; Move contents of edx into eax
+          cmp ecx, esi ; Compare the ecx value with esi
+          jnz routine3 ; Jump to routine3 if NOT 0!
+          mov margin_prop_seq, edx ; Move contents of margin_prop_seq into edx
+froutine:
+          pop esi ; Restore original esi value
+          retn ; Return.
+  };
+}
+
+void NametagGlobals::set_min_2d_alpha(float alpha) {
+  NametagGlobals_cat.debug() << "set_min_2d_alpha(" << alpha << ")" << std::endl;
+  _min_2d_alpha = alpha;
+  // The assembly below is directly ripped from the Disney libotp for the margin_prop_seq part.
+  // The "decompiled" code showed nothing close to what the assembly seems to convey.. So here it is!
+  __asm {mov ecx, margin_prop_seq ; Move contents of ecx into margin_prop_seq
+         lea eax, [ecx+1] ; This will move the effective address ECX + 1 into EAX.
+         lea edx, [eax+1] ; This will move the effective address EAX + 1 into EDX.
+         cmp edx, 2 ; Compare the edx value with 2
+         ja routine2 ; Jump to routine2 if edx >u 2
+         mov eax, 2 ; Moves 2 into eax? 
+routine2:
+          push esi ; Preserve the value of esi
+          mov esi, ecx ; Move contents of esi into ecx
+          mov edx, eax ; Move contents of edx into eax
+          mov margin_prop_seq, edx ; Move contents of margin_prop_seq into edx
+          cmp esi, ecx ; Compare the esi value with ecx
+          jz froutine ; Jump to froutine if 0!
+          nop ; Do nothing!
+routine3:
+          mov esi, eax ; Move contents of esi into eax
+          inc eax ; Increase eax
+          lea ecx, [eax+1] ; This will move the effective address EAX + 1 into ECX.
+          cmp ecx, 2 ; Compare the ecx value with 2
+          ja routine4 ; Jump to routine4 if ecx >u 2
+          mov eax, 2 ; Moves 2 into eax? 
+routine4:
+          mov ecx, edx ; Move contents of ecx into edx
+          mov edx, eax ; Move contents of edx into eax
+          cmp ecx, esi ; Compare the ecx value with esi
+          jnz routine3 ; Jump to routine3 if NOT 0!
+          mov margin_prop_seq, edx ; Move contents of margin_prop_seq into edx
+froutine:
+          pop esi ; Restore original esi value
+          retn ; Return.
+  };
 }
 
 void NametagGlobals::set_click_sound(PT(AudioSound) sound) {

@@ -105,6 +105,14 @@ class EXPCL_LIBOTP NametagGlobals : public virtual TypedObject {
         static void add_color(unsigned int cc, LVecBase4f normal_name_fg, LVecBase4f normal_name_bg, LVecBase4f normal_chat_fg, LVecBase4f normal_chat_bg, LVecBase4f click_name_fg, LVecBase4f click_name_bg, LVecBase4f click_chat_fg, LVecBase4f click_chat_bg, LVecBase4f hover_name_fg, LVecBase4f hover_name_bg, LVecBase4f hover_chat_fg, LVecBase4f hover_chat_bg, LVecBase4f disabled_name_fg, LVecBase4f disabled_name_bg, LVecBase4f disabled_chat_fg, LVecBase4f disabled_chat_bg);
         static void add_whisper_color(unsigned int wt, LVecBase4f normal_fg, LVecBase4f normal_bg, LVecBase4f click_fg, LVecBase4f click_bg, LVecBase4f hover_fg, LVecBase4f hover_bg, LVecBase4f disabled_fg, LVecBase4f disabled_bg);
         
+        static void set_master_arrows_on(bool want);
+        static void set_master_nametags_active(bool want);
+        static void set_master_nametags_visible(bool want);
+        
+        static void set_global_nametag_scale(float scale);
+        static void set_max_2d_alpha(float alpha);
+        static void set_min_2d_alpha(float alpha);
+        
         static bool does_color_code_exist(unsigned int cc);
         static bool does_whisper_type_exist(unsigned int wt);
         
@@ -131,6 +139,8 @@ class EXPCL_LIBOTP NametagGlobals : public virtual TypedObject {
         static NodePath *m_thought_balloon_nodepath;
         static NodePath *m_page_button_nodepath;
         static NodePath *m_camera_nodepath;
+        
+        static UpdateSeq margin_prop_seq;
         
         static bool m_want_active_nametags;
         static bool m_force_onscreen_chat;
@@ -161,12 +171,16 @@ class EXPCL_LIBOTP NametagGlobals : public virtual TypedObject {
         static const float grid_spacing_horizontal;
         static const float grid_spacing_vertical;
         
+    private:
+        static NametagGlobals* _global_ptr;
+        
+        static bool _master_arrows_on;
+        static bool _master_nametags_active;
+        static bool _master_nametags_visible;
+        
         static float _max_2d_alpha;
         static float _min_2d_alpha;
         static float _global_nametag_scale;
-        
-    private:
-        static NametagGlobals* _global_ptr;
       
     TYPE_HANDLE(NametagGlobals, TypedObject);
 };
