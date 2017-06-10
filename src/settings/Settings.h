@@ -74,6 +74,8 @@ class EXPCL_LIBOTP Settings : public TypedReferenceCount {
         unsigned long long m_windowed_mode;
         unsigned long long m_server_type;
         unsigned long long m_current_driver;
+        unsigned long long m_music_volume;
+        unsigned long long m_sfx_volume;
         bool m_want_music;
         bool m_want_sfx;
         bool m_force_sw_midi;
@@ -85,8 +87,6 @@ class EXPCL_LIBOTP Settings : public TypedReferenceCount {
         bool m_accepting_new_friends;
         bool m_accepting_non_friend_whispers;
         bool m_embedded_mode;
-        float m_music_volume;
-        float m_sfx_volume;
         
     private:
         std::string m_version;

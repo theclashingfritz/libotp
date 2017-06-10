@@ -53,6 +53,11 @@
     #define EXPTP_LIBOTP IMPORT_TEMPL 
 #endif 
 
+extern char big_char_map[26];
+extern char small_char_map[26];
+extern char number_char_map[10];
+
+extern char aes_key_index[12][17];
 
 typedef pvector<LVecBase4f> color_tuple_t; // (LVecBase4f, LVecBase4f)
 typedef pvector<color_tuple_t> color_tuple_tuple_t; // ((LVecBase4f, LVecBase4f), (LVecBase4f, LVecBase4f))
@@ -97,24 +102,26 @@ EXPCL_LIBOTP char gen_random_char();
 EXPCL_LIBOTP std::string gen_random_string(const int len);
 
 template <typename T, typename T2>
-EXPTP_LIBOTP INLINE T wrap_rotate_left(T x,T2 amount);
+EXPCL_LIBOTP INLINE T wrap_rotate_left(T x,T2 amount);
 
 template <typename T, typename T2>
-EXPTP_LIBOTP INLINE T wrap_rotate_right(T x,T2 amount);
+EXPCL_LIBOTP INLINE T wrap_rotate_right(T x,T2 amount);
 
-EXPTP_LIBOTP INLINE char *sum_chars(char *a, char *b);
-EXPTP_LIBOTP INLINE std::string sum_strings(std::string a, std::string b);
+EXPCL_LIBOTP INLINE char *sum_chars(char *a, char *b);
+EXPCL_LIBOTP INLINE std::string sum_strings(std::string a, std::string b);
 
-EXPTP_LIBOTP INLINE char *rotate_char_left(char *s, const int len, int amount);
-EXPTP_LIBOTP INLINE void rotate_char_left(char **s, const int len, int amount);
-EXPTP_LIBOTP INLINE char *rotate_char_right(char *s, const int len, int amount);
-EXPTP_LIBOTP INLINE void rotate_char_right(char **s, const int len, int amount);
+EXPCL_LIBOTP INLINE char *rotate_char_left(char *s, const int len, int amount);
+EXPCL_LIBOTP INLINE void rotate_char_left(char **s, const int len, int amount);
+EXPCL_LIBOTP INLINE char *rotate_char_right(char *s, const int len, int amount);
+EXPCL_LIBOTP INLINE void rotate_char_right(char **s, const int len, int amount);
 
-EXPTP_LIBOTP INLINE std::string rotate_string_left(std::string s, const int len, int amount);
-EXPTP_LIBOTP INLINE std::string rotate_string_right(std::string s, const int len, int amount);
+EXPCL_LIBOTP INLINE std::string rotate_string_left(std::string s, const int len, int amount);
+EXPCL_LIBOTP INLINE std::string rotate_string_right(std::string s, const int len, int amount);
 
-EXPTP_LIBOTP unsigned int decrypt_long(unsigned long long value);
+EXPCL_LIBOTP unsigned int decrypt_int(unsigned long long value);
 EXPCL_LIBOTP unsigned long long encrypt_int(unsigned int value);
+EXPCL_LIBOTP float decrypt_float(unsigned long long value);
+EXPCL_LIBOTP unsigned long long encrypt_float(float value);
 
 EXPCL_LIBOTP char* AES_encrypt(char* data, char* key, char* iv);
 EXPCL_LIBOTP char* AES_decrypt(char* data, char* key, char* iv);

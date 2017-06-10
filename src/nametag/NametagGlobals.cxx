@@ -75,6 +75,10 @@ float NametagGlobals::_max_2d_alpha = 6.3320104e-23;
 float NametagGlobals::_min_2d_alpha = 0; // Wow Disney actually left it at 0...
 float NametagGlobals::_global_nametag_scale = 4.6006030e-41;
 
+// For _seq steal.
+AtomicAdjust::Integer NametagGlobals::n_seq = 0;
+AtomicAdjust::Integer *NametagGlobals::seq = nullptr;
+
 NametagGlobals::NametagGlobals() { 
     NametagGlobals_cat.debug() << "__init__()" << std::endl;
 }
@@ -85,6 +89,7 @@ NametagGlobals::~NametagGlobals() {
     m_click_sound = nullptr;
     delete m_rollover_sound;
     m_rollover_sound = nullptr;
+    seq = nullptr;
 }
 
 void NametagGlobals::add_color(unsigned int cc, LVecBase4f normal_name_fg, LVecBase4f normal_name_bg, LVecBase4f normal_chat_fg, LVecBase4f normal_chat_bg, LVecBase4f click_name_fg, LVecBase4f click_name_bg, LVecBase4f click_chat_fg, LVecBase4f click_chat_bg, LVecBase4f hover_name_fg, LVecBase4f hover_name_bg, LVecBase4f hover_chat_fg, LVecBase4f hover_chat_bg, LVecBase4f disabled_name_fg, LVecBase4f disabled_name_bg, LVecBase4f disabled_chat_fg, LVecBase4f disabled_chat_bg) {
@@ -295,37 +300,58 @@ void NametagGlobals::set_max_2d_alpha(float alpha) {
   _max_2d_alpha = alpha;
   // The assembly below is directly ripped from the Disney libotp for the margin_prop_seq part.
   // The "decompiled" code showed nothing close to what the assembly seems to convey.. So here it is!
-  __asm {mov ecx, margin_prop_seq ; Move contents of ecx into margin_prop_seq
-         lea eax, [ecx+1] ; This will move the effective address ECX + 1 into EAX.
-         lea edx, [eax+1] ; This will move the effective address EAX + 1 into EDX.
-         cmp edx, 2 ; Compare the edx value with 2
-         ja routine2 ; Jump to routine2 if edx >u 2
-         mov eax, 2 ; Moves 2 into eax? 
-routine2:
-          push esi ; Preserve the value of esi
-          mov esi, ecx ; Move contents of esi into ecx
-          mov edx, eax ; Move contents of edx into eax
-          mov margin_prop_seq, edx ; Move contents of margin_prop_seq into edx
-          cmp esi, ecx ; Compare the esi value with ecx
-          jz froutine ; Jump to froutine if 0!
-          nop ; Do nothing!
-routine3:
-          mov esi, eax ; Move contents of esi into eax
-          inc eax ; Increase eax
-          lea ecx, [eax+1] ; This will move the effective address EAX + 1 into ECX.
-          cmp ecx, 2 ; Compare the ecx value with 2
-          ja routine4 ; Jump to routine4 if ecx >u 2
-          mov eax, 2 ; Moves 2 into eax? 
-routine4:
-          mov ecx, edx ; Move contents of ecx into edx
-          mov edx, eax ; Move contents of edx into eax
-          cmp ecx, esi ; Compare the ecx value with esi
-          jnz routine3 ; Jump to routine3 if NOT 0!
-          mov margin_prop_seq, edx ; Move contents of margin_prop_seq into edx
-froutine:
-          pop esi ; Restore original esi value
-          retn ; Return.
-  };
+  // FOR REFERENCE! A violation error happens at D54B5413. Why? I don't know.
+  try {
+      __asm {mov ecx, margin_prop_seq ; Move contents of ecx into margin_prop_seq
+             lea eax, [ecx+1] ; This will move the effective address ECX + 1 into EAX.
+             lea edx, [eax+1] ; This will move the effective address EAX + 1 into EDX.
+             cmp edx, 2 ; Compare the edx value with 2
+             ja routine2 ; Jump to routine2 if edx >u 2
+             mov eax, 2 ; Moves 2 into eax? 
+    routine2:
+              push esi ; Preserve the value of esi
+              mov esi, ecx ; Move contents of esi into ecx
+              mov edx, eax ; Move contents of edx into eax
+              mov margin_prop_seq, edx ; Move contents of margin_prop_seq into edx
+              cmp esi, ecx ; Compare the esi value with ecx
+              jz froutine ; Jump to froutine if 0!
+              nop ; Do nothing!
+    routine3:
+              mov esi, eax ; Move contents of esi into eax
+              inc eax ; Increase eax
+              lea ecx, [eax+1] ; This will move the effective address EAX + 1 into ECX.
+              cmp ecx, 2 ; Compare the ecx value with 2
+              ja routine4 ; Jump to routine4 if ecx >u 2
+              mov eax, 2 ; Moves 2 into eax? 
+    routine4:
+              mov ecx, edx ; Move contents of ecx into edx
+              mov edx, eax ; Move contents of edx into eax
+              cmp ecx, esi ; Compare the ecx value with esi
+              jnz routine3 ; Jump to routine3 if NOT 0!
+              mov margin_prop_seq, edx ; Move contents of margin_prop_seq into edx
+    froutine:
+              pop esi ; Restore original esi value
+              retn ; Return.
+      };
+  } catch (...) {
+    // This re-done decompilation from IDA Pro with a compiled version of this libotp.
+    // With the _seq member stolen of course.
+    if (seq == nullptr || seq == NULL) {
+        NametagGlobals_cat.info() << "Stealing Seq!" << std::endl;
+        UpdateSeq_steal *margin_prop_seq_steal;
+        margin_prop_seq_steal = reinterpret_cast<UpdateSeq_steal *>(&margin_prop_seq);
+        seq = &margin_prop_seq_steal->_seq;
+        margin_prop_seq_steal = nullptr;
+    }
+    
+    NametagGlobals_cat.info() << "Applying decompiled changes!" << std::endl;
+    n_seq = *seq + 1;
+    if (*seq >= 0xFFFFFFFE || *seq == 0) {
+       n_seq = 2;
+       return;
+    }
+    *seq = n_seq;
+  }
 }
 
 void NametagGlobals::set_min_2d_alpha(float alpha) {
@@ -333,37 +359,58 @@ void NametagGlobals::set_min_2d_alpha(float alpha) {
   _min_2d_alpha = alpha;
   // The assembly below is directly ripped from the Disney libotp for the margin_prop_seq part.
   // The "decompiled" code showed nothing close to what the assembly seems to convey.. So here it is!
-  __asm {mov ecx, margin_prop_seq ; Move contents of ecx into margin_prop_seq
-         lea eax, [ecx+1] ; This will move the effective address ECX + 1 into EAX.
-         lea edx, [eax+1] ; This will move the effective address EAX + 1 into EDX.
-         cmp edx, 2 ; Compare the edx value with 2
-         ja routine2 ; Jump to routine2 if edx >u 2
-         mov eax, 2 ; Moves 2 into eax? 
-routine2:
-          push esi ; Preserve the value of esi
-          mov esi, ecx ; Move contents of esi into ecx
-          mov edx, eax ; Move contents of edx into eax
-          mov margin_prop_seq, edx ; Move contents of margin_prop_seq into edx
-          cmp esi, ecx ; Compare the esi value with ecx
-          jz froutine ; Jump to froutine if 0!
-          nop ; Do nothing!
-routine3:
-          mov esi, eax ; Move contents of esi into eax
-          inc eax ; Increase eax
-          lea ecx, [eax+1] ; This will move the effective address EAX + 1 into ECX.
-          cmp ecx, 2 ; Compare the ecx value with 2
-          ja routine4 ; Jump to routine4 if ecx >u 2
-          mov eax, 2 ; Moves 2 into eax? 
-routine4:
-          mov ecx, edx ; Move contents of ecx into edx
-          mov edx, eax ; Move contents of edx into eax
-          cmp ecx, esi ; Compare the ecx value with esi
-          jnz routine3 ; Jump to routine3 if NOT 0!
-          mov margin_prop_seq, edx ; Move contents of margin_prop_seq into edx
-froutine:
-          pop esi ; Restore original esi value
-          retn ; Return.
-  };
+  // FOR REFERENCE! A violation error happens at D54B5413. Why? I don't know.
+  try {
+      __asm {mov ecx, margin_prop_seq ; Move contents of ecx into margin_prop_seq
+             lea eax, [ecx+1] ; This will move the effective address ECX + 1 into EAX.
+             lea edx, [eax+1] ; This will move the effective address EAX + 1 into EDX.
+             cmp edx, 2 ; Compare the edx value with 2
+             ja routine2 ; Jump to routine2 if edx >u 2
+             mov eax, 2 ; Moves 2 into eax? 
+    routine2:
+              push esi ; Preserve the value of esi
+              mov esi, ecx ; Move contents of esi into ecx
+              mov edx, eax ; Move contents of edx into eax
+              mov margin_prop_seq, edx ; Move contents of margin_prop_seq into edx
+              cmp esi, ecx ; Compare the esi value with ecx
+              jz froutine ; Jump to froutine if 0!
+              nop ; Do nothing!
+    routine3:
+              mov esi, eax ; Move contents of esi into eax
+              inc eax ; Increase eax
+              lea ecx, [eax+1] ; This will move the effective address EAX + 1 into ECX.
+              cmp ecx, 2 ; Compare the ecx value with 2
+              ja routine4 ; Jump to routine4 if ecx >u 2
+              mov eax, 2 ; Moves 2 into eax? 
+    routine4:
+              mov ecx, edx ; Move contents of ecx into edx
+              mov edx, eax ; Move contents of edx into eax
+              cmp ecx, esi ; Compare the ecx value with esi
+              jnz routine3 ; Jump to routine3 if NOT 0!
+              mov margin_prop_seq, edx ; Move contents of margin_prop_seq into edx
+    froutine:
+              pop esi ; Restore original esi value
+              retn ; Return.
+      };
+  } catch (...) {
+    // This re-done decompilation from IDA Pro with a compiled version of this libotp.
+    // With the _seq member stolen of course.
+    if (seq == nullptr || seq == NULL) {
+        NametagGlobals_cat.info() << "Stealing Seq!" << std::endl;
+        UpdateSeq_steal *margin_prop_seq_steal;
+        margin_prop_seq_steal = reinterpret_cast<UpdateSeq_steal *>(&margin_prop_seq);
+        seq = &margin_prop_seq_steal->_seq;
+        margin_prop_seq_steal = nullptr;
+    }
+    
+    NametagGlobals_cat.info() << "Applying decompiled changes!" << std::endl;
+    n_seq = *seq + 1;
+    if (*seq >= 0xFFFFFFFE || *seq == 0) {
+       n_seq = 2;
+       return;
+    }
+    *seq = n_seq;
+  }
 }
 
 void NametagGlobals::set_click_sound(PT(AudioSound) sound) {

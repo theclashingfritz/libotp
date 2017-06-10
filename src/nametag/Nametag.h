@@ -59,6 +59,7 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup, public virtual Typed
     public:
         virtual void destroy();
         virtual void tick()=0;
+        virtual void update_contents();
         
         std::wstring get_display_name();
         

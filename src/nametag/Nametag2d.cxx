@@ -138,6 +138,10 @@ void Nametag2d::update() {
     consider_update_click_region();
 }
 
+void Nametag2d::update_contents() {
+    update();
+}
+
 void Nametag2d::margin_visibility_changed() {
     Nametag2d_cat.debug() << "margin_visibility_changed()" << std::endl;
     consider_update_click_region();

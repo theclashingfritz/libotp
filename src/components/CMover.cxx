@@ -91,13 +91,25 @@ void CMover::add_rot_force(Vec3 force) {
 
 void CMover::add_shove(Vec3 shove) {
     if (!m_nodepath.is_empty()) {
-        CMover_cat.debug() << "add_shove(Vec3 shove)" << std::endl;
-        vel = shove;
-        rot_mat = Mat3::rotate_mat_normaxis(m_nodepath.get_h(), Vec3::up());
-        step = (Vec3::zero() * get_dt()) + rot_mat.xform(vel);
-        m_nodepath.set_fluid_pos(Point3(m_nodepath.get_pos() + step));
+        float x = shove.get_x();
+        float y = shove.get_y();
+        float z = shove.get_z();
+         __asm {
+            mov eax, [esp+4]
+            fld   dword ptr [ecx+78h]
+            fadd  dword ptr [eax]
+            fstp  dword ptr [ecx+78h]
+            fld   dword ptr [eax+4]
+            fadd  dword ptr [ecx+7Ch]
+            fstp  dword ptr [ecx+7Ch]
+            fld   dword ptr [eax+8]
+            fadd  dword ptr [ecx+80h]
+            fstp  dword ptr [ecx+80h]
+            retn 4
+         }
     } else {
         CMover_cat.warning() << "add_shove(Vec3 shove) -- Can't push a empty nodepath!" << std::endl;
+        return;
     }
 }
 
@@ -109,6 +121,7 @@ void CMover::add_rot_shove(Vec3 shove) {
         m_nodepath.set_hpr(Point3(m_nodepath.get_hpr() + rotation));
     } else {
         CMover_cat.warning() << "add_rot_shove(Vec3 shove) -- Can't rotate a empty nodepath!" << std::endl;
+        return;
     }
 }
 

@@ -21,6 +21,9 @@ class EXPCL_LIBOTP Nametag3d : public virtual Nametag {
     public:
         virtual void tick();
         void set_billboard_offset(float offset);
+        float get_billboard_offset();
+        bool safe_to_flatten_below();
+        void update_contents();
         
     protected:
         virtual ChatBalloon* get_speech_balloon();

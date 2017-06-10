@@ -72,6 +72,8 @@ set(MARGINS_FILES
     src/margins/MarginManager.h
     src/margins/MarginPopup.cxx
     src/margins/MarginPopup.h
+    src/margins/PopupMouseWatcherRegion.cxx
+    src/margins/PopupMouseWatcherRegion.h
     src/margins/WhisperPopup.cxx
     src/margins/WhisperPopup.h
 )

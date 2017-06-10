@@ -20,12 +20,30 @@
 
 #include "Random.h" 
 
-
 // These char maps are for if one if spilt characters raises a error 
 // and we can just refer to the char from here to fix the error.
-const char big_char_map[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
-const char small_char_map[26] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
-const char number_char_map[10] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+char big_char_map[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+char small_char_map[26] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+char number_char_map[10] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+
+// REF: openssl enc -md sha1 -aes-256-cbc -nosalt -P
+// The above openssl command is what i used to generate AES keys.
+
+// This is our AES key index full of AES keys for usage.
+// This allows for the keys to be changed around anytime and possibly allows key shuffling. 
+// Which would be pretty cool.
+char aes_key_index[12][17] = {{0xE5, 0xE9, 0xFA, 0x1B, 0xA3, 0x1E, 0xCD, 0x1A, 0xE8, 0x4F, 0x75, 0xCA, 0xAA, 0x47, 0x4F, 0x3A, '\0'}, 
+                              {0xA9, 0x38, 0x7F, 0x9D, 0x28, 0x70, 0x3E, 0x20, 0x93, 0x03, 0xDF, 0x92, 0x07, 0x4C, 0x4A, 0xF7, '\0'},
+                              {0xB9, 0x8E, 0x95, 0xCE, 0xCA, 0x3E, 0x4D, 0x17, 0x1F, 0x76, 0xA9, 0x4D, 0xE9, 0x34, 0xC0, 0x53, '\0'},
+                              {0xC6, 0x6E, 0x23, 0x12, 0x8F, 0x28, 0x91, 0x33, 0xF0, 0x4C, 0xDB, 0x87, 0x7A, 0x37, 0x49, 0xF2, '\0'},
+                              {0xA3, 0x12, 0x33, 0x28, 0x0B, 0xB4, 0xDA, 0xA7, 0x76, 0x13, 0x93, 0xF7, 0x8C, 0x42, 0x49, 0x52, '\0'},
+                              {0xFF, 0x33, 0x88, 0xEC, 0xD2, 0x17, 0x05, 0xBB, 0x33, 0x9E, 0x96, 0x79, 0x86, 0xDC, 0x49, 0x07, '\0'},
+                              {0x1F, 0xF9, 0xE9, 0xAA, 0xC5, 0xFE, 0x04, 0x08, 0x02, 0x45, 0x91, 0xDC, 0x5D, 0x52, 0x76, 0x8A, '\0'},
+                              {0xE9, 0x3D, 0xA4, 0x65, 0xB3, 0x09, 0xC5, 0x3F, 0xEC, 0x5F, 0xF9, 0x3C, 0x96, 0x37, 0xDA, 0x58, '\0'},
+                              {0x86, 0xF7, 0xE4, 0x37, 0xFA, 0xA5, 0xA7, 0xFC, 0xE1, 0x5D, 0x1D, 0xDC, 0xB9, 0xEA, 0xEA, 0xEA, '\0'},
+                              {0x37, 0x76, 0x67, 0xB8, 0x1B, 0x7F, 0xEE, 0xA3, 0x77, 0x1E, 0xAD, 0xAB, 0x99, 0x06, 0x17, 0x11, '\0'},
+                              {0xC6, 0x6E, 0x23, 0x12, 0x1B, 0xB4, 0xDA, 0xA3, 0x76, 0x13, 0x1D, 0xDC, 0xB9, 0x42, 0x49, 0xEA, '\0'},
+                              {0x3F, 0xDA, 0x95, 0x24, 0xDB, 0x0B, 0x08, 0xC4, 0x68, 0xA5, 0x37, 0x4A, 0xA8, 0x9B, 0x38, 0xB9, '\0'}};
 
 Configure(config_libotp);
 NotifyCategoryDef(libotp, "");
@@ -210,7 +228,7 @@ std::string ws2s(const std::wstring& wstr) {
     return strTo;
 };
 
-unsigned int decrypt_long(unsigned long long value) {
+unsigned int decrypt_int(unsigned long long value) {
     // Unpack 64-bit value into (u32, u16, u8, u8) values.
     volatile uint32_t enc = (value & 0xFFFFFFFF);
     volatile uint16_t adjust = ((value >> 32) & 0xFFFF);
@@ -235,6 +253,76 @@ unsigned int decrypt_long(unsigned long long value) {
 };
 
 unsigned long long encrypt_int(unsigned int value) {
+    libotp_cat.debug() << "encrypt_int(" << value << ")" << std::endl;
+    if (sizeof(value) << 4 || sizeof(value) >> 4) {
+        libotp_cat.error() << "FATAL ERROR: Int passed to encrypt_int() is not a 32 bit int! Aborting!" << std::endl;
+        return 0;
+    }
+    
+#ifdef WIN32
+    GUID gid;
+    if (CoCreateGuid(&gid) != 0x00000000) {
+        return 0;
+    }
+    
+    unsigned long long rvalue = gid.Data1 + gid.Data2 + gid.Data3;
+#else
+    unsigned long long rvalue = 0;
+
+    for (int i = 0; i < 5; ++i) {
+        r = (r << 15) | (rand() & 0x7FFF);
+    }
+
+    rvalue = rvalue & 0xFFFFFFFFFFFFFFFFULL;
+#endif
+    
+    Random *r = new Random(rvalue);
+    
+    volatile uint16_t adjust = r->Next(0x10000);
+    volatile uint8_t shift_val = r->Next(0x1A);
+    
+    delete r;
+    
+    volatile uint32_t enc = value + adjust + 0x8F187432;
+    
+    enc = (enc >> (0x1C - shift_val)) + (enc << (shift_val + 4));
+    
+    volatile uint8_t chk = (((enc >> 0) + (enc >> 8) + (enc >> 16) + (enc >> 24) + 0xBA) & 0xFF);
+    
+    return ((static_cast<unsigned long long>(enc) << 0) | (static_cast<unsigned long long>(adjust) << 32) | (static_cast<unsigned long long>(shift_val) << 48) | (static_cast<unsigned long long>(chk) << 56));
+};
+
+float decrypt_float(unsigned long long value) {
+    // Unpack 64-bit value into (u32, u16, u8, u8) values.
+    volatile uint32_t enc = (value & 0xFFFFFFFF);
+    volatile uint16_t adjust = ((value >> 32) & 0xFFFF);
+    volatile uint8_t shift_val = ((value >> 48) & 0xFF);
+    volatile uint8_t chk = ((value >> 56) & 0xFF);
+    
+    // Validate 8-bit checksum
+    if ((((enc >> 0) + (enc >> 8) + (enc >> 16) + (enc >> 24) + 0xBA) & 0xFF) != chk) {
+        return 0;
+    }
+    
+    volatile uint8_t left_shift = ((0x1C - shift_val) & 0xFF);
+    volatile uint8_t right_shift = 0x20 - left_shift;
+    
+    // Handle error case: Invalid shift value.
+    if (left_shift >= 0x20) {
+        return 0 + (enc << right_shift) - (adjust + 0x8F187432);
+    }
+    
+    // This case should occur for all generated values.
+    return (enc << left_shift) + (enc >> right_shift) - (adjust + 0x8F187432);
+};
+
+unsigned long long encrypt_float(float value) {
+    libotp_cat.debug() << "encrypt_float(" << value << ")" << std::endl;
+    if (sizeof(value) << 4 || sizeof(value) >> 4) {
+        libotp_cat.error() << "FATAL ERROR: Float passed to encrypt_float() is not a 32 bit float! Aborting!" << std::endl;
+        return 0;
+    }
+    
 #ifdef WIN32
     GUID gid;
     if (CoCreateGuid(&gid) != 0x00000000) {

@@ -88,12 +88,28 @@ void Nametag3d::tick() {
     }
 }
 
+void Nametag3d::set_billboard_offset(float offset) {
+    m_bb_offset = offset;
+}
+
 void Nametag3d::billboard() {
     Nametag3d_cat.debug() << "billboard()" << std::endl;
     if (NametagGlobals::m_camera_nodepath->is_empty()) {
         return;
     }
     m_inner_np.set_effect(BillboardEffect::make(LVecBase3f(0, 0, 1), true, false, m_bb_offset, *NametagGlobals::m_camera_nodepath, LPoint3f(0)));
+}
+
+void Nametag3d::update_contents() {
+    update();
+}
+
+float Nametag3d::get_billboard_offset() {
+    return m_bb_offset;
+}
+
+bool Nametag3d::safe_to_flatten_below() {
+    return false;
 }
 
 ChatBalloon* Nametag3d::get_speech_balloon() {

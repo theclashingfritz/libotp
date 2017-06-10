@@ -135,6 +135,10 @@ void Nametag::update() {
     }
 }
 
+void Nametag::update_contents() {
+    update();
+}
+
 void Nametag::set_active(bool active) {
     Nametag_cat.debug() << "set_active(" << active <<")" << std::endl;
     m_active = active;

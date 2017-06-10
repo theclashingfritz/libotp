@@ -70,9 +70,14 @@ class EXPCL_LIBOTP NametagGlobals : public virtual TypedObject {
         static void set_mouse_watcher(MouseWatcher& watcher);
         static void set_mouse_watcher(NodePath& np);
         static void set_camera(NodePath& node);
+        
         static void set_want_active_nametags(bool want);
         static void set_force_onscreen_chat(bool want);
         static void set_force_2d_nametags(bool want);
+        
+        static void set_max_2d_alpha(float alpha);
+        static void set_min_2d_alpha(float alpha);
+        
         static void set_click_sound(PT(AudioSound) sound);
         static void set_rollover_sound(PT(AudioSound) sound);
         static void set_page_button(int state, NodePath& model);
@@ -110,8 +115,6 @@ class EXPCL_LIBOTP NametagGlobals : public virtual TypedObject {
         static void set_master_nametags_visible(bool want);
         
         static void set_global_nametag_scale(float scale);
-        static void set_max_2d_alpha(float alpha);
-        static void set_min_2d_alpha(float alpha);
         
         static bool does_color_code_exist(unsigned int cc);
         static bool does_whisper_type_exist(unsigned int wt);
@@ -181,6 +184,19 @@ class EXPCL_LIBOTP NametagGlobals : public virtual TypedObject {
         static float _max_2d_alpha;
         static float _min_2d_alpha;
         static float _global_nametag_scale;
+        
+        static AtomicAdjust::Integer n_seq;
+        static AtomicAdjust::Integer *seq;
       
     TYPE_HANDLE(NametagGlobals, TypedObject);
+};
+
+class UpdateSeq_steal {
+  public:
+    enum SpecialCases {
+      SC_initial = 0,
+      SC_old = 1,
+      SC_fresh = ~(unsigned int)0,
+    };
+    AtomicAdjust::Integer _seq;
 };

@@ -7,16 +7,6 @@ TypeHandle Settings::_type_handle;
 
 Settings* Settings::_global_ptr = nullptr;
 
-//Feel free to define your own keys and iv here. These are just the defaults.
-char m_aes_key[] = {0xE5, 0xE9, 0xFA, 0x1B, 0xA3, 0x1E, 0xCD, 0x1A, 0xE8, 0x4F, 0x75, 0xCA, 0xAA, 0x47, 0x4F, 0x3A, '\0'};
-char m_aes_key1[] = {0xA9, 0x38, 0x7F, 0x9D, 0x28, 0x70, 0x3E, 0x20, 0x93, 0x03, 0xDF, 0x92, 0x07, 0x4C, 0x4A, 0xF7, '\0'};
-char m_aes_key2[] = {0xB9, 0x8E, 0x95, 0xCE, 0xCA, 0x3E, 0x4D, 0x17, 0x1F, 0x76, 0xA9, 0x4D, 0xE9, 0x34, 0xC0, 0x53, '\0'};
-char m_aes_key3[] = {0xC6, 0x6E, 0x23, 0x12, 0x8F, 0x28, 0x91, 0x33, 0xF0, 0x4C, 0xDB, 0x87, 0x7A, 0x37, 0x49, 0xF2, '\0'};
-char m_aes_key4[] = {0xA3, 0x12, 0x33, 0x28, 0x0B, 0xB4, 0xDA, 0xA7, 0x76, 0x13, 0x93, 0xF7, 0x8C, 0x42, 0x49, 0x52, '\0'};
-char m_aes_key5[] = {0xFF, 0x33, 0x88, 0xEC, 0xD2, 0x17, 0x05, 0xBB, 0x33, 0x9E, 0x96, 0x79, 0x86, 0xDC, 0x49, 0x07, '\0'};
-char c_constant[] = {0x1F, 0xF9, 0xE9, 0xAA, 0xC5, 0xFE, 0x04, 0x08, 0x02, 0x45, 0x91, 0xDC, 0x5D, 0x52, 0x76, 0x8A, '\0'};
-char c_iv[] = {0xE9, 0x3D, 0xA4, 0x65, 0xB3, 0x09, 0xC5, 0x3F, 0xEC, 0x5F, 0xF9, 0x3C, 0x96, 0x37, 0xDA, 0x58, '\0'};
-
 Settings::Settings() {
     /**
      * Constructs the Settings class.
@@ -48,8 +38,8 @@ Settings::Settings() {
     m_toon_chat_sounds = 1;
     m_accepting_new_friends = 1;
     m_accepting_non_friend_whispers = 1;
-    m_sfx_volume = 100.0f;
-    m_music_volume = 100.0f;
+    m_sfx_volume = encrypt_float(100.0f);
+    m_music_volume = encrypt_float(100.0f);
     m_current_driver = encrypt_int(0);
     m_resolution = encrypt_int(1);
     m_windowed_mode = encrypt_int(0);
@@ -62,22 +52,6 @@ Settings::~Settings() {
     /**
      * Deconstructs the Settings class.
      */
-    gen_random(m_aes_key, get_char_length(m_aes_key));
-    gen_random(m_aes_key1, get_char_length(m_aes_key1));
-    gen_random(m_aes_key2, get_char_length(m_aes_key2));
-    gen_random(m_aes_key3, get_char_length(m_aes_key3));
-    gen_random(m_aes_key4, get_char_length(m_aes_key4));
-    gen_random(m_aes_key5, get_char_length(m_aes_key5));
-    gen_random(c_constant, get_char_length(c_constant));
-    gen_random(c_iv, get_char_length(c_iv));
-    delete[] m_aes_key; 
-    delete[] m_aes_key1; 
-    delete[] m_aes_key2; 
-    delete[] m_aes_key3; 
-    delete[] m_aes_key4; 
-    delete[] m_aes_key5; 
-    delete[] c_constant; 
-    delete[] c_iv;
 }
 
 void Settings::read_settings() {
@@ -111,9 +85,9 @@ void Settings::read_settings() {
     char * e_data = new char[m_data.length()];
     memcpy(e_data, m_data.c_str(), m_data.length());
     
-    char *mFixedKey = unscramble_key(m_aes_key, m_aes_key1, c_constant);
+    char *mFixedKey = unscramble_key(aes_key_index[0], aes_key_index[1], aes_key_index[7]);
     
-    e_data = AES_decrypt(e_data, mFixedKey, c_iv);
+    e_data = AES_decrypt(e_data, mFixedKey, aes_key_index[7]);
     
     delete mFixedKey;
     
@@ -149,8 +123,8 @@ void Settings::read_settings() {
     m_toon_chat_sounds = dgi.get_bool();
     m_accepting_new_friends = dgi.get_bool();
     m_accepting_non_friend_whispers = dgi.get_bool();
-    m_sfx_volume = dgi.get_stdfloat();
-    m_music_volume = dgi.get_stdfloat();
+    m_sfx_volume = encrypt_float(dgi.get_stdfloat());
+    m_music_volume = encrypt_float(dgi.get_stdfloat());
     m_server_type = encrypt_int(dgi.get_uint8());
     m_current_driver = encrypt_int(dgi.get_uint8());
     m_resolution = encrypt_int(dgi.get_uint8());
@@ -176,14 +150,14 @@ void Settings::write_settings() {
     dg.add_bool(m_toon_chat_sounds);
     dg.add_bool(m_accepting_new_friends);
     dg.add_bool(m_accepting_non_friend_whispers);
-    dg.add_stdfloat(m_sfx_volume);
-    dg.add_stdfloat(m_music_volume);
-    dg.add_uint8(decrypt_long(m_server_type));
-    dg.add_uint8(decrypt_long(m_current_driver));
-    dg.add_uint8(decrypt_long(m_resolution));
-    dg.add_uint8(decrypt_long(m_windowed_mode));
-    dg.add_uint16(decrypt_long(m_resolution_dimensions[0]));
-    dg.add_uint16(decrypt_long(m_resolution_dimensions[1]));
+    dg.add_stdfloat(decrypt_float(m_sfx_volume));
+    dg.add_stdfloat(decrypt_float(m_music_volume));
+    dg.add_uint8(decrypt_int(m_server_type));
+    dg.add_uint8(decrypt_int(m_current_driver));
+    dg.add_uint8(decrypt_int(m_resolution));
+    dg.add_uint8(decrypt_int(m_windowed_mode));
+    dg.add_uint16(decrypt_int(m_resolution_dimensions[0]));
+    dg.add_uint16(decrypt_int(m_resolution_dimensions[1]));
     DatagramIterator dgi(dg);
     
     m_data = dgi.get_remaining_bytes();
@@ -191,9 +165,9 @@ void Settings::write_settings() {
     char * e_data = new char[m_data.length()];
     memcpy(e_data, m_data.c_str(), m_data.length());
     
-    char *mFixedKey = unscramble_key(m_aes_key, m_aes_key1, c_constant);
+    char *mFixedKey = unscramble_key(aes_key_index[0], aes_key_index[1], aes_key_index[7]);
     
-    e_data = AES_encrypt(e_data, mFixedKey, c_iv);
+    e_data = AES_encrypt(e_data, mFixedKey, aes_key_index[7]);
     
     delete mFixedKey;
     
@@ -267,11 +241,11 @@ void Settings::set_accepting_non_friend_whispers(bool mode) {
 }
 
 void Settings::set_sfx_volume(float volume) {
-    m_sfx_volume = volume;
+    m_sfx_volume = encrypt_float(volume);
 }
 
 void Settings::set_music_volume(float volume) {
-    m_music_volume = volume;
+    m_music_volume = encrypt_float(volume);
 }
 
 void Settings::set_server_type(uint8_t type) {
@@ -305,15 +279,15 @@ void Settings::set_resolution_dimensions(uint16_t xsize, uint16_t ysize) {
 }
 
 uint8_t Settings::server_type() {
-    return decrypt_long(m_server_type);
+    return decrypt_int(m_server_type);
 }
 
 uint8_t Settings::get_resolution() {
-    return decrypt_long(m_resolution);
+    return decrypt_int(m_resolution);
 }
 
 uint8_t Settings::get_windowed_mode() {
-    return decrypt_long(m_windowed_mode);
+    return decrypt_int(m_windowed_mode);
 }
 
 bool Settings::get_music() {
@@ -349,11 +323,11 @@ bool Settings::get_accepting_non_friend_whispers() {
 }
 
 float Settings::get_sfx_volume() {
-    return m_sfx_volume;
+    return decrypt_float(m_sfx_volume);
 }
 
 float Settings::get_music_volume() {
-    return m_music_volume;
+    return decrypt_float(m_music_volume);
 }
 
 bool Settings::get_embedded_mode() {

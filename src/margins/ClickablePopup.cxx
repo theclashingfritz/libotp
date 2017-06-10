@@ -11,6 +11,63 @@ NotifyCategoryDef(ClickablePopup, "");
 TypeHandle ClickablePopup::_type_handle;
 unsigned int ClickablePopup::ClickablePopup_serial = 0;
 
+ClickablePopup::ClickablePopup() : NodePath("popup"), EventReceiver() {
+    ClickablePopup_cat.debug() << "__init__()" << std::endl;
+
+    m_name = "ClickRegion-";
+    m_name += ClickablePopup::ClickablePopup_serial++;
+    m_from_id = 0;
+    m_event_parameter = EventParameter(0);
+    m_mouse_watcher = NametagGlobals::m_mouse_watcher;
+    m_click_sound = NametagGlobals::m_click_sound;
+    m_rollover_sound = NametagGlobals::m_rollover_sound;
+    m_cam = NametagGlobals::m_camera_nodepath;
+    m_disabled = false;
+    m_clicked = false;
+    m_hovered = false;
+    m_click_state = CLICKSTATE_NORMAL;
+    m_click_event = "";
+    m_region = new MouseWatcherRegion(m_name, 0, 0, 0, 0);
+    
+    if (m_mouse_watcher != nullptr && m_mouse_watcher != NULL) {
+        if (m_region != nullptr && m_region != NULL) {
+            m_mouse_watcher->sort_regions();
+#ifndef NDEBUG
+            // This is mainly here to skip the "nassertv(_vizzes.size() == _regions.size())" check in MouseWatcherBase
+            // in Panda3D. By hiding the regions it ensures the check never happens therefore skipping over the check!
+            try {
+                ClickablePopup_cat.debug() << "Hiding Visible Mouse Watcher Regions! (Do not make them visible or a crash may ensue!)" << std::endl;
+                m_mouse_watcher->show_regions(EMPTY_NODEPATH, string(), 0);
+                m_mouse_watcher->hide_regions();
+            } catch (...) {
+                return;
+            }
+#endif
+            ClickablePopup_cat.debug() << "Adding Region with a size of " << sizeof(*m_region) << "!" << std::endl;
+            m_mouse_watcher->add_region(m_region);
+        }
+    }
+        
+    /**
+     * These currently unused strings are here for possible future checking for
+     * if the patterns have been set or not. 
+     */
+    std::string mouse_enter_name = "mouse-enter-%r";
+    std::string mouse_leave_name = "mouse-leave-%r";
+    std::string button_down_name = "button-down-%r";
+    std::string button_up_name = "button-up-%r";
+
+    ClickablePopup_cat.debug() << "Accepting Enter Pattern!" << std::endl;
+    accept(get_event(m_mouse_watcher->get_enter_pattern()));
+    ClickablePopup_cat.debug() << "Accepting Leave Pattern!" << std::endl;
+    accept(get_event(m_mouse_watcher->get_leave_pattern()));
+    ClickablePopup_cat.debug() << "Accepting Button Down Pattern!" << std::endl;
+    accept(get_event(m_mouse_watcher->get_button_down_pattern()));
+    ClickablePopup_cat.debug() << "Accepting Button Up Pattern!" << std::endl;
+    accept(get_event(m_mouse_watcher->get_button_up_pattern()));
+    ClickablePopup_cat.debug() << "Finished Initializing!" << std::endl;
+}
+
 ClickablePopup::ClickablePopup(NodePath* camera) : NodePath("popup"), EventReceiver() {
     ClickablePopup_cat.debug() << "__init__(NodePath camera)" << std::endl;
     
@@ -155,6 +212,31 @@ void ClickablePopup::update_click_state() {
             throw_event(m_click_event);
         }
     }
+}
+
+void ClickablePopup::update_contents() {
+    
+}
+
+void ClickablePopup::set_state(State state) {
+    if (m_click_state != state) {
+        m_click_state = state;
+        update_contents();
+    }
+}
+
+uint32_t ClickablePopup::get_state() {
+    return m_click_state;
+}
+
+void ClickablePopup::enter_region() {
+    if (m_rollover_sound != nullptr && m_rollover_sound != NULL) {
+        m_rollover_sound->play();  
+    }
+}
+
+void ClickablePopup::exit_region() {
+
 }
 
 void ClickablePopup::accept(const std::string& ev) {

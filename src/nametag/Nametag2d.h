@@ -22,6 +22,8 @@ class EXPCL_LIBOTP Nametag2d : public virtual Nametag, public MarginPopup {
         virtual void margin_visibility_changed();
         virtual bool is_displayed();
         
+        virtual void update_contents();
+        
         static const float scale_2d;
         static const float chat_alpha;
         static const float arrow_offset;

@@ -30,12 +30,23 @@ typedef pmap<std::string, callback_t> event_table_t;
 class EXPCL_LIBOTP ClickablePopup : public virtual EventReceiver, public NodePath {
     
     PUBLISHED:
-        ClickablePopup(NodePath* camera=NULL);
+        ClickablePopup();
+        ClickablePopup(NodePath* camera);
         virtual ~ClickablePopup();
         
     public:
+        enum State {
+            stateStopped = 0,
+            statePaused = 1,
+            stateRunning = 2
+        };
+        
         virtual void destroy();
         virtual void set_click_region_event(const std::string& event, int do_id=0);
+        virtual void update_contents();
+        
+        void set_state(State state);
+        uint32_t get_state();
         
         int get_click_state();
         virtual void click_state_changed()=0;
@@ -61,12 +72,15 @@ class EXPCL_LIBOTP ClickablePopup : public virtual EventReceiver, public NodePat
         std::string m_name;
         MouseWatcherRegion *m_region;
     
-    private:
+    private:      
         static unsigned int ClickablePopup_serial;
         
         int m_from_id;
         
         EventParameter m_event_parameter;
+        
+        void enter_region();
+        void exit_region();
         
         void mouse_enter(const Event* ev);
         void mouse_leave(const Event* ev);
