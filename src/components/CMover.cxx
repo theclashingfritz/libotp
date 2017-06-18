@@ -222,8 +222,6 @@ void CMover::integrate() {
     rotation[2] = 0.0;
 }
 
-}
-
 float CMover::get_fwd_speed() {
     CMover_cat.debug() << "get_fwd_speed()" << std::endl;
     return m_fwd_speed;
