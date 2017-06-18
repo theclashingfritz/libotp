@@ -150,7 +150,7 @@ void CMover::add_force(Vec3 force) {
 }
 
 void CMover::add_rot_force(Vec3 force) {
-   CMover_cat.debug() << "add_rot_force(Vec3(" << force[0] << ", " << force[1] << ", " << force[2] << "))" << std::endl;
+    CMover_cat.debug() << "add_rot_force(Vec3(" << force[0] << ", " << force[1] << ", " << force[2] << "))" << std::endl;
     rot_force[0] = rot_force[0] + force[0];
     rot_force[1] = force[1] + rot_force[1];
     rot_force[2] = force[2] + rot_force[2];
