@@ -181,47 +181,53 @@ void CMover::integrate() {
         CMover_cat.debug() << "CMover.integrate() was called while the nodepath is empty!" << std::endl;
         return;
     }
+void CMover::integrate() {
+    CMover_cat.debug() << "CMover.integrate() [WARNING: This function may be incomplete/broken.]" << std::endl;
+    if (m_nodepath.is_empty()) {
+        CMover_cat.debug() << "CMover.integrate() was called while the nodepath is empty!" << std::endl;
+        return;
+    }
     LVector3f i_force; // ebp@1 MAPDST
     LVector3f i_rot_force; // ebx@1 MAPDST
-    LVector3f v4; // eax@1 MAPDST
+    LVector3f i_shove; // eax@1 MAPDST
     float v8; // ST7C_4@1
     LVector3f v9; // ST78_4@1 MAPDST
     LVector3f v10; // eax@1 MAPDST
     LVector3f v15; // ST80_4@1
-    LVector3f i_shove; // eax@1
     LVector3f empty;
 
     i_force = push_force;
     i_rot_force = rot_force;
     empty = LVector3f(0.0);
-    v4 = i_rot_force * _dt;
+    i_shove = i_rot_force * _dt;
     i_rot_force = empty;
-    i_rot_force[0] = v4[0] + empty[0];
-    i_rot_force[1] = v4[1] + empty[1];
-    i_rot_force[2] = v4[2] + empty[2];
+    i_rot_force[0] = i_shove[0] + empty[0];
+    i_rot_force[1] = i_shove[1] + empty[1];
+    i_rot_force[2] = i_shove[2] + empty[2];
     v8 = _dt * _dt;
     v9 = movement * _dt;
     v10 = i_force * v8;
     i_force = v10 * NametagGlobals::scale_exponent;
     v10 = empty * _dt;
     v10 = v10 + i_force;
-    v4 = v10 + v9;
-    CMover_cat.spam() << "v4 = LVector3f(" << v4[0] << ", " << v4[1] << ", " << v4[2] << ")" << std::endl;
-    m_nodepath.set_fluid_pos(m_nodepath, v4);
+    i_shove = v10 + v9;
+    CMover_cat.spam() << "i_shove = LVector3f(" << i_shove[0] << ", " << i_shove[1] << ", " << i_shove[2] << ")" << std::endl;
+    m_nodepath.set_fluid_pos(m_nodepath, i_shove);
     v15 = rotation * _dt;
     v10 = rot_force * v8;
     v9 = v10 * NametagGlobals::scale_exponent;
     v10 = empty * _dt;
     v10 = v10 + v9;
-    v4 = v10 + v15;
-    CMover_cat.spam() << "v4 = LVector3f(" << v4[0] << ", " << v4[1] << ", " << v4[2] << ")" << std::endl;
-    m_nodepath.set_hpr(m_nodepath, v4);
+    i_shove = v10 + v15;
+    CMover_cat.spam() << "i_shove = LVector3f(" << i_shove[0] << ", " << i_shove[1] << ", " << i_shove[2] << ")" << std::endl;
+    m_nodepath.set_hpr(m_nodepath, i_shove);
     movement[0] = 0.0;
     movement[1] = 0.0;
     movement[2] = 0.0;
     rotation[0] = 0.0;
     rotation[1] = 0.0;
     rotation[2] = 0.0;
+}
 
 }
 
