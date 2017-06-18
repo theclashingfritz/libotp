@@ -192,7 +192,6 @@ void CMover::integrate() {
     LVector3f i_shove; // eax@1 MAPDST
     float v8; // ST7C_4@1
     LVector3f v9; // ST78_4@1 MAPDST
-    LVector3f v10; // eax@1 MAPDST
     LVector3f v15; // ST80_4@1
     LVector3f empty;
 
@@ -206,19 +205,19 @@ void CMover::integrate() {
     i_rot_force[2] = i_shove[2] + empty[2];
     v8 = _dt * _dt;
     v9 = movement * _dt;
-    v10 = i_force * v8;
-    i_force = v10 * NametagGlobals::scale_exponent;
-    v10 = empty * _dt;
-    v10 = v10 + i_force;
-    i_shove = v10 + v9;
+    i_shove = i_force * v8;
+    i_force = i_shove * NametagGlobals::scale_exponent;
+    i_shove = empty * _dt;
+    i_shove = i_shove + i_force;
+    i_shove = i_shove + v9;
     CMover_cat.spam() << "i_shove = LVector3f(" << i_shove[0] << ", " << i_shove[1] << ", " << i_shove[2] << ")" << std::endl;
     m_nodepath.set_fluid_pos(m_nodepath, i_shove);
     v15 = rotation * _dt;
-    v10 = rot_force * v8;
-    v9 = v10 * NametagGlobals::scale_exponent;
-    v10 = empty * _dt;
-    v10 = v10 + v9;
-    i_shove = v10 + v15;
+    i_shove = rot_force * v8;
+    v9 = i_shove * NametagGlobals::scale_exponent;
+    i_shove = empty * _dt;
+    i_shove = i_shove + v9;
+    i_shove = i_shove + v15;
     CMover_cat.spam() << "i_shove = LVector3f(" << i_shove[0] << ", " << i_shove[1] << ", " << i_shove[2] << ")" << std::endl;
     m_nodepath.set_hpr(m_nodepath, i_shove);
     movement[0] = 0.0;
