@@ -181,12 +181,6 @@ void CMover::integrate() {
         CMover_cat.debug() << "CMover.integrate() was called while the nodepath is empty!" << std::endl;
         return;
     }
-void CMover::integrate() {
-    CMover_cat.debug() << "CMover.integrate() [WARNING: This function may be incomplete/broken.]" << std::endl;
-    if (m_nodepath.is_empty()) {
-        CMover_cat.debug() << "CMover.integrate() was called while the nodepath is empty!" << std::endl;
-        return;
-    }
     LVector3f i_force; // ebp@1 MAPDST
     LVector3f i_rot_force; // ebx@1 MAPDST
     LVector3f i_shove; // eax@1 MAPDST
