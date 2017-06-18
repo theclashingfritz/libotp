@@ -54,7 +54,7 @@ class EXPCL_LIBOTP ClickablePopup : public virtual EventReceiver, public NodePat
         static void handle_event(const Event* ev, void* data);
         
     protected:
-        const std::string get_event(const std::string& pattern);
+        std::string get_event(const std::string& pattern);
         void update_click_state();
         void update_click_region(float left, float right, float bottom, float top);
         void disable_click_region();
@@ -76,6 +76,11 @@ class EXPCL_LIBOTP ClickablePopup : public virtual EventReceiver, public NodePat
         static unsigned int ClickablePopup_serial;
         
         int m_from_id;
+        
+        std::string mouse_enter_name;
+        std::string mouse_leave_name;
+        std::string button_down_name;
+        std::string button_up_name;
         
         EventParameter m_event_parameter;
         

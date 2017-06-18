@@ -59,6 +59,8 @@ void Settings::read_settings() {
      * Reads the Settings from the Settings file if it exist. If not the 
      * default one is created and the default settings are written to it.
      */
+    Settings_cat.debug() << "read_settings()" << std::endl;
+    
     Filename found(m_file);
     
     if (!m_vfs->exists(found)) {
@@ -138,6 +140,8 @@ void Settings::write_settings() {
      * Writes the currently set settings to the Settings file to loaded up next time the Settings
      * are needed via read_settings()
      */
+    Settings_cat.debug() << "write_settings()" << std::endl;
+    
     Datagram dg;
     dg.add_string(m_version);
     dg.add_bool(m_want_music);
@@ -198,6 +202,7 @@ void Settings::set_music(bool mode) {
     /**
      * Want Music?
      */
+    Settings_cat.debug() << "set_music(" << mode << ")" << std::endl;
     m_want_music = mode;
 }
 
@@ -205,50 +210,62 @@ void Settings::set_sfx(bool mode) {
     /**
      * Want SOUND?
      */
+    Settings_cat.debug() << "set_sfx(" << mode << ")" << std::endl;
     m_want_sfx = mode;
 }
 
 void Settings::set_force_sw_midi(bool mode) {
+    Settings_cat.debug() << "set_force_sw_midi(" << mode << ")" << std::endl;
     m_force_sw_midi = mode;
 }
 
 void Settings::set_embedded_mode(bool mode) {
+    Settings_cat.debug() << "set_embedded_mode(" << mode << ")" << std::endl;
     m_embedded_mode = mode;
 }
 
 void Settings::set_chat_log(bool mode) {
+    Settings_cat.debug() << "set_chat_log(" << mode << ")" << std::endl;
     m_log_chat = mode;
 }
 
 void Settings::set_show_fpsmeter(bool mode) {
+    Settings_cat.debug() << "set_fpsmeter(" << mode << ")" << std::endl;
     m_show_fpsmeter = mode;
 }
 
 void Settings::set_custom_mouse_cursor(bool mode) {
+    Settings_cat.debug() << "set_custom_mouse_cursor(" << mode << ")" << std::endl;
     m_custom_mouse_cursor = mode;
 }
 
 void Settings::set_toon_chat_sounds(bool mode) {
+    Settings_cat.debug() << "set_toon_chat_sounds(" << mode << ")" << std::endl;
     m_toon_chat_sounds = mode;
 }
 
 void Settings::set_accepting_new_friends(bool mode) {
+    Settings_cat.debug() << "set_accepting_new_friends(" << mode << ")" << std::endl;
     m_accepting_new_friends = mode;
 }
 
 void Settings::set_accepting_non_friend_whispers(bool mode) {
+    Settings_cat.debug() << "set_accepting_non_friend_whispers(" << mode << ")" << std::endl;
     m_accepting_non_friend_whispers = mode;
 }
 
 void Settings::set_sfx_volume(float volume) {
+    Settings_cat.debug() << "set_sfx_volume(" << volume << ")" << std::endl;
     m_sfx_volume = encrypt_float(volume);
 }
 
 void Settings::set_music_volume(float volume) {
+    Settings_cat.debug() << "set_music_volume(" << volume << ")" << std::endl;
     m_music_volume = encrypt_float(volume);
 }
 
 void Settings::set_server_type(uint8_t type) {
+    Settings_cat.debug() << "set_server_type(" << type << ")" << std::endl;
     m_server_type = encrypt_int(type);
 }
 
@@ -256,10 +273,12 @@ void Settings::set_display_driver(uint8_t driver) {
     /**
      * Sets the display driver by using it corrosponding ID.
      */
+    Settings_cat.debug() << "set_display_driver(" << driver << ")" << std::endl;
     m_current_driver = encrypt_int(driver);
 }
 
 void Settings::set_windowed_mode(uint8_t mode) {
+    Settings_cat.debug() << "set_windowed_mode(" << mode << ")" << std::endl;
     m_windowed_mode = encrypt_int(mode);
 }
 
@@ -267,6 +286,7 @@ void Settings::set_resolution(uint8_t resolution) {
     /**
      * Sets the Resolution Mode.
      */
+    Settings_cat.debug() << "set_resolution(" << resolution << ")" << std::endl;
     m_resolution = encrypt_int(resolution);
 }
 
@@ -274,63 +294,78 @@ void Settings::set_resolution_dimensions(uint16_t xsize, uint16_t ysize) {
     /**
      * Sets the Resolution Dimensions.
      */
+    Settings_cat.debug() << "set_resolution_dimensions(" << xsize << " " << ysize << ")" << std::endl;
     m_resolution_dimensions[0] = encrypt_int(xsize);
     m_resolution_dimensions[1] = encrypt_int(ysize);
 }
 
 uint8_t Settings::server_type() {
+    Settings_cat.debug() << "server_type()" << std::endl;
     return decrypt_int(m_server_type);
 }
 
 uint8_t Settings::get_resolution() {
+    Settings_cat.debug() << "get_resolution()" << std::endl;
     return decrypt_int(m_resolution);
 }
 
 uint8_t Settings::get_windowed_mode() {
+    Settings_cat.debug() << "get_windowed_mode()" << std::endl;
     return decrypt_int(m_windowed_mode);
 }
 
 bool Settings::get_music() {
+    Settings_cat.debug() << "get_music()" << std::endl;
     return m_want_music;
 }
 
 bool Settings::get_sfx() {
+    Settings_cat.debug() << "get_sfx()" << std::endl;
     return m_want_sfx;
 }
 
 bool Settings::want_chat_log() {
+    Settings_cat.debug() << "want_chat_log()" << std::endl;
     return m_log_chat;
 }
 
 bool Settings::get_show_fpsmeter() {
+    Settings_cat.debug() << "get_show_fpsmeter()" << std::endl;
     return m_show_fpsmeter;
 }
 
 bool Settings::want_custom_mouse_cursor() {
+    Settings_cat.debug() << "want_custom_mouse_cursor()" << std::endl;
     return m_custom_mouse_cursor;
 }
 
 bool Settings::get_toon_chat_sounds() {
+    Settings_cat.debug() << "get_toon_chat_sounds()" << std::endl;
     return m_toon_chat_sounds;
 }
 
 bool Settings::get_accepting_new_friends() {
+    Settings_cat.debug() << "get_accepting_new_friends()" << std::endl;
     return m_accepting_new_friends;
 }
 
 bool Settings::get_accepting_non_friend_whispers() {
+    Settings_cat.debug() << "get_accepting_non_friend_whispers()" << std::endl;
     return m_accepting_non_friend_whispers;
 }
 
 float Settings::get_sfx_volume() {
+    Settings_cat.debug() << "get_sfx_volume()" << std::endl;
     return decrypt_float(m_sfx_volume);
 }
 
 float Settings::get_music_volume() {
+    Settings_cat.debug() << "get_music_volume()" << std::endl;
     return decrypt_float(m_music_volume);
 }
 
 bool Settings::get_embedded_mode() {
+    Settings_cat.debug() << "get_embedded_mode()" << std::endl;
     return m_embedded_mode;
 }
 
@@ -338,6 +373,7 @@ bool Settings::do_saved_settings_exist() {
     /**
      * If saved Settings exist returns True otherwise False.
      */
+    Settings_cat.debug() << "do_saved_settings_exist()" << std::endl;
     return m_vfs->exists(m_file);
 }
 

@@ -57,16 +57,28 @@ ClickablePopup::ClickablePopup() : NodePath("popup"), EventReceiver() {
     std::string button_down_name = "button-down-%r";
     std::string button_up_name = "button-up-%r";
 
-    ClickablePopup_cat.debug() << "Accepting Enter Pattern!" << std::endl;
-    accept(get_event(m_mouse_watcher->get_enter_pattern()));
-    ClickablePopup_cat.debug() << "Accepting Leave Pattern!" << std::endl;
-    accept(get_event(m_mouse_watcher->get_leave_pattern()));
-    ClickablePopup_cat.debug() << "Accepting Button Down Pattern!" << std::endl;
-    accept(get_event(m_mouse_watcher->get_button_down_pattern()));
-    ClickablePopup_cat.debug() << "Accepting Button Up Pattern!" << std::endl;
-    accept(get_event(m_mouse_watcher->get_button_up_pattern()));
-    ClickablePopup_cat.debug() << "Finished Initializing!" << std::endl;
-}
+    try {
+        ClickablePopup_cat.debug() << "Accepting Enter Pattern!" << std::endl;
+        accept(get_event(m_mouse_watcher->get_enter_pattern()));
+        ClickablePopup_cat.debug() << "Accepting Leave Pattern!" << std::endl;
+        accept(get_event(m_mouse_watcher->get_leave_pattern()));
+        ClickablePopup_cat.debug() << "Accepting Button Down Pattern!" << std::endl;
+        accept(get_event(m_mouse_watcher->get_button_down_pattern()));
+        ClickablePopup_cat.debug() << "Accepting Button Up Pattern!" << std::endl;
+        accept(get_event(m_mouse_watcher->get_button_up_pattern()));
+        ClickablePopup_cat.debug() << "Finished Initializing!" << std::endl;
+    } catch (...) {
+        ClickablePopup_cat.debug() << "Accepting Enter Pattern!" << std::endl;
+        accept(get_event(mouse_enter_name));
+        ClickablePopup_cat.debug() << "Accepting Leave Pattern!" << std::endl;
+        accept(get_event(mouse_leave_name));
+        ClickablePopup_cat.debug() << "Accepting Button Down Pattern!" << std::endl;
+        accept(get_event(button_down_name));
+        ClickablePopup_cat.debug() << "Accepting Button Up Pattern!" << std::endl;
+        accept(get_event(button_up_name));
+        ClickablePopup_cat.debug() << "Finished Initializing!" << std::endl;
+    }
+};
 
 ClickablePopup::ClickablePopup(NodePath* camera) : NodePath("popup"), EventReceiver() {
     ClickablePopup_cat.debug() << "__init__(NodePath camera)" << std::endl;
@@ -105,25 +117,28 @@ ClickablePopup::ClickablePopup(NodePath* camera) : NodePath("popup"), EventRecei
         }
     }
         
-    /**
-     * These currently unused strings are here for possible future checking for
-     * if the patterns have been set or not. 
-     */
-    std::string mouse_enter_name = "mouse-enter-%r";
-    std::string mouse_leave_name = "mouse-leave-%r";
-    std::string button_down_name = "button-down-%r";
-    std::string button_up_name = "button-up-%r";
-
+    try {
+        mouse_enter_name = m_mouse_watcher->get_enter_pattern();
+        mouse_leave_name = m_mouse_watcher->get_leave_pattern();
+        button_down_name = m_mouse_watcher->get_button_down_pattern();
+        button_up_name = m_mouse_watcher->get_button_up_pattern();
+    } catch(...) {
+        mouse_enter_name = "mouse-enter-%r";
+        mouse_leave_name = "mouse-leave-%r";
+        button_down_name = "button-down-%r";
+        button_up_name = "button-up-%r";
+    }
+    
     ClickablePopup_cat.debug() << "Accepting Enter Pattern!" << std::endl;
-    accept(get_event(m_mouse_watcher->get_enter_pattern()));
+    accept(get_event(mouse_enter_name));
     ClickablePopup_cat.debug() << "Accepting Leave Pattern!" << std::endl;
-    accept(get_event(m_mouse_watcher->get_leave_pattern()));
+    accept(get_event(mouse_leave_name));
     ClickablePopup_cat.debug() << "Accepting Button Down Pattern!" << std::endl;
-    accept(get_event(m_mouse_watcher->get_button_down_pattern()));
+    accept(get_event(button_down_name));
     ClickablePopup_cat.debug() << "Accepting Button Up Pattern!" << std::endl;
-    accept(get_event(m_mouse_watcher->get_button_up_pattern()));
+    accept(get_event(button_up_name));
     ClickablePopup_cat.debug() << "Finished Initializing!" << std::endl;
-}
+};
 
 ClickablePopup::~ClickablePopup() {
     if (m_mouse_watcher != nullptr && m_mouse_watcher != NULL) {
@@ -136,12 +151,12 @@ ClickablePopup::~ClickablePopup() {
         }
     }
     ignore_all();
-}
+};
 
 void ClickablePopup::destroy() {
     ClickablePopup_cat.debug() << "destory()" << std::endl;
     ignore_all();
-}
+};
 
 void ClickablePopup::set_click_region_event(const std::string& event, int do_id) {
     ClickablePopup_cat.debug() << "set_click_region_event(" << event << ")" << std::endl;
@@ -156,7 +171,7 @@ void ClickablePopup::set_click_region_event(const std::string& event, int do_id)
     }
     
     update_click_state();
-}
+};
 
 int ClickablePopup::get_click_state() {
     ClickablePopup_cat.debug() << "get_click_state()" << std::endl;
@@ -166,15 +181,19 @@ int ClickablePopup::get_click_state() {
     }
     
     return m_click_state;
-}
+};
 
 
-const std::string ClickablePopup::get_event(const std::string& pattern) {
+std::string ClickablePopup::get_event(const std::string& pattern) {
     ClickablePopup_cat.debug() << "get_event(string pattern)" << std::endl;
-    std::string result = pattern;
-    result.replace(result.find("%r"), m_name.size(), m_name);
+    std::string result = *new std::string(pattern);
+    try {
+        result.replace(result.find("%r"), m_name.size(), m_name);
+    } catch(...) {
+        return "ERROR_PLEASE_FIX_ME";
+    }
     return result;
-}
+};
 
 void ClickablePopup::update_click_state() {
     ClickablePopup_cat.debug() << "update_click_state()" << std::endl;
@@ -212,18 +231,18 @@ void ClickablePopup::update_click_state() {
             throw_event(m_click_event);
         }
     }
-}
+};
 
 void ClickablePopup::update_contents() {
     
-}
+};
 
 void ClickablePopup::set_state(State state) {
     if (m_click_state != state) {
         m_click_state = state;
         update_contents();
     }
-}
+};
 
 uint32_t ClickablePopup::get_state() {
     return m_click_state;
@@ -233,21 +252,21 @@ void ClickablePopup::enter_region() {
     if (m_rollover_sound != nullptr && m_rollover_sound != NULL) {
         m_rollover_sound->play();  
     }
-}
+};
 
 void ClickablePopup::exit_region() {
 
-}
+};
 
 void ClickablePopup::accept(const std::string& ev) {
     ClickablePopup_cat.debug() << "accept(" << ev << ")" << std::endl;
     g_event_handler->add_hook(ev, &ClickablePopup::handle_event, (void*)this);
-}
+};
 
 void ClickablePopup::ignore_all() {
     ClickablePopup_cat.debug() << "ignore_all()" << std::endl;
     g_event_handler->remove_hooks_with(this);
-}
+};
 
 void ClickablePopup::update_click_region(float left, float right, float bottom, float top) {
     if (left == 0.0 && right == 0.0 && bottom == 0.0 && top == 0.0) {
@@ -309,19 +328,19 @@ void ClickablePopup::update_click_region(float left, float right, float bottom, 
         m_region->set_active(!m_disabled);
     }
     ClickablePopup_cat.debug() << "Updated Click Region!" << std::endl;
-}
+};
 
 void ClickablePopup::mouse_enter(const Event* ev) {
     ClickablePopup_cat.debug() << "mouse_enter(const Event ev)" << std::endl;
     m_hovered = true;
     update_click_state();
-}
+};
 
 void ClickablePopup::mouse_leave(const Event* ev) {
     ClickablePopup_cat.debug() << "mouse_leave(const Event ev)" << std::endl;
     m_hovered = false;
     update_click_state();
-}
+};
 
 void ClickablePopup::button_down(const Event* ev) {
     ClickablePopup_cat.debug() << "button_down(const Event ev)" << std::endl;
@@ -329,7 +348,7 @@ void ClickablePopup::button_down(const Event* ev) {
         m_clicked = true;
         update_click_state();
     }
-}
+};
 
 void ClickablePopup::button_up(const Event* ev) {
     ClickablePopup_cat.debug() << "button_up(const Event ev)" << std::endl;
@@ -337,14 +356,14 @@ void ClickablePopup::button_up(const Event* ev) {
         m_clicked = false;
         update_click_state();
     }
-}
+};
 
 void ClickablePopup::disable_click_region() {
     ClickablePopup_cat.debug() << "disable_click_region()" << std::endl;
     if (m_region != nullptr && m_region != NULL) {
         m_region->set_active(false);
     }
-}
+};
 
 void ClickablePopup::handle_event(const Event* ev, void* data) {
     ClickablePopup_cat.debug() << "handle_event(const Event ev, void* data)" << std::endl;
@@ -362,4 +381,4 @@ void ClickablePopup::handle_event(const Event* ev, void* data) {
     
     if (name == _this->get_event(_this->m_mouse_watcher->get_button_up_pattern()))
         _this->button_up(ev);
-}
+};

@@ -72,71 +72,15 @@ void Nametag::show_speech() {
 }
 
 void Nametag::show_name() {
-    Nametag_cat.debug() << "show_name()" << std::endl;
-    if ((m_font == nullptr) || (m_font == NULL)) {
-        return;
-    }
-        
-    m_inner_np.attach_new_node(m_icon.node());
-    
-    PT(TextNode) tn = new TextNode("name");
-    tn->set_font(m_font);
-    tn->set_align(TextNode::A_center);
-    tn->set_wordwrap(m_wordwrap);
-    tn->set_wtext(m_display_name);
-        
-    double width = tn->get_width();
-    double height = tn->get_height();
-        
-    NodePath t = m_inner_np.attach_new_node(tn, 1);
-    t.set_color(m_name_fg);
-    t.set_transparency(m_name_fg.get_w() < 1 ? TransparencyAttrib::M_alpha : TransparencyAttrib::M_none);
-    t.set_y(-0.25);
 
-    NodePath panel = NametagGlobals::m_nametag_model_nodepath->copy_to(m_inner_np);
-    panel.set_x((tn->get_left() + tn->get_right()) / 2.);
-    panel.set_z((tn->get_top() + tn->get_bottom()) / 2.);
-    panel.set_scale(width + name_padding, 1, height + name_padding);
-    panel.set_color(m_name_bg);
-    panel.set_transparency(m_name_bg.get_w() < 1 ? TransparencyAttrib::M_alpha : TransparencyAttrib::M_none);
-    
-    frame = LVecBase4f(float(tn->get_left() - name_padding / 2.), float(tn->get_right() + name_padding + 2.), 
-                       float(tn->get_bottom() - name_padding / 2.),  float(tn->get_top() + name_padding / 2.));
 }
 
 void Nametag::update() {
-    Nametag_cat.debug() << "update()" << std::endl;
-    unsigned int code = NametagGlobals::does_color_code_exist(m_color_code) ? m_color_code : NametagGlobals::CCNormal;
-    Nametag_cat.spam() << "Removing Children!!" << std::endl;
-    m_inner_np.node()->remove_all_children();
-    
-    Nametag_cat.spam() << "Getting Colors from Nametag Globals!" << std::endl;
-    color_tuple_tuple_t colors = NametagGlobals::nametag_colors[code][get_click_state()];
-    
-    Nametag_cat.spam() << "Setting Name and Chat Colors!" << std::endl;
-    color_tuple_t name_colors = colors[0];
-    color_tuple_t chat_colors = colors[1];
-    
-    Nametag_cat.spam() << "Setting Name BG and FG!" << std::endl;
-    m_name_fg = name_colors[0];
-    m_name_bg = name_colors[1];
-    
-    Nametag_cat.spam() << "Setting Chat BG and FG!" << std::endl;
-    m_chat_fg = chat_colors[0];
-    m_chat_bg = chat_colors[1];
-    
-    Nametag_cat.spam() << "Preparing Name, Thought, or Speech!" << std::endl;
-    if (m_contents & CThought && m_chat_flags & NametagGlobals::CFThought) {
-        show_thought();
-    } else if (m_contents & CSpeech && m_chat_flags & NametagGlobals::CFSpeech) {
-        show_speech();
-    } else if (m_contents & CName && m_display_name.size()) {
-        show_name();
-    }
+
 }
 
 void Nametag::update_contents() {
-    update();
+
 }
 
 void Nametag::set_active(bool active) {

@@ -11,7 +11,7 @@ Nametag3d::Nametag3d() : Nametag(true), m_bb_offset(3) {
     Nametag3d_cat.debug() << "__init__()" << std::endl;
     m_contents = Nametag::CName | Nametag::CSpeech | Nametag3d::CThought;
     billboard();
-}
+};
 
 Nametag3d::Nametag3d(const Nametag3d& tag) : Nametag() {
     Nametag3d_cat.debug() << "__init__()" << std::endl;
@@ -34,11 +34,11 @@ Nametag3d::Nametag3d(const Nametag3d& tag) : Nametag() {
     m_has_group = tag.m_has_group;
     m_active = tag.m_active;
     billboard();
-}
+};
 
 Nametag3d::~Nametag3d() {
 
-}
+};
 
 /**
  * This little guy is a overload operator. We use this to assign a Nametag object to this object!
@@ -64,10 +64,48 @@ Nametag3d& Nametag3d::operator=(const Nametag3d& tag) {
     m_active = tag.m_active;
     billboard();
     return *this;
-}
+};
 
 void Nametag3d::tick() {
-    Nametag3d_cat.debug() << "tick()" << std::endl;
+    // Do nothing. Disney didn't use Tick and it will be completely scarpped after i 
+    // completely reverse engineer libotp enough to discard it.
+};
+
+void Nametag3d::set_billboard_offset(float offset) {
+    m_bb_offset = offset;
+};
+
+void Nametag3d::billboard() {
+    Nametag3d_cat.debug() << "billboard()" << std::endl;
+    if (NametagGlobals::m_camera_nodepath->is_empty()) {
+        return;
+    }
+    m_inner_np.set_effect(BillboardEffect::make(LVecBase3f(0, 0, 1), true, false, m_bb_offset, *NametagGlobals::m_camera_nodepath, LPoint3f(0)));
+};
+
+void Nametag3d::cull_callback(CullTraverser *traverser, CullTraverserData *traverser_data) {
+    NodePath wpath = traverser_data->_node_path.get_node_path();
+    const RenderState *render_state = wpath.get_state();
+    int bin_index = render_state->get_bin_index();
+    adjust_to_camera(wpath, bin_index);
+};
+
+void Nametag3d::adjust_to_camera(NodePath path, int value) {
+    Nametag3d_cat.debug() << "adjust_to_camera(NodePath path, " << value << ")" << std::endl;
+    //In till i completely reverse engineer the adjust_to_camera() function in Disney's libotp, this will do.
+    /**
+    void Nametag3d::adjust_to_camera(NodePath path, int value) {
+        TransformState * transform_state = path.get_transform();
+        LVector3f scale;
+        if (transform_state->has_scale()) {
+            scale = transform_state->get_scale();
+        } else {
+            return;
+        }
+        LVector3f up = LVector3f::up;
+        LVector3f forward = LVector3f::forward;
+    }
+    **/
     if (NametagGlobals::m_camera_nodepath->is_empty()) {
         return;
     }
@@ -86,31 +124,20 @@ void Nametag3d::tick() {
 
         update_click_region(x, y, z, w);
     }
-}
+};
 
-void Nametag3d::set_billboard_offset(float offset) {
-    m_bb_offset = offset;
-}
-
-void Nametag3d::billboard() {
-    Nametag3d_cat.debug() << "billboard()" << std::endl;
-    if (NametagGlobals::m_camera_nodepath->is_empty()) {
-        return;
-    }
-    m_inner_np.set_effect(BillboardEffect::make(LVecBase3f(0, 0, 1), true, false, m_bb_offset, *NametagGlobals::m_camera_nodepath, LPoint3f(0)));
-}
 
 void Nametag3d::update_contents() {
     update();
-}
+};
 
 float Nametag3d::get_billboard_offset() {
     return m_bb_offset;
-}
+};
 
 bool Nametag3d::safe_to_flatten_below() {
     return false;
-}
+};
 
 ChatBalloon* Nametag3d::get_speech_balloon() {
     Nametag3d_cat.debug() << "get_speech_balloon()" << std::endl;
@@ -118,7 +145,7 @@ ChatBalloon* Nametag3d::get_speech_balloon() {
         return nullptr;
     }
     return NametagGlobals::speech_balloon_3d;
-}
+};
 
 ChatBalloon* Nametag3d::get_thought_balloon() {
     Nametag3d_cat.debug() << "get_thought_balloon()" << std::endl;
@@ -126,4 +153,4 @@ ChatBalloon* Nametag3d::get_thought_balloon() {
         return nullptr;
     }
     return NametagGlobals::thought_balloon_3d;
-}
+};

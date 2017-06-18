@@ -44,6 +44,8 @@ class EXPCL_LIBOTP Nametag2d : public virtual Nametag, public MarginPopup {
         
     private:
         static unsigned int Nametag_serial;
+        void cull_callback(CullTraverser *traverser, CullTraverserData *traverser_data);
+        void rotate_arrow();
         
     TYPE_HANDLE(Nametag2d, TypedObject);
 };

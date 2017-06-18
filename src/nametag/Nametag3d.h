@@ -25,14 +25,19 @@ class EXPCL_LIBOTP Nametag3d : public virtual Nametag {
         bool safe_to_flatten_below();
         void update_contents();
         
-    protected:
+    protected:    
+        virtual void billboard();
+        
         virtual ChatBalloon* get_speech_balloon();
         virtual ChatBalloon* get_thought_balloon();
-        virtual void billboard();
         
         float m_bb_offset;
         
         LVecBase4f frame;
+    
+    private:
+        void cull_callback(CullTraverser *traverser, CullTraverserData *traverser_data);
+        void adjust_to_camera(NodePath path, int value);
         
     TYPE_HANDLE(Nametag3d, TypedObject);
 };

@@ -11,6 +11,7 @@
 #include <nodePath.h>
 #include <clockObject.h>
 #include "CImpulse.h"
+#include "NametagGlobals.h"
 
 NotifyCategoryDecl(CMover, EXPCL_LIBOTP, EXPTP_LIBOTP);
 
@@ -19,9 +20,9 @@ class CMover;
 class EXPCL_LIBOTP CMover : public TypedReferenceCount {
     
     PUBLISHED:
-        CMover(NodePath m_nodepath);
-        CMover(NodePath m_nodepath, float m_fwdSpeed);
-        CMover(NodePath m_nodepath, float m_fwdSpeed, float m_rotSpeed);
+        CMover(NodePath nodepath);
+        CMover(NodePath nodepath, float m_fwdSpeed);
+        CMover(NodePath nodepath, float m_fwdSpeed, float m_rotSpeed);
         ~CMover();
         
         void set_fwd_speed(float speed);
@@ -45,18 +46,25 @@ class EXPCL_LIBOTP CMover : public TypedReferenceCount {
         NodePath get_node_path();
         
     public:
-        Vec3 m_vec_type;
+        LVector3f m_vec_type;
         
     private:
-        float m_fwdSpeed;
-        float m_rotSpeed;
+        float m_fwd_speed;
+        float m_rot_speed;
         float m_distance;
+        
+        float _dt;
+        float _dt_clock;
         
         pmap<std::string, CImpulse> m_c_impulses;
         
-        Vec3 vel;
-        Vec3 step;
-        Vec3 rotation;
+        LVector3f vel;
+        LVector3f step;
+        
+        LVector3f push_force;
+        LVector3f rot_force;
+        LVector3f movement;
+        LVector3f rotation;
         
         Mat3 rot_mat;
         
