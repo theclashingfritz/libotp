@@ -18,7 +18,7 @@
 #include "Nametag.h"
 #include "Settings.h"
 
-#include "Random.h" 
+#include "CRandom.h" 
 
 // These char maps are for if one if spilt characters raises a error 
 // and we can just refer to the char from here to fix the error.
@@ -276,7 +276,7 @@ unsigned long long encrypt_int(unsigned int value) {
     rvalue = rvalue & 0xFFFFFFFFFFFFFFFFULL;
 #endif
     
-    Random *r = new Random(rvalue);
+    CRandom *r = new CRandom(rvalue);
     
     volatile uint16_t adjust = r->Next(0x10000);
     volatile uint8_t shift_val = r->Next(0x1A);
@@ -340,7 +340,7 @@ unsigned long long encrypt_float(float value) {
     rvalue = rvalue & 0xFFFFFFFFFFFFFFFFULL;
 #endif
     
-    Random *r = new Random(rvalue);
+    CRandom *r = new CRandom(rvalue);
     
     volatile uint16_t adjust = r->Next(0x10000);
     volatile uint8_t shift_val = r->Next(0x1A);

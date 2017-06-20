@@ -26,12 +26,12 @@ class EXPCL_LIBOTP CMoverGroup : public TypedReferenceCount {
         void process_c_impulses();
         void process_c_impulses_and_integrate();
         void set_dt(double dt);
-        void set_dt();
-        void reset_dt();
-        double get_dt();
         
     private:
         pmap<std::string, CMover*> m_c_movers;
+        
+        float _dt;
+        float _dt_clock;
     
     TYPE_HANDLE(CMoverGroup, TypedObject);
 };

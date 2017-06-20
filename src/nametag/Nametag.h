@@ -25,16 +25,20 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup, public virtual Typed
     friend class NametagGroup;
     
     PUBLISHED:
-        Nametag(bool is_3d=false);
-        ~Nametag();
-        
         enum { 
             CName = 1,
             CSpeech = 2,
             CThought = 4
         };
         
-        friend bool operator==(const Nametag& tag1, const Nametag& tag2);
+        Nametag(bool is_3d=false);
+        ~Nametag();
+        
+        Nametag(const Nametag& tag);
+        
+        void operator =(const Nametag& tag);
+        bool operator !=(const Nametag& tag);
+        bool operator ==(const Nametag& tag);
 
         void set_draw_order(uint8_t draw_order);
         void clear_draw_order();
@@ -93,6 +97,7 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup, public virtual Typed
         
         bool m_active;
         bool m_has_group;
+        bool m_is_3d;
         
         PT(TextFont) m_font;
         

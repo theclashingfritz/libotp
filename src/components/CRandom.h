@@ -4,10 +4,10 @@
 
 #include <limits>
 
-class Random : public TypedObject {
+class CRandom : public TypedObject {
     PUBLISHED:
-        Random(int seed);
-        ~Random();
+        CRandom(int seed);
+        ~CRandom();
         int Next();
         int Next(int minValue, int maxValue);
         int Next(int maxValue);
@@ -22,5 +22,5 @@ class Random : public TypedObject {
         int InternalSample();
        
        
-    TYPE_HANDLE(Random, TypedObject);
+    TYPE_HANDLE(CRandom, TypedObject);
 };

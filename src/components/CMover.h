@@ -25,6 +25,9 @@ class EXPCL_LIBOTP CMover : public TypedReferenceCount {
         CMover(NodePath nodepath, float m_fwdSpeed, float m_rotSpeed);
         ~CMover();
         
+        CMover(const CMover& mover);
+        void operator =(const CMover& mover);
+        
         void set_fwd_speed(float speed);
         void set_rot_speed(float speed);
         void set_node_path(NodePath np);
@@ -51,7 +54,6 @@ class EXPCL_LIBOTP CMover : public TypedReferenceCount {
     private:
         float m_fwd_speed;
         float m_rot_speed;
-        float m_distance;
         
         float _dt;
         float _dt_clock;

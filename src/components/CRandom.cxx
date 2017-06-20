@@ -1,22 +1,22 @@
-#include "Random.h"
+#include "CRandom.h"
 #include <limits.h>
 #include <math.h>
 #include <stdexcept>
 
-TypeHandle Random::_type_handle;
+TypeHandle CRandom::_type_handle;
 
 const int MBIG = INT_MAX;
 const int MSEED = 161803398;
 const int MZ = 0;
 int * SeedArray = new int[56];
 
-double Random::Sample() {
+double CRandom::Sample() {
     //Including this division at the end gives us significantly improved
     //random number distribution.
     return (this->InternalSample()*(1.0 / MBIG));
 }
 
-int Random::InternalSample() {
+int CRandom::InternalSample() {
     int retVal;
     int locINext = this->inext;
     int locINextp = this->inextp;
@@ -37,7 +37,7 @@ int Random::InternalSample() {
     return retVal;
 }
 
-Random::Random(int seed) {
+CRandom::CRandom(int seed) {
     int ii;
     int mj, mk;
 
@@ -65,15 +65,15 @@ Random::Random(int seed) {
     seed = 1;
 }
 
-Random::~Random() {
+CRandom::~CRandom() {
     delete SeedArray;
 }
 
-int Random::Next() {
+int CRandom::Next() {
     return this->InternalSample();
 }
 
-double Random::GetSampleForLargeRange() {
+double CRandom::GetSampleForLargeRange() {
 
     int result = this->InternalSample();
     // Note we can't use addition here. The distribution will be bad if we do that.
@@ -87,7 +87,7 @@ double Random::GetSampleForLargeRange() {
     return d;
 }
 
-int Random::Next(int minValue, int maxValue) {
+int CRandom::Next(int minValue, int maxValue) {
     if (minValue>maxValue) {
         throw std::invalid_argument("minValue is larger than maxValue");
     }
@@ -102,7 +102,7 @@ int Random::Next(int minValue, int maxValue) {
 }
 
 
-int Random::Next(int maxValue) {
+int CRandom::Next(int maxValue) {
     if (maxValue<0) {
         throw std::invalid_argument("maxValue must be positive");
     }
@@ -110,6 +110,6 @@ int Random::Next(int maxValue) {
     return (int)(this->Sample()*maxValue);
 }
 
-double Random::NextDouble() {
+double CRandom::NextDouble() {
     return this->Sample();
 }

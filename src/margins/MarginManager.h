@@ -27,10 +27,8 @@ class MarginManager : public PandaNode {
         void add_visible_popup(MarginPopup* popup);
         void remove_visible_popup(MarginPopup* popup);
         
-        MarginCell* add_grid_cell(float x, float y, float left, float right, float bottom, float top, const NodePath& parent, float aspect_ratio);
         MarginCell* add_grid_cell(float x, float y, float left, float right, float bottom, float top);
         MarginCell* add_cell(float left, float right, float bottom, float top);
-        MarginCell* add_cell(float x, float y, const NodePath& parent);
         
         static MarginManager* get_global_ptr();
         

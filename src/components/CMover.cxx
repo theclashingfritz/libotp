@@ -10,7 +10,6 @@ CMover::CMover(NodePath nodepath) {
     }
     m_fwd_speed = 1.0;
     m_rot_speed = 1.0;
-    m_distance = 0.0;
     m_vec_type = Vec3(0, 0, 0);
     
     _dt = 1.0;
@@ -28,7 +27,6 @@ CMover::CMover(NodePath nodepath, float m_fwd_speed) {
         m_nodepath = nodepath;
     }
     m_rot_speed = 1.0;
-    m_distance = 0.0;
     m_vec_type = Vec3(0, 0, 0);
     
     _dt = 1.0;
@@ -44,7 +42,6 @@ CMover::CMover(NodePath nodepath, float m_fwd_speed, float m_rot_speed) {
     if (!nodepath.is_empty()) {
         m_nodepath = nodepath;
     }
-    m_distance = 0.0;
     m_vec_type = Vec3(0, 0, 0);
     
     _dt = 1.0;
@@ -59,6 +56,41 @@ CMover::CMover(NodePath nodepath, float m_fwd_speed, float m_rot_speed) {
 CMover::~CMover() {
     
 }
+
+CMover::CMover(const CMover& mover) {
+    if (!mover.m_nodepath.is_empty()) {
+        m_nodepath = mover.m_nodepath;
+    }
+    m_fwd_speed = mover.m_fwd_speed;
+    m_rot_speed = mover.m_rot_speed;
+    m_vec_type = mover.m_vec_type;
+    
+    _dt = mover._dt;
+    _dt_clock = mover._dt_clock;
+    
+    movement = LVector3f(mover.movement);
+    rotation = LVector3f(mover.rotation);
+    rot_force = LVector3f(mover.rot_force);
+    push_force = LVector3f(mover.push_force);
+}
+
+void CMover::operator =(const CMover& mover) {
+    if (!mover.m_nodepath.is_empty()) {
+        m_nodepath = mover.m_nodepath;
+    }
+    m_fwd_speed = mover.m_fwd_speed;
+    m_rot_speed = mover.m_rot_speed;
+    m_vec_type = mover.m_vec_type;
+    
+    _dt = mover._dt;
+    _dt_clock = mover._dt_clock;
+    
+    movement = LVector3f(mover.movement);
+    rotation = LVector3f(mover.rotation);
+    rot_force = LVector3f(mover.rot_force);
+    push_force = LVector3f(mover.push_force);
+}
+
 
 void CMover::set_fwd_speed(float speed) {
     CMover_cat.debug() << "set_fwd_speed(" << speed << ")" << std::endl;
@@ -89,7 +121,6 @@ void CMover::reset_dt() {
 
 void CMover::add_c_impulse(string name, CImpulse impulse) {
     CMover_cat.debug() << "add_c_impulse(" << name << " CImpulse impulse)" << std::endl;
-    CMover_cat.spam() << "Adding CImpulse '" << name << "' to impulse map and setting it's mover to our current mover!" << std::endl;
     m_c_impulses[name] = impulse;
     m_c_impulses[name].set_mover(this);
 }
@@ -116,7 +147,7 @@ void CMover::remove_c_impulse(string name) {
 
 void CMover::process_c_impulses(float dt) {
     CMover_cat.debug() << "process_c_impulses(" << dt << ")" << std::endl;
-    CMover_cat.spam() << "Processing CImpulses!" << std::endl;
+    _dt = dt;
     if (_dt == -1.0) {
         ClockObject *co = ClockObject::get_global_clock();
         float clock_dt = co->get_dt();
@@ -124,13 +155,12 @@ void CMover::process_c_impulses(float dt) {
         _dt_clock = clock_dt;
     }
     for each(pair<string, CImpulse> x in m_c_impulses) {
-        x.second.process(dt);
+        x.second.process(_dt);
     }
 }
 
 void CMover::process_c_impulses() {
     CMover_cat.debug() << "process_c_impulses()" << std::endl;
-    CMover_cat.spam() << "Processing CImpulses!" << std::endl;
     if (_dt == -1.0) {
         ClockObject *co = ClockObject::get_global_clock();
         float clock_dt = co->get_dt();
@@ -138,22 +168,8 @@ void CMover::process_c_impulses() {
         _dt_clock = clock_dt;
     }
     for each(pair<string, CImpulse> x in m_c_impulses) {
-        x.second.process(get_dt());
+        x.second.process(_dt);
     }
-}
-
-void CMover::add_force(Vec3 force) {
-    CMover_cat.debug() << "add_force(Vec3(" << force[0] << ", " << force[1] << ", " << force[2] << "))" << std::endl;
-    push_force[0] = push_force[0] + force[0];
-    push_force[1] = force[1] + push_force[1];
-    push_force[2] = force[2] + push_force[2];
-}
-
-void CMover::add_rot_force(Vec3 force) {
-    CMover_cat.debug() << "add_rot_force(Vec3(" << force[0] << ", " << force[1] << ", " << force[2] << "))" << std::endl;
-    rot_force[0] = rot_force[0] + force[0];
-    rot_force[1] = force[1] + rot_force[1];
-    rot_force[2] = force[2] + rot_force[2];
 }
 
 void CMover::add_shove(Vec3 shove) {
@@ -168,6 +184,20 @@ void CMover::add_rot_shove(Vec3 shove) {
     rotation[0] = rotation[0] + shove[0];
     rotation[1] = shove[1] + rotation[1];
     rotation[2] = shove[2] + rotation[2];
+}
+
+void CMover::add_force(Vec3 force) {
+    CMover_cat.debug() << "add_force(Vec3(" << force[0] << ", " << force[1] << ", " << force[2] << "))" << std::endl;
+    push_force[0] = push_force[0] + force[0];
+    push_force[1] = force[1] + push_force[1];
+    push_force[2] = force[2] + push_force[2];
+}
+
+void CMover::add_rot_force(Vec3 force) {
+    CMover_cat.debug() << "add_rot_force(Vec3(" << force[0] << ", " << force[1] << ", " << force[2] << "))" << std::endl;
+    rot_force[0] = rot_force[0] + force[0];
+    rot_force[1] = force[1] + rot_force[1];
+    rot_force[2] = force[2] + rot_force[2];
 }
 
 void CMover::set_node_path(NodePath np) {

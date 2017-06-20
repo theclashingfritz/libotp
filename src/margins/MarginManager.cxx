@@ -140,60 +140,40 @@ void MarginManager::reorganize() {
     }
 }
 
-MarginCell* MarginManager::add_grid_cell(float x, float y, float left, float right, float bottom, float top, const NodePath& parent, float aspect_ratio) {
-    MarginManager_cat.debug() << "add_grid_cell(" << x << " " << y << " " << left << " " << right << " " << bottom << " " << top << " NodePath parent " << aspect_ratio << ")" << std::endl;
-    float padding = .125;
-    float scale = .2;
-    float x_start = left + scale / 2. + padding;
-    float y_start = bottom + scale / 2. + padding;
-    float x_end = right - scale / 2. - padding;
-    float y_end = top - scale / 2. - padding;
-    float x_inc = (x_end - x_start) / 5.;
-    float y_inc = (y_end - y_start) / 3.5;
-    float x2 = x_start + x_inc * x;
-    float y2 = y_start + y_inc * y - 1;
-    
-    if (x < 2)
-        x2 += aspect_ratio;
-        
-    else
-        x2 -= aspect_ratio;
-        
-    MarginCell* cell = new MarginCell(this);
-    cell->reparent_to(parent);
-    cell->set_scale(scale);
-    cell->set_pos(x2, 0, y2);
-    cell->set_available(true);
-    
-    m_cells.push_back(cell);
-    reorganize();
-    
-    return cell;
-}
 
 MarginCell* MarginManager::add_grid_cell(float x, float y, float left, float right, float bottom, float top) {
     MarginManager_cat.debug() << "add_grid_cell(" << x << " " << y << " " << left << " " << right << " " << bottom << " " << top << ")" << std::endl;
-    float padding = .125;
-    float scale = .2;
-    float x_start = left + scale / 2. + padding;
-    float y_start = bottom + scale / 2. + padding;
-    float x_end = right - scale / 2. - padding;
-    float y_end = top - scale / 2. - padding;
-    float x_inc = (x_end - x_start) / 5.;
-    float y_inc = (y_end - y_start) / 3.5;
-    float x2 = x_start + x_inc * x;
-    float y2 = y_start + y_inc * y - 1;
-        
-    MarginCell* cell = new MarginCell(this);
-    cell->reparent_to(NodePath(this->get_parent(0)));
-    cell->set_scale(scale);
-    cell->set_pos(x2, 0, y2);
-    cell->set_available(true);
-    
-    m_cells.push_back(cell);
-    reorganize();
-    
-    return cell;
+    double v7; // st7@1 MAPDST
+    double v8; // st5@1 MAPDST
+    double v12; // st6@1 MAPDST
+    float f_top; // ST0C_4@1
+    float f_bottom; // ST08_4@1
+    float f_right; // ST04_4@1
+    float v17; // [sp+1Ch] [bp+Ch]@1 MAPDST
+    float f_left; // [sp+20h] [bp+10h]@1 MAPDST
+
+    v7 = left;
+    f_left = right - left;
+    v17 = f_left / 6.0;
+    f_left = top - bottom;
+    f_left = f_left / 6.0;
+    v8 = v7 + v17 * x;
+    v7 = v17;
+    v17 = v8;
+    v12 = f_left;
+    f_left = bottom + f_left * y;
+    v8 = v12 + f_left;
+    v12 = f_left;
+    f_left = v8;
+    f_left = f_left - 0.009999999776482582;
+    f_top = f_left;
+    f_left = v12 + 0.009999999776482582;
+    f_bottom = f_left;
+    f_left = v7 + v17;
+    f_left = f_left - 0.009999999776482582;
+    f_right = f_left;
+    f_left = v17 + 0.009999999776482582;
+    return add_cell(f_left, f_right, f_bottom, f_top);
 }
 
 MarginCell* MarginManager::add_cell(float left, float right, float bottom, float top) {
@@ -221,20 +201,6 @@ MarginCell* MarginManager::add_cell(float left, float right, float bottom, float
     return cell;
 }
 
-MarginCell* MarginManager::add_cell(float x, float y, const NodePath& parent) {
-    MarginManager_cat.debug() << "add_cell(" << x << " " << y << " " << "NodePath parent" << ")" << std::endl;
-    float scale = .2;
-    MarginCell* cell = new MarginCell(this);
-    cell->reparent_to(parent);
-    cell->set_scale(scale);
-    cell->set_pos(x, 0, y);
-    cell->set_available(true);
-    
-    m_cells.push_back(cell);
-    reorganize();
-    
-    return cell;
-}
 
 bool MarginManager::_sort_key(MarginPopup* lhs, MarginPopup* rhs) {
     MarginManager_cat.debug() << "_sort_key(MarginPopup lhs, MarginPopup rhs)" << std::endl;
