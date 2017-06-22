@@ -23,9 +23,9 @@ class EXPCL_LIBOTP CImpulse : public TypedReferenceCount {
     public:
         Vec3 m_vec_type;
         
-    private:
-        CMover* m_mover;
+    protected:
         NodePath m_nodepath;
+        CMover* m_mover;
         
     TYPE_HANDLE(CImpulse, TypedObject);
 };
