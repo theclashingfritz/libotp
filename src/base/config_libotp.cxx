@@ -18,6 +18,7 @@
 #include "Nametag.h"
 #include "Settings.h"
 
+#include "CPyObjectHandler.h"
 #include "CRandom.h" 
 
 // These char maps are for if one if spilt characters raises a error 
@@ -82,6 +83,8 @@ void init_libotp() {
     NametagFloat3d::init_type();
     Nametag::init_type();
     Settings::init_type();
+    CPyObjectHandler::init_type();
+    CRandom::init_type();
 #ifdef _DEBUG
     _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif

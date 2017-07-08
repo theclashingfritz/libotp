@@ -41,6 +41,8 @@ set(COMPONENTS_FILES
     src/components/CImpulse.cxx
     src/components/CImpulse.h
     src/components/CRandom.cxx
+    src/components/CPyObjectHandler.cxx
+    src/components/CPyObjectHandler.h
     src/components/CRandom.h
 )
 

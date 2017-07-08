@@ -1,19 +1,18 @@
 #pragma once
 
 #include "util.h"
-#include <typedReferenceCount.h>
+#include <typedObject.h>
 #include <nodePath.h>
 #include <pandabase.h>
 
 class CMover;
-class CImpulse;
 
-class EXPCL_LIBOTP CImpulse : public TypedReferenceCount {
+class EXPCL_LIBOTP CImpulse : public virtual TypedObject {
     
     PUBLISHED:
         CImpulse();
         ~CImpulse();
-        void process(float dt);
+        virtual void process(float dt);
         void set_mover(CMover* mover);
         void clear_mover();
         void clear_mover(CMover* mover);
@@ -27,5 +26,30 @@ class EXPCL_LIBOTP CImpulse : public TypedReferenceCount {
         NodePath m_nodepath;
         CMover* m_mover;
         
-    TYPE_HANDLE(CImpulse, TypedObject);
+    // Type handle
+    public:
+        static TypeHandle get_class_type()
+        {
+            return _type_handle;
+        }
+        
+        static void init_type()
+        {
+            TypedObject::init_type();
+            register_type(_type_handle, "CImpulse", TypedObject::get_class_type());
+        }
+        
+        virtual TypeHandle get_type() const
+        {
+            return get_class_type();
+        }
+        
+        virtual TypeHandle force_init_type()
+        {
+            init_type();
+            return get_class_type();
+        }
+
+    private:
+        static TypeHandle _type_handle;
 };

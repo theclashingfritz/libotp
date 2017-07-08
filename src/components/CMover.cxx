@@ -119,10 +119,13 @@ void CMover::reset_dt() {
     _dt_clock = co->get_dt();
 }
 
-void CMover::add_c_impulse(string name, CImpulse impulse) {
-    CMover_cat.debug() << "add_c_impulse(" << name << " CImpulse impulse)" << std::endl;
+void CMover::add_c_impulse(string name, CImpulse *impulse) {
+    CMover_cat.debug() << "add_c_impulse('" << name << "', CImpulse impulse)" << std::endl;
+    if (impulse == nullptr || impulse == NULL) {
+        return;
+    }
     m_c_impulses[name] = impulse;
-    m_c_impulses[name].set_mover(this);
+    m_c_impulses[name]->set_mover(this);
 }
 
 void CMover::remove_c_impulse(string name) {
@@ -131,12 +134,12 @@ void CMover::remove_c_impulse(string name) {
         CMover_cat.spam() << "CImpulse '" << name << "' was not found in impulse map! Returning..." << std::endl;
         return;
     } else {
-        pmap<std::string, CImpulse>::iterator it;
+        pmap<std::string, CImpulse *>::iterator it;
         it = m_c_impulses.find(name);
         if (it != m_c_impulses.end()) {
             // Found it? - Delete it!
-            CMover_cat.spam() << "Removing CImpulse '" << name << "' from map and destorying CImpulse!" << std::endl;
-            m_c_impulses[name].clear_mover(this);
+            CMover_cat.spam() << "Removing CImpulse '" << name << "' from map!" << std::endl;
+            m_c_impulses[name]->clear_mover(this);
             m_c_impulses.erase(it);
         } else {
             CMover_cat.spam() << "CImpulse '" << name << "' was not found in impulse map! Returning..." << std::endl;
@@ -154,8 +157,8 @@ void CMover::process_c_impulses(float dt) {
         _dt = clock_dt - _dt_clock;
         _dt_clock = clock_dt;
     }
-    for each(pair<string, CImpulse> x in m_c_impulses) {
-        x.second.process(_dt);
+    for each(pair<string, CImpulse *> x in m_c_impulses) {
+        x.second->process(_dt);
     }
 }
 
@@ -167,8 +170,8 @@ void CMover::process_c_impulses() {
         _dt = clock_dt - _dt_clock;
         _dt_clock = clock_dt;
     }
-    for each(pair<string, CImpulse> x in m_c_impulses) {
-        x.second.process(_dt);
+    for each(pair<string, CImpulse *> x in m_c_impulses) {
+        x.second->process(_dt);
     }
 }
 
@@ -210,46 +213,16 @@ void CMover::integrate() {
     if (m_nodepath.is_empty()) {
         CMover_cat.debug() << "CMover.integrate() was called while the nodepath is empty!" << std::endl;
         return;
-    }
-    LVector3f i_force; // ebp@1 MAPDST
-    LVector3f i_rot_force; // ebx@1 MAPDST
-    LVector3f i_shove; // eax@1 MAPDST
-    float v8; // ST7C_4@1
-    LVector3f v9; // ST78_4@1 MAPDST
-    LVector3f v15; // ST80_4@1
-    LVector3f empty;
-
-    i_force = push_force;
-    i_rot_force = rot_force;
-    empty = LVector3f(0.0);
-    i_shove = i_rot_force * _dt;
-    i_rot_force = empty;
-    i_rot_force[0] = i_shove[0] + empty[0];
-    i_rot_force[1] = i_shove[1] + empty[1];
-    i_rot_force[2] = i_shove[2] + empty[2];
-    v8 = _dt * _dt;
-    v9 = movement * _dt;
-    i_shove = i_force * v8;
-    i_force = i_shove * NametagGlobals::scale_exponent;
-    i_shove = empty * _dt;
-    i_shove = i_shove + i_force;
-    i_shove = i_shove + v9;
-    CMover_cat.spam() << "i_shove = LVector3f(" << i_shove[0] << ", " << i_shove[1] << ", " << i_shove[2] << ")" << std::endl;
-    m_nodepath.set_fluid_pos(m_nodepath, i_shove);
-    v15 = rotation * _dt;
-    i_shove = rot_force * v8;
-    v9 = i_shove * NametagGlobals::scale_exponent;
-    i_shove = empty * _dt;
-    i_shove = i_shove + v9;
-    i_shove = i_shove + v15;
-    CMover_cat.spam() << "i_shove = LVector3f(" << i_shove[0] << ", " << i_shove[1] << ", " << i_shove[2] << ")" << std::endl;
-    m_nodepath.set_hpr(m_nodepath, i_shove);
-    movement[0] = 0.0;
-    movement[1] = 0.0;
-    movement[2] = 0.0;
-    rotation[0] = 0.0;
-    rotation[1] = 0.0;
-    rotation[2] = 0.0;
+    }    
+    // Can't believe it was this simple. All the force crud goes unused. 
+    movement = movement * (_dt * _dt);
+    CMover_cat.spam() << "movement = LVector3f(" << movement[0] << ", " << movement[1] << ", " << movement[2] << ")" << std::endl;
+    m_nodepath.set_fluid_pos(m_nodepath, movement);
+    rotation = rotation * _dt;
+    CMover_cat.spam() << "rotation = LVector3f(" << rotation[0] << ", " << rotation[1] << ", " << rotation[2] << ")" << std::endl;
+    m_nodepath.set_hpr(m_nodepath, rotation);
+    movement = LVector3f(0.0);
+    rotation = LVector3f(0.0);
 }
 
 float CMover::get_fwd_speed() {
@@ -267,11 +240,11 @@ double CMover::get_dt() {
     return _dt;
 }
 
-CImpulse CMover::get_c_impulse(string name) {
+CImpulse *CMover::get_c_impulse(string name) {
     CMover_cat.debug() << "get_c_impulse(" << name << ")" << std::endl;
     if (m_c_impulses.find(name) == m_c_impulses.end()) {
-        CMover_cat.spam() << "CImpulse '" << name << "' was not found in impulse map! Returning a fake CImpulse..." << std::endl;
-        return CImpulse();
+        CMover_cat.spam() << "CImpulse '" << name << "' was not found in impulse map! Returning a nullptr!" << std::endl;
+        return nullptr;
     } else {
         return m_c_impulses[name];
     }

@@ -33,7 +33,7 @@ class EXPCL_LIBOTP CMover : public TypedReferenceCount {
         void set_node_path(NodePath np);
         void set_dt(double dt);
         void reset_dt();
-        void add_c_impulse(string name, CImpulse impulse);
+        void add_c_impulse(string name, CImpulse *impulse);
         void remove_c_impulse(string name);
         void process_c_impulses(float dt);
         void process_c_impulses();
@@ -45,7 +45,7 @@ class EXPCL_LIBOTP CMover : public TypedReferenceCount {
         float get_fwd_speed();
         float get_rot_speed();
         double get_dt();
-        CImpulse get_c_impulse(string name);
+        CImpulse *get_c_impulse(string name);
         NodePath get_node_path();
         
     public:
@@ -58,7 +58,7 @@ class EXPCL_LIBOTP CMover : public TypedReferenceCount {
         float _dt;
         float _dt_clock;
         
-        pmap<std::string, CImpulse> m_c_impulses;
+        pmap<std::string, CImpulse *> m_c_impulses;
         
         LVector3f vel;
         LVector3f step;

@@ -84,7 +84,7 @@ void Nametag3d::billboard() {
 };
 
 void Nametag3d::cull_callback(CullTraverser *traverser, CullTraverserData *traverser_data) {
-    NodePath wpath = traverser_data->_node_path.get_node_path();
+    NodePath wpath = traverser_data->get_node_path();
     const RenderState *render_state = wpath.get_state();
     int bin_index = render_state->get_bin_index();
     adjust_to_camera(wpath, bin_index);

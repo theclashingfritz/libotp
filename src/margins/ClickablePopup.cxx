@@ -225,10 +225,23 @@ void ClickablePopup::update_click_state() {
             m_click_sound->play();  
         }
     } else if (old_state == CLICKSTATE_CLICK && state == CLICKSTATE_HOVER) {
-        if (m_from_id != 0) {
-            throw_event(m_click_event, m_event_parameter);
-        } else {
-            throw_event(m_click_event);
+        try {
+            if (m_from_id != 0) {
+                throw_event(m_click_event, m_event_parameter);
+            } else {
+                throw_event(m_click_event);
+            }
+        } catch (const std::logic_error& e) {
+            ClickablePopup_cat.error() << "A unexpected error has occured! Info: " << e.what() << std::endl;
+            return;
+        } catch (const std::runtime_error& e) {
+            ClickablePopup_cat.error() << "A unexpected error has occured! Info: " << e.what() << std::endl;
+            return; 
+        } catch (const std::exception& e) {
+            ClickablePopup_cat.error() << "A unexpected error has occured! Info: " << e.what() << std::endl;
+            return;
+        } catch (...) {
+            return;
         }
     }
 };

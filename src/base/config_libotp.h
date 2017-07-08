@@ -31,6 +31,13 @@
 #undef NDEBUG
 #endif
 
+#ifdef BUILDING_LIBOTP
+    #define EXPCL_LIBOTP EXPORT_CLASS 
+    #define EXPTP_LIBOTP EXPORT_TEMPL 
+#else 
+    #define EXPCL_LIBOTP IMPORT_CLASS 
+    #define EXPTP_LIBOTP IMPORT_TEMPL 
+#endif 
 
 #ifdef _DEBUG
 #define _CRTDBG_MAP_ALLOC
@@ -44,14 +51,6 @@
 #pragma warning (disable : 4275)
 #pragma warning (disable : 4217)
 #pragma warning (disable : 4309)
-
-#ifdef BUILDING_LIBOTP
-    #define EXPCL_LIBOTP EXPORT_CLASS 
-    #define EXPTP_LIBOTP EXPORT_TEMPL 
-#else 
-    #define EXPCL_LIBOTP IMPORT_CLASS 
-    #define EXPTP_LIBOTP IMPORT_TEMPL 
-#endif 
 
 extern char big_char_map[26];
 extern char small_char_map[26];
@@ -137,4 +136,4 @@ EXPCL_LIBOTP std::string caculate_deobfuscated_key(std::string key);
 END_PUBLISH
 
 NotifyCategoryDecl(libotp, EXPCL_LIBOTP, EXPTP_LIBOTP);
-extern void init_libotp();
+extern EXPCL_LIBOTP void init_libotp();
