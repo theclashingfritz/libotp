@@ -1,5 +1,9 @@
 #include "CMover.h"
 
+#ifdef HAVE_THEMDIA
+#include <ThemidaSDK.h>
+#endif
+
 NotifyCategoryDef(CMover, "");
 
 TypeHandle CMover::_type_handle;
@@ -129,6 +133,9 @@ void CMover::add_c_impulse(string name, CImpulse *impulse) {
 }
 
 void CMover::remove_c_impulse(string name) {
+#ifdef HAVE_THEMDIA
+    ENCODE_START
+#endif
     CMover_cat.debug() << "remove_c_impulse(" << name << ")" << std::endl;
     if (m_c_impulses.find(name) == m_c_impulses.end()) {
         CMover_cat.spam() << "CImpulse '" << name << "' was not found in impulse map! Returning..." << std::endl;
@@ -146,6 +153,9 @@ void CMover::remove_c_impulse(string name) {
             return;
         }
     }
+#ifdef HAVE_THEMDIA
+    ENCODE_END
+#endif
 }
 
 void CMover::process_c_impulses(float dt) {

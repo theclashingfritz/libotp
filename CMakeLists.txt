@@ -23,6 +23,9 @@ SET(PANDA_DIR "C:\\Panda3D-1.10.0" CACHE STRING "Panda3D directory.")
 ### OpenSSL dir ###
 SET(OPEN_SSL_DIR "C:\\openssl" CACHE STRING "OpenSSL directory.")
 
+### Themdia dir (Optional)###
+SET(THEMDIA_DIR "C:\\Program Files\\Themida" CACHE STRING "Themdia directory. (Optional)")
+
 execute_process(COMMAND ${PYTHON2_EXECUTABLE} "${CMAKE_SOURCE_DIR}/src/run_interrogate.py" "${PANDA_DIR}")
 
 ### Define core components ###
@@ -143,6 +146,11 @@ set(OPEN_SSL_LIBS
     ${LIBPFX}pandaeay
     ${LIBPFX}pandassl
 )
+
+
+set(THEMDIA_LIBS
+)
+
 if(WIN32)
     LIST(APPEND OPEN_SSL_LIBS crypt32)
     LIST(APPEND OPEN_SSL_LIBS psapi)
@@ -160,6 +168,21 @@ else()
     message(STATUS "libp3interrogatedb not found")
 endif()
 
+# Add Themdia, if it exists
+find_library(HAVE_THEMDIA
+             SecureEngineSDK32
+             HINTS ${THEMDIA_DIR}/ThemidaSDK/Lib/COFF)
+             
+if (HAVE_THEMDIA)
+    message(STATUS "Themdia found!")
+    LIST(APPEND THEMDIA_LIBS SecureEngineSDK32)
+    add_definitions(-DHAVE_THEMDIA)
+    include_directories(${THEMDIA_DIR}/ThemidaSDK/Include/C)
+    link_directories(${THEMDIA_DIR}/ThemidaSDK/Lib/COFF)
+else()
+    message(STATUS "Themdia (Optional) was NOT found!")
+endif()
+
 add_library(libotp SHARED
     ${BASE_FILES}
     ${COMPONENTS_FILES}
@@ -174,7 +197,11 @@ if(WIN32)
     SET_TARGET_PROPERTIES(libotp PROPERTIES SUFFIX ".pyd")
 endif()
 
-target_link_libraries(libotp ${PANDA_LIBS} ${OPEN_SSL_LIBS} ${PYTHON_LIBRARY})
+if (HAVE_THEMDIA)
+    target_link_libraries(libotp ${PANDA_LIBS} ${THEMDIA_LIBS} ${OPEN_SSL_LIBS} ${PYTHON_LIBRARY})
+else()
+    target_link_libraries(libotp ${PANDA_LIBS} ${OPEN_SSL_LIBS} ${PYTHON_LIBRARY})
+endif()
 
 add_custom_command(TARGET libotp
                    PRE_BUILD
