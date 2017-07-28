@@ -1,5 +1,7 @@
 #include "util.h"
 
+#include "PopupMouseWatcherRegion.h"
+
 #include "Nametag.h"
 #include "NametagGroup.h"
 #include "ChatBalloon.h"
@@ -14,7 +16,7 @@ const float Nametag::chat_alpha = 1;
 
 unsigned int Nametag::Nametag_serial = 0;
 
-Nametag::Nametag(bool is_3d) : ClickablePopup(is_3d ? NametagGlobals::m_camera_nodepath : &NodePath()), m_contents(0), m_inner_np(this->attach_new_node("nametag_contents")), m_wordwrap(7.5), m_chat_wordwrap(10), m_font(nullptr), m_qt_color(LVecBase4f(1)), m_color_code(NametagGlobals::CCNormal), m_avatar(nullptr), m_icon(NodePath("icon")), m_name_fg(LVecBase4f(0, 0, 0, 1)), m_name_bg(LVecBase4f(1)), m_chat_fg(LVecBase4f(0, 0, 0, 1)), m_chat_bg(LVecBase4f(1)), m_chat_flags(0) {
+Nametag::Nametag(bool is_3d) : m_contents(0), m_wordwrap(7.5), m_chat_wordwrap(10), m_font(nullptr), m_qt_color(LVecBase4f(1)), m_color_code(NametagGlobals::CCNormal), m_avatar(nullptr), m_icon(NodePath("icon")), m_name_fg(LVecBase4f(0, 0, 0, 1)), m_name_bg(LVecBase4f(1)), m_chat_fg(LVecBase4f(0, 0, 0, 1)), m_chat_bg(LVecBase4f(1)), m_chat_flags(0) {
     Nametag_cat.debug() << "__init__(" << is_3d << ")" << std::endl;
     m_serial = Nametag::Nametag_serial++;
     m_is_3d = is_3d;
@@ -30,7 +32,7 @@ Nametag::~Nametag() {
     }
 }
 
-Nametag::Nametag(const Nametag& tag) : ClickablePopup(tag.m_is_3d ? NametagGlobals::m_camera_nodepath : &NodePath()), m_inner_np(this->attach_new_node("nametag_contents")), m_font(nullptr), m_avatar(nullptr), m_icon(NodePath("icon")) {
+Nametag::Nametag(const Nametag& tag) : m_font(nullptr), m_avatar(nullptr), m_icon(NodePath("icon")) {
     Nametag_cat.debug() << "__init__(const Nametag& tag)" << std::endl;
     m_serial = Nametag::Nametag_serial++;
     frame = LVecBase4f(tag.frame);
@@ -108,6 +110,12 @@ void Nametag::show_speech() {
     show_balloon(get_speech_balloon(), m_chat_string);
 }
 
+void Nametag::click() {
+    if (m_has_group) {
+        m_group->click();
+    }
+}
+
 void Nametag::show_name() {
 
 }
@@ -129,6 +137,17 @@ void Nametag::set_contents(int contents) {
     Nametag_cat.debug() << "set_contents(" << contents <<")" << std::endl;
     m_contents = contents;
     update();
+}
+
+void Nametag::set_region(LVecBase4f region_frame, int v1) {
+    if (_region) {
+        _region->set_frame(LVecBase4f(region_frame));
+    } else {
+        std::string name = Nametag::get_type().get_name();
+        name += '-';
+        name += ws2s(m_name);
+        _region = new PopupMouseWatcherRegion(this, name, LVecBase4f(region_frame));
+    }
 }
 
 void Nametag::destroy() {
@@ -155,12 +174,12 @@ void Nametag::set_visible(bool flag) {
        
 NodePath Nametag::get_button() {
     Nametag_cat.debug() << "get_button()" << std::endl;
-    int cs = get_click_state();
+    State cs = m_click_state;
     
     if (m_buttons.size() == 0) {
         return NodePath::not_found();
     } else if (cs < m_buttons.size()) {
-        return m_buttons[cs];
+        return m_buttons[int(cs)];
     }
     
     return m_buttons.at(0);

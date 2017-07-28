@@ -10,7 +10,7 @@ NotifyCategoryDecl(Nametag2d, EXPCL_LIBOTP, EXPTP_LIBOTP);
 
 class Nametag2d;
 
-class EXPCL_LIBOTP Nametag2d : public virtual Nametag, public MarginPopup {
+class EXPCL_LIBOTP Nametag2d : public virtual Nametag, public virtual MarginPopup {
     PUBLISHED:
         Nametag2d();
         Nametag2d(const Nametag2d& tag);
@@ -47,5 +47,5 @@ class EXPCL_LIBOTP Nametag2d : public virtual Nametag, public MarginPopup {
         void cull_callback(CullTraverser *traverser, CullTraverserData *traverser_data);
         void rotate_arrow();
         
-    TYPE_HANDLE(Nametag2d, TypedObject);
+    TYPE_HANDLE(Nametag2d, Nametag);
 };

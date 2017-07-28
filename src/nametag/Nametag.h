@@ -19,8 +19,9 @@ class Nametag;
 class ChatBalloon;
 class NametagGroup; 
 class MarginManager;
+class PopupMouseWatcherRegion;
 
-class EXPCL_LIBOTP Nametag : public virtual ClickablePopup, public virtual TypedObject {
+class EXPCL_LIBOTP Nametag : public virtual ClickablePopup {
     
     friend class NametagGroup;
     
@@ -43,6 +44,7 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup, public virtual Typed
         void set_draw_order(uint8_t draw_order);
         void clear_draw_order();
         void set_contents(int contents);
+        void set_region(LVecBase4f region_frame, int v1);
         void set_active(bool active);
         void set_chat_wordwrap(uint16_t chat_wordwrap);
         void set_avatar(NodePath *avatar);
@@ -77,6 +79,7 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup, public virtual Typed
         virtual void show_thought();
         virtual void clear_group();
         virtual void show_speech();
+        virtual void click();
         virtual void show_name();
         virtual void update();
         
@@ -112,6 +115,8 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup, public virtual Typed
         
         NametagGroup *m_group;
         
+        PopupMouseWatcherRegion *_region;
+        
         NodePath *m_avatar;
         NodePath m_inner_np;
         NodePath m_icon;
@@ -128,5 +133,5 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup, public virtual Typed
         static unsigned int Nametag_serial;
         //PandaNode m_pandaNode;
 
-    TYPE_HANDLE(Nametag, TypedObject);
+    TYPE_HANDLE(Nametag, ClickablePopup);
 };

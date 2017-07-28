@@ -39,5 +39,5 @@ class EXPCL_LIBOTP Nametag3d : public virtual Nametag {
         void cull_callback(CullTraverser *traverser, CullTraverserData *traverser_data);
         void adjust_to_camera(NodePath path, int value);
         
-    TYPE_HANDLE(Nametag3d, TypedObject);
+    TYPE_HANDLE(Nametag3d, Nametag);
 };

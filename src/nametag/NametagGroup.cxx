@@ -5,6 +5,7 @@
 #include <asyncTaskManager.h>
 #include <boundingBox.h>
 #include <boundingHexahedron.h>
+#include <eventQueue.h>
 
 static PT(AsyncTaskManager) g_task_mgr = AsyncTaskManager::get_global_ptr(); 
 
@@ -191,6 +192,12 @@ void NametagGroup::remove_nametag(Nametag* nametag) {
     }
 }
 
+void NametagGroup::click() {
+    CPT(Event) event = new Event(get_unique_id());
+    EventQueue *queue = EventQueue::get_global_event_queue();
+    queue->queue_event(event);
+}
+
 void NametagGroup::manage(MarginManager* manager) {
     NametagGroup_cat.debug() << "manage(MarginManager manager)" << std::endl;
     if (manager == NULL || manager == nullptr) {
@@ -300,11 +307,11 @@ void NametagGroup::update_nametag(Nametag* nametag) {
     nametag->m_avatar = m_avatar;
     nametag->m_icon = NodePath(m_icon);
     
-    if (m_active || has_button()) {
-        nametag->set_click_region_event(get_unique_id());
-    } else {
-        nametag->set_click_region_event("");
-    }
+    // if (m_active || has_button()) {
+    //     nametag->set_click_region_event(get_unique_id());
+    // } else {
+    //     nametag->set_click_region_event("");
+    // }
         
     nametag->update();
 }

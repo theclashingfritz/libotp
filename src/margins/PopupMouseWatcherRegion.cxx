@@ -1,30 +1,41 @@
 #include "PopupMouseWatcherRegion.h"
 
+#include <mouseWatcherParameter.h>
+
 TypeHandle PopupMouseWatcherRegion::_type_handle;
 
 NotifyCategoryDef(PopupMouseWatcherRegion, "");
 
-PopupMouseWatcherRegion::PopupMouseWatcherRegion(ClickablePopup *popup, const string &name, const LVecBase4 &frame) : MouseWatcherRegion(name, frame) {
-    PopupMouseWatcherRegion_cat.debug() << "__init__(" << name << " LVecBase4 frame)" << std::endl;
-    float value1 = *(float *)(this + 52);
-    float value2 = *(float *)(this + 56);
-    value1 = *(float *)&frame;
-    value2 = *((float *)&frame + 4);
+PopupMouseWatcherRegion::PopupMouseWatcherRegion(ClickablePopup *popup, const std::string &name, const LVecBase4f &frame) : MouseWatcherRegion(name, frame) {
+    PopupMouseWatcherRegion_cat.debug() << "__init__(ClickablePopup popup " << name << " LVecBase4 frame)" << std::endl;
     
-    PopupMouseWatcherRegion_cat.info() << "Value 1 is " << value1 << " which is at address " << reinterpret_cast<int>(std::addressof(value1)) << "!" << std::endl;
-    PopupMouseWatcherRegion_cat.info() << "Value 2 is " << value2 << " which is at address " << reinterpret_cast<int>(std::addressof(value2)) << "!" << std::endl;
-    
-    *(float *)(this + 52) = *(float *)&frame;
-    *(float *)(this + 56) = *((float *)&frame + 4);
-    *(float *)(this + 60) = *((float *)&frame + 8);
-    *(float *)(this + 64) = *((float *)&frame + 12);
-    
+    _popup = popup;
+    _name = std::string(name);
 }
 
-PopupMouseWatcherRegion::PopupMouseWatcherRegion(const PopupMouseWatcherRegion& region) : MouseWatcherRegion("temp", LVecBase4(1, 1, 1, 1)) {
+PopupMouseWatcherRegion::PopupMouseWatcherRegion(const PopupMouseWatcherRegion& region) : MouseWatcherRegion(std::string(region._name), LVecBase4f(region._frame)) {
     PopupMouseWatcherRegion_cat.debug() << "__init__(const PopupMouseWatcherRegion& region)" << std::endl;
+    
+    _popup = region._popup;
+    _name = std::string(region._name);
 }
 
 PopupMouseWatcherRegion::~PopupMouseWatcherRegion() {
     
+}
+
+void PopupMouseWatcherRegion::enter_region(MouseWatcherParameter param) {
+    _popup->enter_region(param);
+}
+
+void PopupMouseWatcherRegion::exit_region(MouseWatcherParameter param) {
+    _popup->exit_region(param);
+}
+
+void PopupMouseWatcherRegion::press(MouseWatcherParameter param) {
+    _popup->press(param);
+}
+
+void PopupMouseWatcherRegion::release(MouseWatcherParameter param) {
+    _popup->release(param);
 }
