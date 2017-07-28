@@ -15,6 +15,9 @@ CPyObjectHandler::~CPyObjectHandler() {
 }
 
 void CPyObjectHandler::add_object(std::string object_name, PyObject *obj, unsigned int object_importance) {
+#ifdef HAVE_THEMDIA
+    MUTATE_START
+#endif
     if (object_map.size() == object_count_limit || object_map.size() == object_map.max_size()) {
         pmap<std::string, std::pair<unsigned int, PyObject *>>::iterator x;
         for (x = object_map.begin(); x != object_map.end(); ++x) {
@@ -30,9 +33,15 @@ void CPyObjectHandler::add_object(std::string object_name, PyObject *obj, unsign
     }
     
     object_map[object_name] = std::make_pair(object_importance, obj);
+#ifdef HAVE_THEMDIA
+    MUTATE_END
+#endif
 }
 
 void CPyObjectHandler::remove_object(std::string object_name) {
+#ifdef HAVE_THEMDIA
+    MUTATE_START
+#endif
     if (object_map.find(object_name) == object_map.end()) {
         return;
     } else {
@@ -45,6 +54,9 @@ void CPyObjectHandler::remove_object(std::string object_name) {
             return;
         }
     }
+#ifdef HAVE_THEMDIA
+    MUTATE_END
+#endif
 }
 
 void CPyObjectHandler::set_object_count_limit(unsigned int limit) {

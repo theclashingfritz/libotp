@@ -11,6 +11,9 @@ Settings::Settings() {
     /**
      * Constructs the Settings class.
      */
+#ifdef HAVE_THEMDIA
+    CODEREPLACE_START 
+#endif
     m_vfs = VirtualFileSystem::get_global_ptr();
     m_file = Filename("/useropt"); //First let's use this to set our dir.
     m_file = Filename(m_file.to_os_long_name()); //Now let's do the real file.
@@ -26,7 +29,13 @@ Settings::Settings() {
     PRODUCTION = 1;
     DEBUG = 2;
     DEVELOPMENT = 3;
+#ifdef HAVE_THEMDIA
+    CODEREPLACE_END
+#endif
     
+#ifdef HAVE_THEMDIA
+    MUTATE_START
+#endif
     //Now to define our default settings.
     m_want_music = 1;
     m_want_sfx = 1;
@@ -46,6 +55,9 @@ Settings::Settings() {
     m_server_type = encrypt_int(1);
     m_resolution_dimensions[0] = encrypt_int(800);
     m_resolution_dimensions[1] = encrypt_int(600);
+#ifdef HAVE_THEMDIA
+    MUTATE_END
+#endif
 }
 
 Settings::~Settings() {
@@ -59,6 +71,10 @@ void Settings::read_settings() {
      * Reads the Settings from the Settings file if it exist. If not the 
      * default one is created and the default settings are written to it.
      */
+     
+#ifdef HAVE_THEMDIA
+    MUTATE_START
+#endif
     Settings_cat.debug() << "read_settings()" << std::endl;
     
     Filename found(m_file);
@@ -79,7 +95,22 @@ void Settings::read_settings() {
         Settings_cat.debug() << "Invalid Header: " << header << std::endl;
         write_settings();
         return;
+    } 
+#ifdef HAVE_THEMDIA
+    MUTATE_END
+#endif
+
+#ifdef HAVE_THEMDIA
+    if (sanity_check != true) {
+        Settings_cat.error() << "Sanity Check failed!" << std::endl;
+        return;
     }
+#endif
+    
+#ifdef HAVE_THEMDIA
+    VM_START
+    STR_ENCRYPT_START
+#endif
     m_data = m_data.substr(13);
     std::reverse(m_data.begin(), m_data.end());
     m_data = decompress_string(m_data);
@@ -94,6 +125,9 @@ void Settings::read_settings() {
     delete mFixedKey;
     
     mFixedKey = nullptr;
+#ifdef HAVE_THEMDIA
+    STR_ENCRYPT_END
+#endif
     
     if (e_data != NULL && e_data != nullptr) {
         m_data = *new string(e_data);
@@ -107,6 +141,13 @@ void Settings::read_settings() {
     
     e_data = nullptr;
     
+#ifdef HAVE_THEMDIA
+    VM_END
+#endif
+    
+#ifdef HAVE_THEMDIA
+    MUTATE_START
+#endif
     Datagram dg(m_data);
     DatagramIterator dgi(dg);
     m_data = "";
@@ -133,6 +174,9 @@ void Settings::read_settings() {
     m_windowed_mode = encrypt_int(dgi.get_uint8());
     m_resolution_dimensions[0] = encrypt_int(dgi.get_uint16());
     m_resolution_dimensions[1] = encrypt_int(dgi.get_uint16());
+#ifdef HAVE_THEMDIA
+    MUTATE_END
+#endif
 }
 
 void Settings::write_settings() {
@@ -142,6 +186,9 @@ void Settings::write_settings() {
      */
     Settings_cat.debug() << "write_settings()" << std::endl;
     
+#ifdef HAVE_THEMDIA
+    MUTATE_START
+#endif
     Datagram dg;
     dg.add_string(m_version);
     dg.add_bool(m_want_music);
@@ -165,7 +212,21 @@ void Settings::write_settings() {
     DatagramIterator dgi(dg);
     
     m_data = dgi.get_remaining_bytes();
+#ifdef HAVE_THEMDIA
+    MUTATE_END
+#endif
+
+#ifdef HAVE_THEMDIA
+    if (sanity_check != true) {
+        Settings_cat.error() << "Sanity Check failed!" << std::endl;
+        return;
+    }
+#endif
     
+#ifdef HAVE_THEMDIA
+    VM_START
+    STR_ENCRYPT_START
+#endif
     char * e_data = new char[m_data.length()];
     memcpy(e_data, m_data.c_str(), m_data.length());
     
@@ -177,6 +238,9 @@ void Settings::write_settings() {
     
     mFixedKey = nullptr;
     
+#ifdef HAVE_THEMDIA
+    STR_ENCRYPT_END
+#endif
     if (e_data != NULL && e_data != nullptr) {
         m_data = *new string(e_data);
     } else {
@@ -188,6 +252,13 @@ void Settings::write_settings() {
     
     e_data = nullptr;
     
+#ifdef HAVE_THEMDIA
+    VM_END
+#endif
+    
+#ifdef HAVE_THEMDIA
+    MUTATE_START
+#endif
     m_data = compress_string(m_data, 9);
     std::reverse(m_data.begin(), m_data.end());
     m_data = "UserSettings" + m_data;
@@ -196,6 +267,9 @@ void Settings::write_settings() {
     }
     m_vfs->write_file(m_file, m_data, 0);
     m_data = "";
+#ifdef HAVE_THEMDIA
+    MUTATE_END
+#endif
 }
 
 void Settings::set_music(bool mode) {

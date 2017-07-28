@@ -124,17 +124,23 @@ void CMover::reset_dt() {
 }
 
 void CMover::add_c_impulse(string name, CImpulse *impulse) {
+#ifdef HAVE_THEMDIA
+    MUTATE_START
+#endif
     CMover_cat.debug() << "add_c_impulse('" << name << "', CImpulse impulse)" << std::endl;
     if (impulse == nullptr || impulse == NULL) {
         return;
     }
     m_c_impulses[name] = impulse;
     m_c_impulses[name]->set_mover(this);
+#ifdef HAVE_THEMDIA
+    MUTATE_END
+#endif
 }
 
 void CMover::remove_c_impulse(string name) {
 #ifdef HAVE_THEMDIA
-    ENCODE_START
+    MUTATE_START
 #endif
     CMover_cat.debug() << "remove_c_impulse(" << name << ")" << std::endl;
     if (m_c_impulses.find(name) == m_c_impulses.end()) {
@@ -154,7 +160,7 @@ void CMover::remove_c_impulse(string name) {
         }
     }
 #ifdef HAVE_THEMDIA
-    ENCODE_END
+    MUTATE_END
 #endif
 }
 
@@ -219,6 +225,9 @@ void CMover::set_node_path(NodePath np) {
 }
 
 void CMover::integrate() {
+#ifdef HAVE_THEMDIA
+    VM_START
+#endif
     CMover_cat.debug() << "CMover.integrate() [WARNING: This function may be incomplete/broken.]" << std::endl;
     if (m_nodepath.is_empty()) {
         CMover_cat.debug() << "CMover.integrate() was called while the nodepath is empty!" << std::endl;
@@ -233,6 +242,9 @@ void CMover::integrate() {
     m_nodepath.set_hpr(m_nodepath, rotation);
     movement = LVector3f(0.0);
     rotation = LVector3f(0.0);
+#ifdef HAVE_THEMDIA
+    VM_END
+#endif
 }
 
 float CMover::get_fwd_speed() {

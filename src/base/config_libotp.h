@@ -27,6 +27,10 @@
 #endif
 #include <Python.h>
 
+#ifdef HAVE_THEMDIA
+#include <ThemidaSDK.h>
+#endif
+
 #ifdef NDEBUG
 #undef NDEBUG
 #endif
@@ -51,6 +55,8 @@
 #pragma warning (disable : 4275)
 #pragma warning (disable : 4217)
 #pragma warning (disable : 4309)
+
+static bool sanity_check;
 
 extern char big_char_map[26];
 extern char small_char_map[26];
