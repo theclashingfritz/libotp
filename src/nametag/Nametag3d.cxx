@@ -12,12 +12,14 @@ TypeHandle Nametag3d::_type_handle;
 
 Nametag3d::Nametag3d() : Nametag(true), m_bb_offset(3) {
     Nametag3d_cat.debug() << "__init__()" << std::endl;
+    m_inner_np = NodePath("nametag_contents");
     m_contents = Nametag::CName | Nametag::CSpeech | Nametag3d::CThought;
     billboard();
 };
 
 Nametag3d::Nametag3d(const Nametag3d& tag) : Nametag() {
     Nametag3d_cat.debug() << "__init__()" << std::endl;
+    m_inner_np = NodePath("nametag_contents");
     m_contents = tag.m_contents;
     m_chat_flags = tag.m_chat_flags;
     m_color_code = tag.m_color_code;

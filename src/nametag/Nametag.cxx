@@ -18,6 +18,7 @@ unsigned int Nametag::Nametag_serial = 0;
 
 Nametag::Nametag(bool is_3d) : m_contents(0), m_wordwrap(7.5), m_chat_wordwrap(10), m_font(nullptr), m_qt_color(LVecBase4f(1)), m_color_code(NametagGlobals::CCNormal), m_avatar(nullptr), m_icon(NodePath("icon")), m_name_fg(LVecBase4f(0, 0, 0, 1)), m_name_bg(LVecBase4f(1)), m_chat_fg(LVecBase4f(0, 0, 0, 1)), m_chat_bg(LVecBase4f(1)), m_chat_flags(0) {
     Nametag_cat.debug() << "__init__(" << is_3d << ")" << std::endl;
+    m_inner_np = NodePath("nametag_contents");
     m_serial = Nametag::Nametag_serial++;
     m_is_3d = is_3d;
     frame = LVecBase4f(0.0, 0.0, 0.0, 0.0);
@@ -34,6 +35,7 @@ Nametag::~Nametag() {
 
 Nametag::Nametag(const Nametag& tag) : m_font(nullptr), m_avatar(nullptr), m_icon(NodePath("icon")) {
     Nametag_cat.debug() << "__init__(const Nametag& tag)" << std::endl;
+    m_inner_np = NodePath("nametag_contents");
     m_serial = Nametag::Nametag_serial++;
     frame = LVecBase4f(tag.frame);
     m_draw_order = tag.m_draw_order;
