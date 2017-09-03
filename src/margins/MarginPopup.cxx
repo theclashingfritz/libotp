@@ -3,7 +3,7 @@
 
 NotifyCategoryDef(MarginPopup, "");
 
-//TypeHandle MarginPopup::_type_handle;
+TypeHandle MarginPopup::_type_handle;
 
 MarginPopup::MarginPopup() : PandaNode("popup"), m_manager(nullptr), m_visible(false), m_priority(0) {
     MarginPopup_cat.debug() << "__init__()" << std::endl;
