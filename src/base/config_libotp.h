@@ -48,6 +48,22 @@
 #include <crtdbg.h>
 #endif
 
+#ifdef OLD_P3D
+#undef OLD_P3D
+#endif
+
+#ifdef NEW_P3D
+#undef NEW_P3D
+#endif
+
+#if defined PANDA_MAJOR_VERSION && defined PANDA_MINOR_VERSION && defined PANDA_SEQUENCE_VERSION 
+    #if PANDA_MINOR_VERSION <= 9 
+        #define OLD_P3D
+    #else
+        #define NEW_P3D
+    #endif
+#endif
+
 #define ROL(x, y) __asm{rol x, y}
 #define ROR(x, y) __asm{ror x, y}
 
@@ -56,13 +72,9 @@
 #pragma warning (disable : 4217)
 #pragma warning (disable : 4309)
 
-static bool sanity_check;
-
 extern char big_char_map[26];
 extern char small_char_map[26];
 extern char number_char_map[10];
-
-extern char aes_key_index[12][17];
 
 typedef pvector<LVecBase4f> color_tuple_t; // (LVecBase4f, LVecBase4f)
 typedef pvector<color_tuple_t> color_tuple_tuple_t; // ((LVecBase4f, LVecBase4f), (LVecBase4f, LVecBase4f))

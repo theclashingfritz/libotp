@@ -18,6 +18,8 @@
 #include "Nametag.h"
 #include "Settings.h"
 
+#include "AESKeyScrambler.h"
+#include "AESKeyStore.h"
 #include "CPyObjectHandler.h"
 #include "CRandom.h" 
 
@@ -29,24 +31,6 @@ char number_char_map[10] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
 // REF: openssl enc -md sha1 -aes-256-cbc -nosalt -P
 // The above openssl command is what i used to generate AES keys.
-
-// This is our AES key index full of AES keys for usage.
-// This allows for the keys to be changed around anytime and possibly allows key shuffling. 
-// Which would be pretty cool.
-char aes_key_index[12][17] = {{0xE5, 0xE9, 0xFA, 0x1B, 0xA3, 0x1E, 0xCD, 0x1A, 0xE8, 0x4F, 0x75, 0xCA, 0xAA, 0x47, 0x4F, 0x3A, '\0'}, 
-                              {0xA9, 0x38, 0x7F, 0x9D, 0x28, 0x70, 0x3E, 0x20, 0x93, 0x03, 0xDF, 0x92, 0x07, 0x4C, 0x4A, 0xF7, '\0'},
-                              {0xB9, 0x8E, 0x95, 0xCE, 0xCA, 0x3E, 0x4D, 0x17, 0x1F, 0x76, 0xA9, 0x4D, 0xE9, 0x34, 0xC0, 0x53, '\0'},
-                              {0xC6, 0x6E, 0x23, 0x12, 0x8F, 0x28, 0x91, 0x33, 0xF0, 0x4C, 0xDB, 0x87, 0x7A, 0x37, 0x49, 0xF2, '\0'},
-                              {0xA3, 0x12, 0x33, 0x28, 0x0B, 0xB4, 0xDA, 0xA7, 0x76, 0x13, 0x93, 0xF7, 0x8C, 0x42, 0x49, 0x52, '\0'},
-                              {0xFF, 0x33, 0x88, 0xEC, 0xD2, 0x17, 0x05, 0xBB, 0x33, 0x9E, 0x96, 0x79, 0x86, 0xDC, 0x49, 0x07, '\0'},
-                              {0x1F, 0xF9, 0xE9, 0xAA, 0xC5, 0xFE, 0x04, 0x08, 0x02, 0x45, 0x91, 0xDC, 0x5D, 0x52, 0x76, 0x8A, '\0'},
-                              {0xE9, 0x3D, 0xA4, 0x65, 0xB3, 0x09, 0xC5, 0x3F, 0xEC, 0x5F, 0xF9, 0x3C, 0x96, 0x37, 0xDA, 0x58, '\0'},
-                              {0x86, 0xF7, 0xE4, 0x37, 0xFA, 0xA5, 0xA7, 0xFC, 0xE1, 0x5D, 0x1D, 0xDC, 0xB9, 0xEA, 0xEA, 0xEA, '\0'},
-                              {0x37, 0x76, 0x67, 0xB8, 0x1B, 0x7F, 0xEE, 0xA3, 0x77, 0x1E, 0xAD, 0xAB, 0x99, 0x06, 0x17, 0x11, '\0'},
-                              {0xC6, 0x6E, 0x23, 0x12, 0x1B, 0xB4, 0xDA, 0xA3, 0x76, 0x13, 0x1D, 0xDC, 0xB9, 0x42, 0x49, 0xEA, '\0'},
-                              {0x3F, 0xDA, 0x95, 0x24, 0xDB, 0x0B, 0x08, 0xC4, 0x68, 0xA5, 0x37, 0x4A, 0xA8, 0x9B, 0x38, 0xB9, '\0'}};
-
-bool santiy_check = true;
                               
 Configure(config_libotp);
 NotifyCategoryDef(libotp, "");
@@ -56,9 +40,13 @@ ConfigureFn(config_libotp) {
 };
 
 void init_libotp() {
+#ifdef HAVE_THEMDIA
+    VM_START 
+#endif
     static bool initialized = false;
-    if (initialized)
+    if (initialized) {
         return;
+    }
 
     initialized = true;
     
@@ -85,10 +73,15 @@ void init_libotp() {
     NametagFloat3d::init_type();
     Nametag::init_type();
     Settings::init_type();
+    AESKeyScrambler::init_type();
+    AESKeyStore::init_type();
     CPyObjectHandler::init_type();
     CRandom::init_type();
 #ifdef _DEBUG
     _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+#endif
+#ifdef HAVE_THEMDIA
+    VM_END
 #endif
 };
 
@@ -104,7 +97,7 @@ INLINE std::string get_type_name(T thing) {
     return typeid(thing).name();
 };
 
-INLINE int get_char_length(char * chr) {
+INLINE int get_char_length(char *chr) {
     libotp_cat.debug() << "get_char_length(char * chr)" << std::endl;
     if (chr == NULL || chr == nullptr) {
         return 0;
@@ -113,7 +106,7 @@ INLINE int get_char_length(char * chr) {
     return chr_string.length();
 };
 
-INLINE std::string char_to_string(char * chr) {
+INLINE std::string char_to_string(char *chr) {
     if (chr == NULL || chr == nullptr) {
         return "NULL";
     }
@@ -259,11 +252,6 @@ unsigned int decrypt_int(unsigned long long value) {
 
 unsigned long long encrypt_int(unsigned int value) {
     libotp_cat.debug() << "encrypt_int(" << value << ")" << std::endl;
-    if (sizeof(value) << 4 || sizeof(value) >> 4) {
-        libotp_cat.error() << "FATAL ERROR: Int passed to encrypt_int() is not a 32 bit int! Aborting!" << std::endl;
-        return 0;
-    }
-    
 #ifdef WIN32
     GUID gid;
     if (CoCreateGuid(&gid) != 0x00000000) {
@@ -323,11 +311,6 @@ float decrypt_float(unsigned long long value) {
 
 unsigned long long encrypt_float(float value) {
     libotp_cat.debug() << "encrypt_float(" << value << ")" << std::endl;
-    if (sizeof(value) << 4 || sizeof(value) >> 4) {
-        libotp_cat.error() << "FATAL ERROR: Float passed to encrypt_float() is not a 32 bit float! Aborting!" << std::endl;
-        return 0;
-    }
-    
 #ifdef WIN32
     GUID gid;
     if (CoCreateGuid(&gid) != 0x00000000) {

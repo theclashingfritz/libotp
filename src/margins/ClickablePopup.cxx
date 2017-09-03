@@ -32,7 +32,8 @@ ClickablePopup::ClickablePopup() : NodePath("popup"), EventReceiver() {
     if (m_mouse_watcher != nullptr && m_mouse_watcher != NULL) {
         if (m_region != nullptr && m_region != NULL) {
             m_mouse_watcher->sort_regions();
-#ifndef NDEBUG
+#ifndef NDEBUG 
+#ifndef PANDA_OPTIMIZED
             // This is mainly here to skip the "nassertv(_vizzes.size() == _regions.size())" check in MouseWatcherBase
             // in Panda3D. By hiding the regions it ensures the check never happens therefore skipping over the check!
             try {
@@ -42,6 +43,7 @@ ClickablePopup::ClickablePopup() : NodePath("popup"), EventReceiver() {
             } catch (...) {
                 return;
             }
+#endif
 #endif
             ClickablePopup_cat.debug() << "Adding Region with a size of " << sizeof(*m_region) << "!" << std::endl;
             m_mouse_watcher->add_region(m_region);
@@ -102,6 +104,7 @@ ClickablePopup::ClickablePopup(NodePath* camera) : NodePath("popup"), EventRecei
         if (m_region != nullptr && m_region != NULL) {
             m_mouse_watcher->sort_regions();
 #ifndef NDEBUG
+#ifndef PANDA_OPTIMIZED
             // This is mainly here to skip the "nassertv(_vizzes.size() == _regions.size())" check in MouseWatcherBase
             // in Panda3D. By hiding the regions it ensures the check never happens therefore skipping over the check!
             try {
@@ -111,6 +114,7 @@ ClickablePopup::ClickablePopup(NodePath* camera) : NodePath("popup"), EventRecei
             } catch (...) {
                 return;
             }
+#endif
 #endif
             ClickablePopup_cat.debug() << "Adding Region with a size of " << sizeof(*m_region) << "!" << std::endl;
             m_mouse_watcher->add_region(m_region);

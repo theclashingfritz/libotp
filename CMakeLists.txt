@@ -23,6 +23,12 @@ SET(PANDA_DIR "C:\\Panda3D-1.10.0" CACHE STRING "Panda3D directory.")
 ### OpenSSL dir ###
 SET(OPEN_SSL_DIR "C:\\openssl" CACHE STRING "OpenSSL directory.")
 
+# Toggle for Themdia use
+option(WANT_THEMDIA "If this is TRUE/On Themdia will be used if possible.")
+
+# Toggle for Themdia use
+option(PANDA_OPTIMIZED "Set this to true if NDEBUG was not defined when Panda was compiled! (NDEBUG will not be defined on high optimization levels.)")
+
 ### Themdia dir (Optional)###
 SET(THEMDIA_DIR "C:\\Program Files\\Themida" CACHE STRING "Themdia directory. (Optional)")
 
@@ -37,6 +43,10 @@ set(BASE_FILES
 )
 
 set(COMPONENTS_FILES
+    src/components/AESKeyScrambler.cxx
+    src/components/AESKeyScrambler.h
+    src/components/AESKeyStore.cxx
+    src/components/AESKeyStore.h
     src/components/CMoverGroup.cxx
     src/components/CMoverGroup.h
     src/components/CMover.cxx
@@ -168,19 +178,39 @@ else()
     message(STATUS "libp3interrogatedb not found")
 endif()
 
-# Add Themdia, if it exists
-find_library(HAVE_THEMDIA
-             SecureEngineSDK32
-             HINTS ${THEMDIA_DIR}/ThemidaSDK/Lib/COFF)
+# Add p3framework, if it exists
+find_library(HAVE_P3FRAMEWORK
+             ${LIBPFX}p3framework
+             HINTS ${PANDA_DIR}/lib)
              
-if (HAVE_THEMDIA)
-    message(STATUS "Themdia found!")
-    LIST(APPEND THEMDIA_LIBS SecureEngineSDK32)
-    add_definitions(-DHAVE_THEMDIA)
-    include_directories(${THEMDIA_DIR}/ThemidaSDK/Include/C)
-    link_directories(${THEMDIA_DIR}/ThemidaSDK/Lib/COFF)
+if (HAVE_P3FRAMEWORK)
+    message(STATUS "libp3framework found")
+    LIST(APPEND PANDA_LIBS ${LIBPFX}p3framework)
 else()
-    message(STATUS "Themdia (Optional) was NOT found!")
+    message(STATUS "libp3framework not found")
+endif()
+
+if (WANT_THEMDIA)
+    # Add Themdia, if it exists
+    find_library(HAVE_THEMDIA
+                 SecureEngineSDK32
+                 HINTS ${THEMDIA_DIR}/ThemidaSDK/Lib/COFF)
+                 
+    if (HAVE_THEMDIA)
+        message(STATUS "Themdia found!")
+        LIST(APPEND THEMDIA_LIBS SecureEngineSDK32)
+        add_definitions(-DHAVE_THEMDIA)
+        include_directories(${THEMDIA_DIR}/ThemidaSDK/Include/C)
+        link_directories(${THEMDIA_DIR}/ThemidaSDK/Lib/COFF)
+    else()
+        message(STATUS "Themdia (Optional) was NOT found!")
+    endif()
+else()
+    set(HAVE_THEMDIA OFF)
+endif()
+
+if (PANDA_OPTIMIZED)
+    add_definitions(-DPANDA_OPTIMIZED)
 endif()
 
 add_library(libotp SHARED

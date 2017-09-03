@@ -5,6 +5,8 @@
 #include <nodePath.h>
 #include <pandabase.h>
 
+NotifyCategoryDecl(CImpulse, EXPCL_LIBOTP, EXPTP_LIBOTP);
+
 class CMover;
 
 class EXPCL_LIBOTP CImpulse : public virtual TypedObject {
@@ -14,8 +16,10 @@ class EXPCL_LIBOTP CImpulse : public virtual TypedObject {
         ~CImpulse();
         virtual void process(float dt);
         void set_mover(CMover* mover);
+        void set_node_path(NodePath path);
         void clear_mover();
         void clear_mover(CMover* mover);
+        NodePath get_node_path();
         CMover* get_mover();
         bool is_cpp();
         
