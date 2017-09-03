@@ -2,13 +2,20 @@
 
 #include "util.h"
 #include "Nametag.h"
-#include <notifyCategoryProxy.h>
+
+#include <math.h>
+#include <algorithm>
 
 #include <pandabase.h>
+#include <boundingVolume.h>
+#include <boundingBox.h>
+#include <depthWriteAttrib.h>
+#include <notifyCategoryProxy.h>
 
 NotifyCategoryDecl(Nametag3d, EXPCL_LIBOTP, EXPTP_LIBOTP);
 
 class Nametag3d;
+class PopupMouseWatcherRegion;
 
 class EXPCL_LIBOTP Nametag3d : public virtual Nametag {
     
@@ -27,6 +34,8 @@ class EXPCL_LIBOTP Nametag3d : public virtual Nametag {
         
     protected:    
         virtual void billboard();
+        
+        virtual void show_name();
         
         virtual ChatBalloon* get_speech_balloon();
         virtual ChatBalloon* get_thought_balloon();

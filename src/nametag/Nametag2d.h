@@ -24,6 +24,10 @@ class EXPCL_LIBOTP Nametag2d : public virtual Nametag, public virtual MarginPopu
         
         virtual void update_contents();
         
+         // To disambiguate the multiple inheritance from TypedObject. 
+        INLINE TypedObject *as_typed_object();
+        INLINE const TypedObject *as_typed_object() const; 
+        
         static const float scale_2d;
         static const float chat_alpha;
         static const float arrow_offset;

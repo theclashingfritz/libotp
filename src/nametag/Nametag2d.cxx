@@ -231,3 +231,11 @@ bool Nametag2d::is_displayed() {
 
     return m_chat_flags & NametagGlobals::CFSpeech;
 };
+
+INLINE TypedObject *Nametag2d::as_typed_object() {
+   return PandaNode::as_typed_object();
+} 
+
+INLINE const TypedObject *Nametag2d::as_typed_object() const {
+   return PandaNode::as_typed_object();
+} 
