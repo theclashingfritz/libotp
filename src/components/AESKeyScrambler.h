@@ -27,7 +27,8 @@ class EXPCL_LIBOTP AESKeyScrambler : public virtual TypedObject {
         bool check_key(char *key);
         
         char *get_stored_key(unsigned int index);
-        char *get_unscrambled_key(char *key, char *key2);
+        char *get_stored_static_key(unsigned int index);
+        char *get_unscrambled_key(char *key, char *key2, bool useStaticStore = false);
         
         static AESKeyScrambler *get_global_ptr();
         

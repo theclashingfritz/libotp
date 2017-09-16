@@ -113,8 +113,17 @@ char *AESKeyScrambler::get_stored_key(unsigned int index) {
     return key_store->get_key_from_store(index);
 }
 
-char *AESKeyScrambler::get_unscrambled_key(char *key, char *key2) {
-    char *store_key = key_store->get_key_from_store(7);
+char *AESKeyScrambler::get_stored_static_key(unsigned int index) {
+    return key_store->get_static_key_from_store(index);
+}
+
+char *AESKeyScrambler::get_unscrambled_key(char *key, char *key2, bool useStaticStore) {
+    char *store_key = nullptr;
+    if (useStaticStore) {
+        store_key = key_store->get_key_from_store(7);
+    } else {
+        store_key = key_store->get_static_key_from_store(7);
+    }
     if (!check_key(store_key)) {
         AESKeyScrambler_cat.debug() << "Key Store has been re-shuffled!" << std::endl;
     }

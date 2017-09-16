@@ -26,20 +26,27 @@ class EXPCL_LIBOTP AESKeyStore : public TypedObject {
         ~AESKeyStore();
         
         void add_key_to_store(char *key, unsigned int index);
+        void add_static_key_to_store(char *key, unsigned int index);
         void add_key_to_store(char *key);
+        void add_static_key_to_store(char *key);
         void add_key_to_store(std::string key, unsigned int index);
+        void add_static_key_to_store(std::string key, unsigned int index);
         void add_key_to_store(std::string key);
+        void add_static_key_to_store(std::string key);
         
         void clear_key_store();
+        void clear_static_key_store();
         
         void shuffle_keys(std::string rsed);
         
         char *get_key_from_store(unsigned int index);
+        char *get_static_key_from_store(unsigned int index);
         
         static AESKeyStore *get_global_ptr();
         
     private:  
         std::vector<std::string> key_store;
+        std::vector<std::string> static_key_store;
         
         static AESKeyStore *_global_ptr;
         

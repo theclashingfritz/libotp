@@ -23,6 +23,14 @@
 #include "CPyObjectHandler.h"
 #include "CRandom.h" 
 
+ConfigVariableBool temp_hpr_fix
+("temp-hpr-fix", true,
+  PRC_DESC("Set this true to compute hpr's correctly.  Historically, Panda has "
+           "applied these in the wrong order, and roll was backwards relative "
+           "to the other two.  Set this false if you need compatibility with "
+           "Panda's old hpr calculations."));
+ 
+
 // These char maps are for if one if spilt characters raises a error 
 // and we can just refer to the char from here to fix the error.
 char big_char_map[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
@@ -77,27 +85,24 @@ void init_libotp() {
     AESKeyStore::init_type();
     CPyObjectHandler::init_type();
     CRandom::init_type();
-#ifdef _DEBUG
-    _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
-#endif
 #ifdef HAVE_THEMDIA
     VM_END
 #endif
 };
 
 template <class T>
-INLINE void * get_address_of(T thing) {
+ALWAYS_INLINE void * get_address_of(T thing) {
     libotp_cat.debug() << "get_address_of(T thing)" << std::endl;
     return std::addressof(thing);
 };
 
 template <class T>
-INLINE std::string get_type_name(T thing) {
+ALWAYS_INLINE std::string get_type_name(T thing) {
     libotp_cat.debug() << "get_type_name(T thing)" << std::endl;
     return typeid(thing).name();
 };
 
-INLINE int get_char_length(char *chr) {
+ALWAYS_INLINE int get_char_length(char *chr) {
     libotp_cat.debug() << "get_char_length(char * chr)" << std::endl;
     if (chr == NULL || chr == nullptr) {
         return 0;
@@ -106,7 +111,7 @@ INLINE int get_char_length(char *chr) {
     return chr_string.length();
 };
 
-INLINE std::string char_to_string(char *chr) {
+ALWAYS_INLINE std::string char_to_string(char *chr) {
     if (chr == NULL || chr == nullptr) {
         return "NULL";
     }
@@ -115,7 +120,7 @@ INLINE std::string char_to_string(char *chr) {
 };
 
 template <typename T, typename T2>
-INLINE T wrap_rotate_left(T x,T2 amount) {
+ALWAYS_INLINE T wrap_rotate_left(T x,T2 amount) {
 	const unsigned bits=sizeof(T)*8;
 #if POWER_SIZES
 	amount&=bits-1;
@@ -129,7 +134,7 @@ INLINE T wrap_rotate_left(T x,T2 amount) {
 }
 
 template <typename T, typename T2>
-INLINE T wrap_rotate_right(T x,T2 amount) {
+ALWAYS_INLINE T wrap_rotate_right(T x,T2 amount) {
 	const unsigned bits=sizeof(T)*8;
 #if POWER_SIZES
 	amount&=bits-1;
@@ -142,7 +147,7 @@ INLINE T wrap_rotate_right(T x,T2 amount) {
 	return x;
 }
 
-INLINE char *sum_chars(char *a, char *b) {
+ALWAYS_INLINE char *sum_chars(char *a, char *b) {
     int carry = 0;
     for (int i = 0; i < get_char_length(a); ++i) {
         int sum = a[i] + b[i] + carry;
@@ -152,7 +157,7 @@ INLINE char *sum_chars(char *a, char *b) {
     return a;
 }
 
-INLINE std::string sum_strings(std::string a, std::string b) {
+ALWAYS_INLINE std::string sum_strings(std::string a, std::string b) {
     int carry = 0;
     for (int i = 0; i < a.length(); ++i) {
         int sum = a[i] + b[i] + carry;
@@ -162,7 +167,7 @@ INLINE std::string sum_strings(std::string a, std::string b) {
     return a;
 }
 
-INLINE char *rotate_char_left(char *s, const int len, int amount) {
+ALWAYS_INLINE char *rotate_char_left(char *s, const int len, int amount) {
     for (int i = 0; i < len; ++i) {
         s[i] = static_cast<char>(wrap_rotate_left(static_cast<unsigned char>(s[i]), amount));
     }
@@ -170,14 +175,14 @@ INLINE char *rotate_char_left(char *s, const int len, int amount) {
     return s;
 };
 
-INLINE void rotate_char_left(char **s, const int len, int amount) {
+ALWAYS_INLINE void rotate_char_left(char **s, const int len, int amount) {
     char *d = *s;
     for (int i = 0; i < len; ++i) {
         d[i] = static_cast<char>(wrap_rotate_left(static_cast<unsigned char>(d[i]), amount));
     }
 };
 
-INLINE char *rotate_char_right(char *s, const int len, int amount) {
+ALWAYS_INLINE char *rotate_char_right(char *s, const int len, int amount) {
     for (int i = 0; i < len; ++i) {
         s[i] = static_cast<char>(wrap_rotate_right(static_cast<unsigned char>(s[i]), amount));
     }
@@ -185,14 +190,14 @@ INLINE char *rotate_char_right(char *s, const int len, int amount) {
     return s;
 };
 
-INLINE void rotate_char_right(char **s, const int len, int amount) {
+ALWAYS_INLINE void rotate_char_right(char **s, const int len, int amount) {
     char *d = *s;
     for (int i = 0; i < len; ++i) {
         d[i] = static_cast<char>(wrap_rotate_right(static_cast<unsigned char>(d[i]), amount));
     }
 };
 
-INLINE std::string rotate_string_left(std::string s, const int len, int amount) {
+ALWAYS_INLINE std::string rotate_string_left(std::string s, const int len, int amount) {
     for (int i = 0; i < len; ++i) {
         s[i] = wrap_rotate_right(s[i], amount);
     }
@@ -200,7 +205,7 @@ INLINE std::string rotate_string_left(std::string s, const int len, int amount) 
     return s;
 };
 
-INLINE std::string rotate_string_right(std::string s, const int len, int amount) {
+ALWAYS_INLINE std::string rotate_string_right(std::string s, const int len, int amount) {
     for (int i = 0; i < len; ++i) {
         s[i] = wrap_rotate_right(s[i], amount);
     }
@@ -379,7 +384,7 @@ std::string hex_to_string(const std::string& input) {
     return output;
 };
 
-INLINE unsigned int value(char c) {
+ALWAYS_INLINE unsigned int value(char c) {
     if (c >= '0' && c <= '9') {return c - '0';}
     if (c >= 'a' && c <= 'f') {return c - 'a' + 10;}
     if (c >= 'A' && c <= 'F') {return c - 'A' + 10;}
@@ -399,7 +404,7 @@ std::string hex_str_XOR(std::string const & s1, std::string const & s2) {
     return result;
 };
 
-std::string XOR(std::string value, std::string key) {
+ALWAYS_INLINE std::string XOR(std::string value, std::string key) {
     std::string retval(value);
     long unsigned int klen = key.length();
     long unsigned int vlen = value.length();
@@ -412,7 +417,7 @@ std::string XOR(std::string value, std::string key) {
     return retval;
 };
 
-char *XOR(char *value, char *key) {
+ALWAYS_INLINE char *XOR(char *value, char *key) {
     long unsigned int klen = get_char_length(key);
     long unsigned int vlen = get_char_length(value);
     unsigned long int k = 0;
@@ -439,7 +444,7 @@ void gen_random(char *s, const int len) {
 	s[len] = 0;
 };
 
-char gen_random_char() {
+ALWAYS_INLINE char gen_random_char() {
     /*
     This function returns a random char.
     */

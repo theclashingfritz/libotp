@@ -8,8 +8,12 @@ AESKeyStore *AESKeyStore::_global_ptr = nullptr;
 
 AESKeyStore::AESKeyStore() {
     key_store.reserve(20);
+    static_key_store.reserve(20);
     for (unsigned int v = 0; v < key_store.size(); v++) {
         key_store.at(v) = gen_random_string(16);
+    }
+    for (unsigned int v = 0; v < static_key_store.size(); v++) {
+        static_key_store.at(v) = gen_random_string(16);
     }
 }
 
@@ -18,6 +22,10 @@ AESKeyStore::~AESKeyStore() {
         key_store.at(v) = gen_random_string(key_store.at(v).size());
     }
     key_store.clear();
+    for (unsigned int v = 0; v < static_key_store.size(); v++) {
+        static_key_store.at(v) = gen_random_string(static_key_store.at(v).size());
+    }
+    static_key_store.clear();
 }
 
 void AESKeyStore::add_key_to_store(char *key, unsigned int index) {
@@ -39,6 +47,25 @@ void AESKeyStore::add_key_to_store(char *key, unsigned int index) {
 #endif
 }
 
+void AESKeyStore::add_static_key_to_store(char *key, unsigned int index) {
+#ifdef HAVE_THEMDIA
+    VM_START
+#endif
+    if (key == nullptr || key == NULL) {
+        return;
+    }
+    if (static_key_store.size() < index) {
+        AESKeyStore_cat.error() << "Index is out of bounds!" << std::endl;
+        return;
+    }
+    
+    std::string new_key(key);
+    static_key_store.at(index) = new_key;
+#ifdef HAVE_THEMDIA
+    VM_END
+#endif
+}
+
 void AESKeyStore::add_key_to_store(char *key) {
 #ifdef HAVE_THEMDIA
     VM_START
@@ -49,6 +76,21 @@ void AESKeyStore::add_key_to_store(char *key) {
     
     std::string new_key(key);
     key_store.push_back(new_key);
+#ifdef HAVE_THEMDIA
+    VM_END
+#endif
+}
+
+void AESKeyStore::add_static_key_to_store(char *key) {
+#ifdef HAVE_THEMDIA
+    VM_START
+#endif
+    if (key == nullptr || key == NULL) {
+        return;
+    }
+    
+    std::string new_key(key);
+    static_key_store.push_back(new_key);
 #ifdef HAVE_THEMDIA
     VM_END
 #endif
@@ -69,11 +111,36 @@ void AESKeyStore::add_key_to_store(std::string key, unsigned int index) {
 #endif
 }
 
+void AESKeyStore::add_static_key_to_store(std::string key, unsigned int index) {
+#ifdef HAVE_THEMDIA
+    VM_START
+#endif
+    if (static_key_store.size() < index) {
+        AESKeyStore_cat.error() << "Index is out of bounds!" << std::endl;
+        return;
+    }
+    
+    static_key_store.at(index) = key;
+#ifdef HAVE_THEMDIA
+    VM_END
+#endif
+}
+
 void AESKeyStore::add_key_to_store(std::string key) {
 #ifdef HAVE_THEMDIA
     VM_START
 #endif
     key_store.push_back(key);
+#ifdef HAVE_THEMDIA
+    VM_END
+#endif
+}
+
+void AESKeyStore::add_static_key_to_store(std::string key) {
+#ifdef HAVE_THEMDIA
+    VM_START
+#endif
+    static_key_store.push_back(key);
 #ifdef HAVE_THEMDIA
     VM_END
 #endif
@@ -88,6 +155,20 @@ void AESKeyStore::clear_key_store() {
     }
     key_store.clear();
     key_store.reserve(20);
+#ifdef HAVE_THEMDIA
+    MUTATE_END
+#endif
+}
+
+void AESKeyStore::clear_static_key_store() {
+#ifdef HAVE_THEMDIA
+    MUTATE_START
+#endif
+    for (unsigned int v = 0; v < static_key_store.size(); v++) {
+        static_key_store.at(v) = gen_random_string(static_key_store.at(v).size());
+    }
+    static_key_store.clear();
+    static_key_store.reserve(20);
 #ifdef HAVE_THEMDIA
     MUTATE_END
 #endif
@@ -117,7 +198,16 @@ char *AESKeyStore::get_key_from_store(unsigned int index) {
         return "ERROR";
     }
     
-    return strdup(key_store.at(index).c_str());
+    return _strdup(key_store.at(index).c_str());
+}
+
+char *AESKeyStore::get_static_key_from_store(unsigned int index) {
+    if (static_key_store.size() < index) {
+        AESKeyStore_cat.error() << "Index is out of bounds!" << std::endl;
+        return "ERROR";
+    }
+    
+    return _strdup(static_key_store.at(index).c_str());
 }
 
 AESKeyStore *AESKeyStore::get_global_ptr() {

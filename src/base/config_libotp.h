@@ -14,6 +14,7 @@
 #include <pandabase.h>
 #include <dconfig.h>
 #include <notifyCategoryProxy.h>
+#include <configVariableBool.h>
 #include <luse.h>
 #include <nodePath.h>
 #include <string.h>
@@ -31,10 +32,6 @@
 #include <ThemidaSDK.h>
 #endif
 
-#ifdef NDEBUG
-#undef NDEBUG
-#endif
-
 #ifdef BUILDING_LIBOTP
     #define EXPCL_LIBOTP EXPORT_CLASS 
     #define EXPTP_LIBOTP EXPORT_TEMPL 
@@ -42,11 +39,6 @@
     #define EXPCL_LIBOTP IMPORT_CLASS 
     #define EXPTP_LIBOTP IMPORT_TEMPL 
 #endif 
-
-#ifdef _DEBUG
-#define _CRTDBG_MAP_ALLOC
-#include <crtdbg.h>
-#endif
 
 #ifdef OLD_P3D
 #undef OLD_P3D
@@ -72,6 +64,8 @@
 #pragma warning (disable : 4217)
 #pragma warning (disable : 4309)
 
+extern EXPCL_LIBOTP ConfigVariableBool temp_hpr_fix;
+
 extern char big_char_map[26];
 extern char small_char_map[26];
 extern char number_char_map[10];
@@ -86,16 +80,16 @@ typedef pmap<unsigned int, state_map_simple_t> whisper_color_map_t; // {wt: stat
 
 EXPCL_LIBOTP std::wstring s2ws(const std::string& str);
 EXPCL_LIBOTP std::string ws2s(const std::wstring& wstr);
-EXPCL_LIBOTP std::string XOR(std::string value, std::string key);
-EXPCL_LIBOTP char *XOR(char *value, char *key);
+EXPCL_LIBOTP ALWAYS_INLINE std::string XOR(std::string value, std::string key);
+EXPCL_LIBOTP ALWAYS_INLINE char *XOR(char *value, char *key);
 
-EXPCL_LIBOTP INLINE std::string char_to_string(char * chr);
+EXPCL_LIBOTP ALWAYS_INLINE std::string char_to_string(char * chr);
 
 EXPCL_LIBOTP std::string string_to_hex(const std::string& input);
 EXPCL_LIBOTP std::string hex_to_string(const std::string& input);
 EXPCL_LIBOTP std::string hex_str_XOR(std::string const & s1, std::string const & s2);
 
-EXPCL_LIBOTP INLINE unsigned int value(char c);
+EXPCL_LIBOTP ALWAYS_INLINE unsigned int value(char c);
 
 #ifdef WIN32
 EXPCL_LIBOTP std::pair<std::string, DWORD> GetProcessNameAndID(DWORD processID);
@@ -107,33 +101,33 @@ EXPCL_LIBOTP int process_AES_encrypt(char* data, int size, char* key, char* iv, 
 EXPCL_LIBOTP int process_AES_decrypt(char* data, int size, char* key, char* iv, char* ciphertext);
 
 template <class T>
-EXPCL_LIBOTP INLINE void * get_address_of(T thing);
+EXPCL_LIBOTP ALWAYS_INLINE void * get_address_of(T thing);
 
 template <class T>
-EXPCL_LIBOTP INLINE std::string get_type_name(T thing);
+EXPCL_LIBOTP ALWAYS_INLINE std::string get_type_name(T thing);
 
-EXPCL_LIBOTP INLINE int get_char_length(char * chr);
+EXPCL_LIBOTP ALWAYS_INLINE int get_char_length(char * chr);
 
 EXPCL_LIBOTP void gen_random(char *s, const int len);
-EXPCL_LIBOTP char gen_random_char();
+EXPCL_LIBOTP ALWAYS_INLINE char gen_random_char();
 EXPCL_LIBOTP std::string gen_random_string(const int len);
 
 template <typename T, typename T2>
-EXPCL_LIBOTP INLINE T wrap_rotate_left(T x,T2 amount);
+EXPCL_LIBOTP ALWAYS_INLINE T wrap_rotate_left(T x,T2 amount);
 
 template <typename T, typename T2>
-EXPCL_LIBOTP INLINE T wrap_rotate_right(T x,T2 amount);
+EXPCL_LIBOTP ALWAYS_INLINE T wrap_rotate_right(T x,T2 amount);
 
-EXPCL_LIBOTP INLINE char *sum_chars(char *a, char *b);
-EXPCL_LIBOTP INLINE std::string sum_strings(std::string a, std::string b);
+EXPCL_LIBOTP ALWAYS_INLINE char *sum_chars(char *a, char *b);
+EXPCL_LIBOTP ALWAYS_INLINE std::string sum_strings(std::string a, std::string b);
 
-EXPCL_LIBOTP INLINE char *rotate_char_left(char *s, const int len, int amount);
-EXPCL_LIBOTP INLINE void rotate_char_left(char **s, const int len, int amount);
-EXPCL_LIBOTP INLINE char *rotate_char_right(char *s, const int len, int amount);
-EXPCL_LIBOTP INLINE void rotate_char_right(char **s, const int len, int amount);
+EXPCL_LIBOTP ALWAYS_INLINE char *rotate_char_left(char *s, const int len, int amount);
+EXPCL_LIBOTP ALWAYS_INLINE void rotate_char_left(char **s, const int len, int amount);
+EXPCL_LIBOTP ALWAYS_INLINE char *rotate_char_right(char *s, const int len, int amount);
+EXPCL_LIBOTP ALWAYS_INLINE void rotate_char_right(char **s, const int len, int amount);
 
-EXPCL_LIBOTP INLINE std::string rotate_string_left(std::string s, const int len, int amount);
-EXPCL_LIBOTP INLINE std::string rotate_string_right(std::string s, const int len, int amount);
+EXPCL_LIBOTP ALWAYS_INLINE std::string rotate_string_left(std::string s, const int len, int amount);
+EXPCL_LIBOTP ALWAYS_INLINE std::string rotate_string_right(std::string s, const int len, int amount);
 
 EXPCL_LIBOTP unsigned int decrypt_int(unsigned long long value);
 EXPCL_LIBOTP unsigned long long encrypt_int(unsigned int value);
