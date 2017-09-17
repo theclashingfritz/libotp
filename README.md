@@ -28,10 +28,6 @@ In the case of Visual Studio. Visual Studio 2010 and up will work.
 ### Contributing ###
 We welcome all potential contributors.
 
-### Building ###
-
-The compiler you use must support at least C++98 at minimum. In the case of Visual Studio. Visual Studio 2010 and up will work.
-
 ### Credits ###
 Credits to the people over at _libpandadna_ (https://github.com/loblao/libpandadna) for the base we use to compile our code and for some stuff in the actual code!
 
