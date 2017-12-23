@@ -16,6 +16,7 @@
 #include <notifyCategoryProxy.h>
 #include <configVariableBool.h>
 #include <luse.h>
+#include <pointerToArray.h>
 #include <nodePath.h>
 #include <string.h>
 #include <stdint.h>
@@ -66,17 +67,37 @@
 
 extern EXPCL_LIBOTP ConfigVariableBool temp_hpr_fix;
 
+EXPORT_TEMPLATE_CLASS(EXPCL_LIBOTP, EXPCL_LIBOTP, ReferenceCountedVector<UnalignedLVecBase4f>)
+
+typedef ReferenceCountedVector<UnalignedLVecBase4f> color_tuple_t; // (LVecBase4f, LVecBase4f)
+
+EXPORT_TEMPLATE_CLASS(EXPCL_LIBOTP, EXPCL_LIBOTP, ReferenceCountedVector<ReferenceCountedVector<UnalignedLVecBase4f> >)
+
+typedef ReferenceCountedVector<ReferenceCountedVector<UnalignedLVecBase4f> > color_tuple_tuple_t; // ((LVecBase4f, LVecBase4f), (LVecBase4f, LVecBase4f))
+
+EXPORT_TEMPLATE_CLASS(EXPCL_LIBOTP, EXPCL_LIBOTP, pmap<int, ReferenceCountedVector<ReferenceCountedVector<UnalignedLVecBase4f> > >)
+
+typedef pmap<int, ReferenceCountedVector<ReferenceCountedVector<UnalignedLVecBase4f> > > state_map_t; // {state: color_tuple_tuple_t}
+
+EXPORT_TEMPLATE_CLASS(EXPCL_LIBOTP, EXPCL_LIBOTP, pmap<int, ReferenceCountedVector<UnalignedLVecBase4f> >)
+
+typedef pmap<int, ReferenceCountedVector<UnalignedLVecBase4f> > state_map_simple_t; // {state: color_tuple_t}
+
+EXPORT_TEMPLATE_CLASS(EXPCL_LIBOTP, EXPCL_LIBOTP, pmap<int, NodePath>)
+
+typedef pmap<int, NodePath> buttons_map_t; // (index: button_path)
+
+EXPORT_TEMPLATE_CLASS(EXPCL_LIBOTP, EXPCL_LIBOTP, pmap<unsigned int, pmap<int, ReferenceCountedVector<ReferenceCountedVector<UnalignedLVecBase4f> > > >)
+
+typedef pmap<unsigned int, pmap<int, ReferenceCountedVector<ReferenceCountedVector<UnalignedLVecBase4f> > > > color_map_t; // {cc: state_map_t}
+
+EXPORT_TEMPLATE_CLASS(EXPCL_LIBOTP, EXPCL_LIBOTP, pmap<int, pmap<int, ReferenceCountedVector<UnalignedLVecBase4f> > >)
+
+typedef pmap<unsigned int, pmap<int, ReferenceCountedVector<UnalignedLVecBase4f> > > whisper_color_map_t; // {wt: state_map_simple_t}
+
 extern char big_char_map[26];
 extern char small_char_map[26];
 extern char number_char_map[10];
-
-typedef pvector<LVecBase4f> color_tuple_t; // (LVecBase4f, LVecBase4f)
-typedef pvector<color_tuple_t> color_tuple_tuple_t; // ((LVecBase4f, LVecBase4f), (LVecBase4f, LVecBase4f))
-typedef pmap<int, color_tuple_tuple_t> state_map_t; // {state: color_tuple_tuple_t}
-typedef pmap<int, color_tuple_t> state_map_simple_t; // {state: color_tuple_t}
-typedef pmap<int, NodePath> buttons_map_t;
-typedef pmap<unsigned int, state_map_t> color_map_t; // {cc: state_map_t}
-typedef pmap<unsigned int, state_map_simple_t> whisper_color_map_t; // {wt: state_map_simple_t}
 
 EXPCL_LIBOTP std::wstring s2ws(const std::string& str);
 EXPCL_LIBOTP std::string ws2s(const std::wstring& wstr);
@@ -137,6 +158,7 @@ EXPCL_LIBOTP unsigned long long encrypt_float(float value);
 EXPCL_LIBOTP char* AES_encrypt(char* data, char* key, char* iv);
 EXPCL_LIBOTP char* AES_decrypt(char* data, char* key, char* iv);
 EXPCL_LIBOTP std::string process_key_chunks(std::string chunk1, std::string chunk2, std::string chunk3, std::string chunk4);
+
 BEGIN_PUBLISH
 EXPCL_LIBOTP PyObject* list_process_modules();
 EXPCL_LIBOTP PyObject* AES_decrypt(PyObject* pdata, PyObject* pkey, PyObject* piv);

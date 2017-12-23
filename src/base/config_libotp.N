@@ -1,0 +1,9 @@
+forcetype ReferenceCountedVector<UnalignedLVecBase4f>
+forcetype ReferenceCountedVector<ReferenceCountedVector<UnalignedLVecBase4f> >
+forcetype pmap<int, ReferenceCountedVector<ReferenceCountedVector<UnalignedLVecBase4f> > >
+forcetype pmap<int, ReferenceCountedVector<UnalignedLVecBase4f> >
+forcetype pmap<int, NodePath>
+forcetype pmap<unsigned int, pmap<int, ReferenceCountedVector<ReferenceCountedVector<UnalignedLVecBase4f> > > >
+forcetype pmap<unsigned int, pmap<int, ReferenceCountedVector<UnalignedLVecBase4f> > >
+
+forceinclude <pointerToArray_ext.h>
