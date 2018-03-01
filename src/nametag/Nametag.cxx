@@ -7,8 +7,6 @@
 
 NotifyCategoryDef(Nametag, "");
 
-TypeHandle Nametag::_type_handle;
-
 const float Nametag::name_padding = .2;
 const float Nametag::chat_alpha = 1;
 
