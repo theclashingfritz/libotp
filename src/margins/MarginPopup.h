@@ -4,7 +4,7 @@
 #include "MarginManager.h"
 
 #include <pandabase.h>
-#include <typedObject.h>
+#include <typedWritable.h>
 #include <notifyCategoryProxy.h>
 #include <pandaNode.h>
 
@@ -12,7 +12,7 @@ NotifyCategoryDecl(MarginPopup, EXPCL_LIBOTP, EXPTP_LIBOTP);
 
 class MarginCell; 
 
-class MarginPopup  {
+class MarginPopup : public virtual TypedWritable {
     PUBLISHED:
         MarginPopup();
         virtual ~MarginPopup();
@@ -45,5 +45,5 @@ class MarginPopup  {
         int m_priority;
         bool m_visible;
         
-   //TYPE_HANDLE(MarginPopup, TypedObject);
+   TYPE_HANDLE(MarginPopup, TypedWritable);
 };

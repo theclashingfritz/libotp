@@ -7,6 +7,8 @@
 
 NotifyCategoryDef(Nametag, "");
 
+TypeHandle Nametag::_type_handle;
+
 const float Nametag::name_padding = .2;
 const float Nametag::chat_alpha = 1;
 
@@ -69,6 +71,10 @@ bool Nametag::operator ==(const Nametag& tag) {
 
 bool Nametag::operator !=(const Nametag& tag) {
     return m_serial != tag.m_serial;
+}
+
+void Nametag::init_type() {
+    register_type(_type_handle, "ReferenceCount");
 }
 
 void Nametag::set_draw_order(uint8_t draw_order) {
@@ -250,4 +256,8 @@ NametagGroup * Nametag::get_group() {
 NodePath * Nametag::get_avatar() {
     Nametag_cat.debug() << "get_avatar()" << std::endl;
     return m_avatar;
+}
+
+INLINE bool Nametag::is_of_type(TypeHandle handle) const {
+    return get_type().is_derived_from(handle, (TypedObject *)this);
 }

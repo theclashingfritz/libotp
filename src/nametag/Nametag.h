@@ -1,4 +1,5 @@
-#pragma once
+#ifndef NAMETAG_H
+#define NAMETAG_H
 
 #include "util.h"
 
@@ -52,11 +53,14 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup, public virtual Refer
         void manage(MarginManager* manager);
         void unmanage(MarginManager* manager);
         void set_visible(bool flag);
+        
+        static void init_type();
 
         uint8_t get_draw_order();
         unsigned int get_contents();
         bool get_active();
         bool has_group();
+        bool is_of_type(TypeHandle handle) const;
         uint16_t get_chat_wordwrap();
         NametagGroup *get_group();
         NodePath *get_avatar();
@@ -128,4 +132,8 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup, public virtual Refer
     private:
         static unsigned int Nametag_serial;
         //PandaNode m_pandaNode;
+        
+    TYPE_HANDLE_U(Nametag, ReferenceCount);
 };
+
+#endif

@@ -18,7 +18,7 @@ else()
 endif()
 
 ### Panda3D dir ###
-SET(PANDA_DIR "C:\\Panda3D-1.10.0" CACHE STRING "Panda3D directory.")
+SET(PANDA_DIR "D:\\Panda3D-1.10.0" CACHE STRING "Panda3D directory.")
 
 ### OpenSSL dir ###
 SET(OPEN_SSL_DIR "C:\\openssl" CACHE STRING "OpenSSL directory.")
@@ -153,8 +153,8 @@ set(PANDA_LIBS
 )
 
 set(OPEN_SSL_LIBS
-    ${LIBPFX}pandaeay
-    ${LIBPFX}pandassl
+    libeay32
+    ssleay32
 )
 
 

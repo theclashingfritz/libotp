@@ -70,7 +70,7 @@ void init_libotp() {
     ClickablePopup::init_type();
     MarginCell::init_type();
     MarginManager::init_type();
-    //MarginPopup::init_type();
+    MarginPopup::init_type();
     WhisperPopup::init_type();
     ChatBalloon::init_type();
     NametagGlobals::init_type();
@@ -79,7 +79,7 @@ void init_libotp() {
     Nametag3d::init_type();
     NametagFloat2d::init_type();
     NametagFloat3d::init_type();
-    Nametag::init_type();
+    Nametag::ReferenceCount::init_type();
     Settings::init_type();
     AESKeyScrambler::init_type();
     AESKeyStore::init_type();
