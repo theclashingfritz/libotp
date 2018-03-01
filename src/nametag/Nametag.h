@@ -7,6 +7,7 @@
 
 #include <nodepath.h>
 #include <pandanode.h>
+#include <referenceCount.h>
 #include <textNode.h>
 #include <textFont.h>
 #include <notifyCategoryProxy.h>
@@ -20,7 +21,7 @@ class ChatBalloon;
 class NametagGroup; 
 class MarginManager;
 
-class EXPCL_LIBOTP Nametag : public virtual ClickablePopup, public virtual TypedObject {
+class EXPCL_LIBOTP Nametag : public virtual ClickablePopup, public virtual ReferenceCount {
     
     friend class NametagGroup;
     
@@ -127,6 +128,4 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup, public virtual Typed
     private:
         static unsigned int Nametag_serial;
         //PandaNode m_pandaNode;
-
-    TYPE_HANDLE(Nametag, TypedObject);
 };
