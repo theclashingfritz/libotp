@@ -156,6 +156,7 @@ class EXPCL_LIBOTP NametagGlobals : public virtual ReferenceCount {
         static const double button_delay_time;
 
         static const float billboard_offset;
+        static const float building_nametag_distance;
         static const float far_distance;
         static const float far_scale;
         static const float scale_exponent;

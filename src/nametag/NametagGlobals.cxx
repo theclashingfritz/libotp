@@ -44,36 +44,35 @@ bool NametagGlobals::_master_arrows_on = 1;
 bool NametagGlobals::_master_nametags_active = 1;
 bool NametagGlobals::_master_nametags_visible = 1;
 
-const double NametagGlobals::whisper_total_time = 0x0000000000002E40;
-const double NametagGlobals::whisper_priority_time = 0x0000000000001440;
-const double NametagGlobals::cell_memory_time = 0x0000000000003E40;
-const double NametagGlobals::button_delay_time = 0x9A9999999999C93F; // Jesus Disney.
+const double NametagGlobals::whisper_total_time = 15.0;
+const double NametagGlobals::whisper_priority_time = 5.0;
+const double NametagGlobals::cell_memory_time = 30.0;
+const double NametagGlobals::button_delay_time = 0.2;
 
-const float NametagGlobals::billboard_offset = 2.3048557e-41;
-const float NametagGlobals::far_distance = 2.5921219e-41;
-const float NametagGlobals::far_scale = 4.8863037e-14;
+const float NametagGlobals::billboard_offset = 3.0;
+const float NametagGlobals::building_nametag_distance = 40.0;
+const float NametagGlobals::far_distance = 50.0;
+const float NametagGlobals::far_scale = 0.56;
 const float NametagGlobals::scale_exponent = 0.5;
-const float NametagGlobals::arrow_scale = 8.8281803e-44;
-const float NametagGlobals::arrow_offset = 4.6006030e-41;
-const float NametagGlobals::nominal_avatar_width = 5.7486868e-41;
-const float NametagGlobals::name_wordwrap = 8.618546074983355e-41;
-const float NametagGlobals::building_name_wordwrap = 2.9609437e-42;
-const float NametagGlobals::house_name_wordwrap = 1.1570521e-41;
-const float NametagGlobals::chat_2d_wordwrap = 9.1084400e-44;
-const float NametagGlobals::chat_3d_wordwrap = 1.1570521e-41;
-const float NametagGlobals::balloon_internal_width = 5.8308029e-42;
-const float NametagGlobals::balloon_external_width = 1.1570521e-41;
-const float NametagGlobals::ballon_min_hscale = 4.6004629e-41;
-const float NametagGlobals::grid_count_horizontal = 6.8966305e-41;
-const float NametagGlobals::grid_count_vertical = 6.8966305e-41;
-const float NametagGlobals::grid_spacing_horizontal = 2.0765149e-32;
-const float NametagGlobals::grid_spacing_vertical = 2.0765149e-32;
+const float NametagGlobals::arrow_scale = 0.5;
+const float NametagGlobals::arrow_offset = 1.0;
+const float NametagGlobals::nominal_avatar_width = 5.0;
+const float NametagGlobals::name_wordwrap = 7.5;
+const float NametagGlobals::building_name_wordwrap = 8.5;
+const float NametagGlobals::house_name_wordwrap = 10.0;
+const float NametagGlobals::chat_2d_wordwrap = 8.0;
+const float NametagGlobals::chat_3d_wordwrap = 10.0;
+const float NametagGlobals::balloon_internal_width = 9.0;
+const float NametagGlobals::balloon_external_width = 10.0;
+const float NametagGlobals::ballon_min_hscale = 0.25;
+const float NametagGlobals::grid_count_horizontal = 6.0;
+const float NametagGlobals::grid_count_vertical = 6.0;
+const float NametagGlobals::grid_spacing_horizontal = 0.02;
+const float NametagGlobals::grid_spacing_vertical = 0.02;
 
-// These values are only set in Disney's Libotp at runtime so ripping them was a bit more
-// tricky...
-float NametagGlobals::_max_2d_alpha = 6.3320104e-23;
-float NametagGlobals::_min_2d_alpha = 0; // Wow Disney actually left it at 0...
-float NametagGlobals::_global_nametag_scale = 4.6006030e-41;
+float NametagGlobals::_max_2d_alpha = 1.0;
+float NametagGlobals::_min_2d_alpha = 0.8;
+float NametagGlobals::_global_nametag_scale = 1.0;
 
 // For _seq steal.
 AtomicAdjust::Integer NametagGlobals::n_seq = 0;
