@@ -1,4 +1,5 @@
-#pragma once
+#ifndef NAMETAG_GLOBALS_H
+#define NAMETAG_GLOBALS_H
 
 #include "util.h"
 #include "ChatBalloon.h"
@@ -8,7 +9,7 @@
 #include <audioSound.h>
 #include <filename.h>
 #include <mouseWatcher.h>
-#include <typedObject.h>
+#include <ReferenceCount.h>
 #include <notifyCategoryProxy.h>
 #include <pandabase.h>
 
@@ -16,7 +17,7 @@ NotifyCategoryDecl(NametagGlobals, EXPCL_LIBOTP, EXPTP_LIBOTP);
 
 class NametagGlobals;
 
-class EXPCL_LIBOTP NametagGlobals : public virtual TypedObject {
+class EXPCL_LIBOTP NametagGlobals : public virtual ReferenceCount {
     PUBLISHED:
         NametagGlobals();
         ~NametagGlobals();
@@ -161,6 +162,7 @@ class EXPCL_LIBOTP NametagGlobals : public virtual TypedObject {
         static float _global_nametag_scale;
 
         static const float billboard_offset;
+        static const float building_nametag_distance;
         static const float far_distance;
         static const float far_scale;
         static const float scale_exponent;
@@ -201,3 +203,5 @@ class UpdateSeq_steal {
     };
     AtomicAdjust::Integer _seq;
 };
+
+#endif

@@ -9,8 +9,8 @@ NotifyCategoryDef(ClickablePopup, "");
 TypeHandle ClickablePopup::_type_handle;
 unsigned int ClickablePopup::ClickablePopup_serial = 0;
 
-ClickablePopup::ClickablePopup() {
-    ClickablePopup_cat.debug() << "__init__()" << std::endl;
+ClickablePopup::ClickablePopup(NodePath* camera) : NodePath("popup"), EventReceiver() {
+    ClickablePopup_cat.debug() << "__init__(NodePath camera)" << std::endl;
     
     m_click_state = stateStopped;
     m_click_sound = NametagGlobals::m_click_sound;

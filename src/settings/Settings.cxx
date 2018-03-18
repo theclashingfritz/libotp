@@ -7,17 +7,24 @@ TypeHandle Settings::_type_handle;
 
 Settings* Settings::_global_ptr = nullptr;
 
+bool Settings::sanity_check = true;
+
 Settings::Settings() {
     /**
      * Constructs the Settings class.
      */
+#ifdef HAVE_THEMDIA
+    CODEREPLACE_START 
+#endif
+    Settings_cat.spam() << "Crash Test Area 1" << std::endl;
     m_vfs = VirtualFileSystem::get_global_ptr();
     m_file = Filename("/useropt"); //First let's use this to set our dir.
+    Settings_cat.spam() << "Crash Test Area 2" << std::endl;
     m_file = Filename(m_file.to_os_long_name()); //Now let's do the real file.
     
     //Define our Settings Version!
     m_version = "v1.1.0";
-    
+    Settings_cat.spam() << "Crash Test Area 3" << std::endl;
     //Now define any PUBLISHED variables
     GL = 1;
     DX9 = 2;
@@ -26,7 +33,13 @@ Settings::Settings() {
     PRODUCTION = 1;
     DEBUG = 2;
     DEVELOPMENT = 3;
+#ifdef HAVE_THEMDIA
+    CODEREPLACE_END
+#endif
     
+#ifdef HAVE_THEMDIA
+    MUTATE_START
+#endif
     //Now to define our default settings.
     m_want_music = 1;
     m_want_sfx = 1;
@@ -46,6 +59,9 @@ Settings::Settings() {
     m_server_type = encrypt_int(1);
     m_resolution_dimensions[0] = encrypt_int(800);
     m_resolution_dimensions[1] = encrypt_int(600);
+#ifdef HAVE_THEMDIA
+    MUTATE_END
+#endif
 }
 
 Settings::~Settings() {
@@ -59,6 +75,10 @@ void Settings::read_settings() {
      * Reads the Settings from the Settings file if it exist. If not the 
      * default one is created and the default settings are written to it.
      */
+     
+#ifdef HAVE_THEMDIA
+    MUTATE_START
+#endif
     Settings_cat.debug() << "read_settings()" << std::endl;
     
     Filename found(m_file);
@@ -79,7 +99,21 @@ void Settings::read_settings() {
         Settings_cat.debug() << "Invalid Header: " << header << std::endl;
         write_settings();
         return;
+    } 
+#ifdef HAVE_THEMDIA
+    MUTATE_END
+#endif
+
+#ifdef HAVE_THEMDIA
+    if (sanity_check != true) {
+        Settings_cat.error() << "Sanity Check failed!" << std::endl;
+        return;
     }
+#endif
+    
+#ifdef HAVE_THEMDIA
+    VM_START
+#endif
     m_data = m_data.substr(13);
     std::reverse(m_data.begin(), m_data.end());
     m_data = decompress_string(m_data);
@@ -87,9 +121,30 @@ void Settings::read_settings() {
     char * e_data = new char[m_data.length()];
     memcpy(e_data, m_data.c_str(), m_data.length());
     
-    char *mFixedKey = unscramble_key(aes_key_index[0], aes_key_index[1], aes_key_index[7]);
+    AESKeyScrambler *key_scrambler = AESKeyScrambler::get_global_ptr();
     
-    e_data = AES_decrypt(e_data, mFixedKey, aes_key_index[7]);
+    char *key3 = key_scrambler->get_stored_key(7);
+    if (!key_scrambler->check_key(key3)) {
+        Settings_cat.warning() << "Settings encryption is no longer valid! Resetting..." << std::endl;
+        delete[] e_data;
+        free(key3);
+        write_settings();
+        return;
+    }
+    free(key3);
+    key3 = key_scrambler->get_stored_key(7);
+    
+    char *key1 = key_scrambler->get_stored_key(0);
+    char *key2 = key_scrambler->get_stored_key(1);
+    char *mFixedKey = key_scrambler->get_unscrambled_key(key1, key2);
+    free(key1);
+    free(key2);
+    key1 = nullptr;
+    key2 = nullptr;
+    
+    e_data = AES_decrypt(e_data, mFixedKey, key3);
+    free(key3);
+    key3 = nullptr;
     
     delete mFixedKey;
     
@@ -107,6 +162,13 @@ void Settings::read_settings() {
     
     e_data = nullptr;
     
+#ifdef HAVE_THEMDIA
+    VM_END
+#endif
+    
+#ifdef HAVE_THEMDIA
+    MUTATE_START
+#endif
     Datagram dg(m_data);
     DatagramIterator dgi(dg);
     m_data = "";
@@ -133,6 +195,9 @@ void Settings::read_settings() {
     m_windowed_mode = encrypt_int(dgi.get_uint8());
     m_resolution_dimensions[0] = encrypt_int(dgi.get_uint16());
     m_resolution_dimensions[1] = encrypt_int(dgi.get_uint16());
+#ifdef HAVE_THEMDIA
+    MUTATE_END
+#endif
 }
 
 void Settings::write_settings() {
@@ -142,6 +207,9 @@ void Settings::write_settings() {
      */
     Settings_cat.debug() << "write_settings()" << std::endl;
     
+#ifdef HAVE_THEMDIA
+    MUTATE_START
+#endif
     Datagram dg;
     dg.add_string(m_version);
     dg.add_bool(m_want_music);
@@ -165,13 +233,43 @@ void Settings::write_settings() {
     DatagramIterator dgi(dg);
     
     m_data = dgi.get_remaining_bytes();
+#ifdef HAVE_THEMDIA
+    MUTATE_END
+#endif
+
+#ifdef HAVE_THEMDIA
+    if (sanity_check != true) {
+        Settings_cat.error() << "Sanity Check failed!" << std::endl;
+        return;
+    }
+#endif
     
+#ifdef HAVE_THEMDIA
+    VM_START
+#endif
     char * e_data = new char[m_data.length()];
     memcpy(e_data, m_data.c_str(), m_data.length());
     
-    char *mFixedKey = unscramble_key(aes_key_index[0], aes_key_index[1], aes_key_index[7]);
+    AESKeyScrambler *key_scrambler = AESKeyScrambler::get_global_ptr();
     
-    e_data = AES_encrypt(e_data, mFixedKey, aes_key_index[7]);
+    char *key3 = key_scrambler->get_stored_key(7);
+    if (!key_scrambler->check_key(key3)) {
+        Settings_cat.warning() << "Settings encryption has changed before write!" << std::endl;
+    }
+    free(key3);
+    key3 = key_scrambler->get_stored_key(7);
+    
+    char *key1 = key_scrambler->get_stored_key(0);
+    char *key2 = key_scrambler->get_stored_key(1);
+    char *mFixedKey = key_scrambler->get_unscrambled_key(key1, key2);
+    free(key1);
+    free(key2);
+    key1 = nullptr;
+    key2 = nullptr;
+    
+    e_data = AES_encrypt(e_data, mFixedKey, key3);
+    free(key3);
+    key3 = nullptr;
     
     delete mFixedKey;
     
@@ -188,6 +286,13 @@ void Settings::write_settings() {
     
     e_data = nullptr;
     
+#ifdef HAVE_THEMDIA
+    VM_END
+#endif
+    
+#ifdef HAVE_THEMDIA
+    MUTATE_START
+#endif
     m_data = compress_string(m_data, 9);
     std::reverse(m_data.begin(), m_data.end());
     m_data = "UserSettings" + m_data;
@@ -196,22 +301,37 @@ void Settings::write_settings() {
     }
     m_vfs->write_file(m_file, m_data, 0);
     m_data = "";
+#ifdef HAVE_THEMDIA
+    MUTATE_END
+#endif
 }
 
 void Settings::set_music(bool mode) {
     /**
      * Want Music?
      */
+#ifdef HAVE_THEMDIA
+    MUTATE_START
+#endif
     Settings_cat.debug() << "set_music(" << mode << ")" << std::endl;
     m_want_music = mode;
+#ifdef HAVE_THEMDIA
+    MUTATE_END
+#endif
 }
 
 void Settings::set_sfx(bool mode) {
     /**
      * Want SOUND?
      */
+#ifdef HAVE_THEMDIA
+    MUTATE_START
+#endif
     Settings_cat.debug() << "set_sfx(" << mode << ")" << std::endl;
     m_want_sfx = mode;
+#ifdef HAVE_THEMDIA
+    MUTATE_END
+#endif
 }
 
 void Settings::set_force_sw_midi(bool mode) {
@@ -255,48 +375,90 @@ void Settings::set_accepting_non_friend_whispers(bool mode) {
 }
 
 void Settings::set_sfx_volume(float volume) {
+#ifdef HAVE_THEMDIA
+    MUTATE_START
+#endif
     Settings_cat.debug() << "set_sfx_volume(" << volume << ")" << std::endl;
     m_sfx_volume = encrypt_float(volume);
+#ifdef HAVE_THEMDIA
+    MUTATE_END
+#endif
 }
 
 void Settings::set_music_volume(float volume) {
+#ifdef HAVE_THEMDIA
+    MUTATE_START
+#endif
     Settings_cat.debug() << "set_music_volume(" << volume << ")" << std::endl;
     m_music_volume = encrypt_float(volume);
+#ifdef HAVE_THEMDIA
+    MUTATE_END
+#endif
 }
 
 void Settings::set_server_type(uint8_t type) {
+#ifdef HAVE_THEMDIA
+    MUTATE_START
+#endif
     Settings_cat.debug() << "set_server_type(" << type << ")" << std::endl;
     m_server_type = encrypt_int(type);
+#ifdef HAVE_THEMDIA
+    MUTATE_END
+#endif
 }
 
 void Settings::set_display_driver(uint8_t driver) {
     /**
      * Sets the display driver by using it corrosponding ID.
      */
+#ifdef HAVE_THEMDIA
+    MUTATE_START
+#endif
     Settings_cat.debug() << "set_display_driver(" << driver << ")" << std::endl;
     m_current_driver = encrypt_int(driver);
+#ifdef HAVE_THEMDIA
+    MUTATE_END
+#endif
 }
 
 void Settings::set_windowed_mode(uint8_t mode) {
+#ifdef HAVE_THEMDIA
+    MUTATE_START
+#endif
     Settings_cat.debug() << "set_windowed_mode(" << mode << ")" << std::endl;
     m_windowed_mode = encrypt_int(mode);
+#ifdef HAVE_THEMDIA
+    MUTATE_END
+#endif
 }
 
 void Settings::set_resolution(uint8_t resolution) {
     /**
      * Sets the Resolution Mode.
      */
+#ifdef HAVE_THEMDIA
+    MUTATE_START
+#endif
     Settings_cat.debug() << "set_resolution(" << resolution << ")" << std::endl;
     m_resolution = encrypt_int(resolution);
+#ifdef HAVE_THEMDIA
+    MUTATE_END
+#endif
 }
 
 void Settings::set_resolution_dimensions(uint16_t xsize, uint16_t ysize) {
     /**
      * Sets the Resolution Dimensions.
      */
+#ifdef HAVE_THEMDIA
+    MUTATE_START
+#endif
     Settings_cat.debug() << "set_resolution_dimensions(" << xsize << " " << ysize << ")" << std::endl;
     m_resolution_dimensions[0] = encrypt_int(xsize);
     m_resolution_dimensions[1] = encrypt_int(ysize);
+#ifdef HAVE_THEMDIA
+    MUTATE_END
+#endif
 }
 
 uint8_t Settings::server_type() {

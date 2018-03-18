@@ -13,6 +13,9 @@ nosetests.xml
 # Mac directory info
 .DS_Store
 
+#Keys
+.snk
+
 # libpandadna
 *.dna
 *.pdna

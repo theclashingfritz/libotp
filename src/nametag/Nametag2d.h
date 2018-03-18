@@ -4,6 +4,7 @@
 #include "Nametag.h"
 #include "MarginPopup.h"
 #include <pandabase.h>
+#include <typedWritable.h>
 #include <notifyCategoryProxy.h>
 
 NotifyCategoryDecl(Nametag2d, EXPCL_LIBOTP, EXPTP_LIBOTP);
@@ -11,6 +12,7 @@ NotifyCategoryDecl(Nametag2d, EXPCL_LIBOTP, EXPTP_LIBOTP);
 class Nametag2d;
 
 class EXPCL_LIBOTP Nametag2d : public virtual Nametag, public virtual MarginPopup {
+
     PUBLISHED:
         Nametag2d();
         Nametag2d(const Nametag2d& tag);

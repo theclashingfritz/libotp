@@ -2,7 +2,7 @@ libotp
 ===========
 _libotp_ is a library made for Panda3D that handles Nametags, CMovers, CImpulses and includes a C++ Settings system.
 
-__NOTE__ - This project is inspired, and based off of the libotp dynamic link library created for the now-closed MMORPGs - _Toontown Online_ and _Pirates of the Carribean Online_, and therefore will be geared towards supporting them.
+__NOTE__ - This project is inspired, and based off of the libotp dynamic link library created for the now-closed MMORPGs - _Toontown Online_ and _Pirates of the Caribbean Online_, and therefore will be geared towards supporting them.
 
 ### Features ###
 > * A **CMover** remake so Doodles will work! Woopie! 
@@ -13,10 +13,17 @@ __NOTE__ - This project is inspired, and based off of the libotp dynamic link li
 ### The Team ###
 The main people behind _libotp_ are listed below:
 * **ponyboy837** - Founder and a Head Developer of the project. 
-* **CodeAnGo** - A Head Developer!
+
+### Side Team ###
+The people who are on and off with contributing. 
+* **SkippsDev/AnythingTechPro** - A Head Developer of the project.
 
 ### Former Team ###
-* **SkippsDev/AnythingTechPro** - A former Head Developer of the project.
+* **CodeAnGo** - A former dev.
+
+### Building ###
+The compiler you use must support at least **C++98** at minimum. 
+In the case of Visual Studio. Visual Studio 2010 and up will work.
 
 ### Contributing ###
 We welcome all potential contributors.

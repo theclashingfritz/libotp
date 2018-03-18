@@ -1,9 +1,12 @@
 #pragma once
 
 #include "util.h"
+#include "AESKeyScrambler.h"
 
 #include <string>
 #include <iostream>
+
+#include <stdlib.h>
 
 #include <notifyCategoryProxy.h>
 #include <filename.h>
@@ -92,9 +95,11 @@ class EXPCL_LIBOTP Settings : public TypedReferenceCount {
         std::string m_version;
         std::string m_data;
         Filename m_file;
-        VirtualFileSystem* m_vfs;
+        VirtualFileSystem *m_vfs;
         
         static Settings* _global_ptr;
+        
+        static bool sanity_check;
         
     TYPE_HANDLE(Settings, TypedObject);
 };

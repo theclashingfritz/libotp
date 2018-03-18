@@ -2,10 +2,9 @@
 
 #include "util.h"
 #include "Nametag.h"
-
 #include <math.h>
 #include <algorithm>
-
+#include <typedWritable.h>
 #include <pandabase.h>
 #include <boundingVolume.h>
 #include <boundingBox.h>
@@ -17,7 +16,7 @@ NotifyCategoryDecl(Nametag3d, EXPCL_LIBOTP, EXPTP_LIBOTP);
 class Nametag3d;
 class PopupMouseWatcherRegion;
 
-class EXPCL_LIBOTP Nametag3d : public virtual Nametag {
+class EXPCL_LIBOTP Nametag3d : public virtual Nametag, public virtual TypedWritable {
     
     PUBLISHED:
         Nametag3d();

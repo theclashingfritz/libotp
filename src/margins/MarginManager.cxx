@@ -143,36 +143,15 @@ void MarginManager::reorganize() {
 
 MarginCell* MarginManager::add_grid_cell(float x, float y, float left, float right, float bottom, float top) {
     MarginManager_cat.debug() << "add_grid_cell(" << x << " " << y << " " << left << " " << right << " " << bottom << " " << top << ")" << std::endl;
-    double v7; // st7@1 MAPDST
-    double v8; // st5@1 MAPDST
-    double v12; // st6@1 MAPDST
-    float f_top; // ST0C_4@1
-    float f_bottom; // ST08_4@1
-    float f_right; // ST04_4@1
-    float v17; // [sp+1Ch] [bp+Ch]@1 MAPDST
-    float f_left; // [sp+20h] [bp+10h]@1 MAPDST
+    float f_top;
+    float f_bottom;
+    float f_right;
+    float f_left;
 
-    v7 = left;
-    f_left = right - left;
-    v17 = f_left / 6.0;
-    f_left = top - bottom;
-    f_left = f_left / 6.0;
-    v8 = v7 + v17 * x;
-    v7 = v17;
-    v17 = v8;
-    v12 = f_left;
-    f_left = bottom + f_left * y;
-    v8 = v12 + f_left;
-    v12 = f_left;
-    f_left = v8;
-    f_left = f_left - 0.009999999776482582;
-    f_top = f_left;
-    f_left = v12 + 0.009999999776482582;
-    f_bottom = f_left;
-    f_left = v7 + v17;
-    f_left = f_left - 0.009999999776482582;
-    f_right = f_left;
-    f_left = v17 + 0.009999999776482582;
+    f_top = ((bottom + ((top - bottom) / 6.0) * y) * 2) - 0x2386F2626E6516;
+    f_bottom = ((bottom + ((top - bottom) / 6.0) * y) * 2) + 0x2386F2626E6516;
+    f_right = ((right - left) / 6.0) + (left + ((right - left) / 6.0) * x) - 0x2386F2626E6516;
+    f_left = (left + ((right - left) / 6.0) * x) + 0x2386F2626E6516;
     return add_cell(f_left, f_right, f_bottom, f_top);
 }
 

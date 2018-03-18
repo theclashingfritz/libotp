@@ -18,10 +18,19 @@ else()
 endif()
 
 ### Panda3D dir ###
-SET(PANDA_DIR "C:\\Panda3D-1.10.0" CACHE STRING "Panda3D directory.")
+SET(PANDA_DIR "D:\\Panda3D-1.10.0" CACHE STRING "Panda3D directory.")
 
 ### OpenSSL dir ###
 SET(OPEN_SSL_DIR "C:\\openssl" CACHE STRING "OpenSSL directory.")
+
+# Toggle for Themdia use
+option(WANT_THEMDIA "If this is TRUE/On Themdia will be used if possible.")
+
+# Toggle for Static Library
+option(STATIC_LIB "If this is TRUE, The compiler will output a static library instead of a shared one.")
+
+# Toggle for Themdia use
+option(PANDA_OPTIMIZED "Set this to true if NDEBUG was not defined when Panda was compiled! (NDEBUG will not be defined on high optimization levels.)")
 
 ### Themdia dir (Optional)###
 SET(THEMDIA_DIR "C:\\Program Files\\Themida" CACHE STRING "Themdia directory. (Optional)")
@@ -37,6 +46,10 @@ set(BASE_FILES
 )
 
 set(COMPONENTS_FILES
+    src/components/AESKeyScrambler.cxx
+    src/components/AESKeyScrambler.h
+    src/components/AESKeyStore.cxx
+    src/components/AESKeyStore.h
     src/components/CMoverGroup.cxx
     src/components/CMoverGroup.h
     src/components/CMover.cxx
@@ -128,7 +141,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 endif()
 
 add_definitions(-DBUILDING_LIBOTP)
-add_definitions(/O2)
 add_definitions(/Ob1)
 
 set(PANDA_LIBS
@@ -143,10 +155,9 @@ set(PANDA_LIBS
 )
 
 set(OPEN_SSL_LIBS
-    ${LIBPFX}pandaeay
-    ${LIBPFX}pandassl
+    libeay32
+    ssleay32
 )
-
 
 set(THEMDIA_LIBS
 )
@@ -193,8 +204,91 @@ add_library(libotp SHARED
     ${IGATE_FILES}
 )
 
-if(WIN32)
-    SET_TARGET_PROPERTIES(libotp PROPERTIES SUFFIX ".pyd")
+# Add p3framework, if it exists
+find_library(HAVE_P3FRAMEWORK
+             ${LIBPFX}p3framework
+             HINTS ${PANDA_DIR}/lib)
+             
+if (HAVE_P3FRAMEWORK)
+    message(STATUS "libp3framework found")
+    LIST(APPEND PANDA_LIBS ${LIBPFX}p3framework)
+else()
+    message(STATUS "libp3framework not found")
+endif()
+
+if (WANT_THEMDIA)
+    # Add Themdia, if it exists
+    find_library(HAVE_THEMDIA
+                 SecureEngineSDK32
+                 HINTS ${THEMDIA_DIR}/ThemidaSDK/Lib/COFF)
+                 
+    if (HAVE_THEMDIA)
+        message(STATUS "Themdia found!")
+        LIST(APPEND THEMDIA_LIBS SecureEngineSDK32)
+        add_definitions(-DHAVE_THEMDIA)
+        include_directories(${THEMDIA_DIR}/ThemidaSDK/Include/C)
+        link_directories(${THEMDIA_DIR}/ThemidaSDK/Lib/COFF)
+    else()
+        message(STATUS "Themdia (Optional) was NOT found!")
+    endif()
+else()
+    set(HAVE_THEMDIA OFF)
+endif()
+
+if (PANDA_OPTIMIZED)
+    add_definitions(-DPANDA_OPTIMIZED)
+    add_definitions(-DNDEBUG)
+    add_definitions(/O2)
+    
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /GL")
+    set(CMAKE_STATIC_LINKER_FLAGS_RELEASE "${CMAKE_STATIC_LINKER_FLAGS_RELEASE} /LTCG")
+    set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /LTCG")
+    set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /LTCG")
+    
+    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /GL")
+    string(REGEX REPLACE "[-/]INCREMENTAL" "/INCREMENTAL:NO" CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO "${CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO}")
+    set(CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO "${CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO} /LTCG")
+    string(REGEX REPLACE "[-/]INCREMENTAL" "/INCREMENTAL:NO" CMAKE_SHARED_LINKER_FLAGS_RELWITHDEBINFO "${CMAKE_SHARED_LINKER_FLAGS_RELWITHDEBINFO}")
+    set(CMAKE_SHARED_LINKER_FLAGS_RELWITHDEBINFO "${CMAKE_SHARED_LINKER_FLAGS_RELWITHDEBINFO} /LTCG")
+    string(REGEX REPLACE "[-/]INCREMENTAL" "/INCREMENTAL:NO" CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO}")
+    set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO} /LTCG")
+    
+    set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL} /GL")
+    set(CMAKE_STATIC_LINKER_FLAGS_MINSIZEREL "${CMAKE_STATIC_LINKER_FLAGS_MINSIZEREL} /LTCG")
+    set(CMAKE_SHARED_LINKER_FLAGS_MINSIZEREL "${CMAKE_SHARED_LINKER_FLAGS_MINSIZEREL} /LTCG")
+    set(CMAKE_EXE_LINKER_FLAGS_MINSIZEREL "${CMAKE_EXE_LINKER_FLAGS_MINSIZEREL} /LTCG")
+else()
+    add_definitions(-D_DEBUG)
+endif()
+
+
+if (STATIC_LIB)
+    add_library(libotp STATIC
+        ${BASE_FILES}
+        ${COMPONENTS_FILES}
+        ${NAMETAG_FILES}
+        ${MARGINS_FILES}
+        ${SETTINGS_FILES}
+        ${SECURE_FILES}
+        ${IGATE_FILES}
+    )
+
+
+    SET_TARGET_PROPERTIES(libotp PROPERTIES SUFFIX ".lib")
+else()
+    add_library(libotp SHARED
+        ${BASE_FILES}
+        ${COMPONENTS_FILES}
+        ${NAMETAG_FILES}
+        ${MARGINS_FILES}
+        ${SETTINGS_FILES}
+        ${SECURE_FILES}
+        ${IGATE_FILES}
+    )
+
+    if(WIN32)
+        SET_TARGET_PROPERTIES(libotp PROPERTIES SUFFIX ".pyd")
+    endif()
 endif()
 
 if (HAVE_THEMDIA)

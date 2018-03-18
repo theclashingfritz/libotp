@@ -1,4 +1,5 @@
-#pragma once
+#ifndef NAMETAG_H
+#define NAMETAG_H
 
 #include "util.h"
 
@@ -7,6 +8,7 @@
 
 #include <nodepath.h>
 #include <pandanode.h>
+#include <referenceCount.h>
 #include <textNode.h>
 #include <textFont.h>
 #include <notifyCategoryProxy.h>
@@ -21,7 +23,7 @@ class NametagGroup;
 class MarginManager;
 class PopupMouseWatcherRegion;
 
-class EXPCL_LIBOTP Nametag : public virtual ClickablePopup {
+class EXPCL_LIBOTP Nametag : public virtual ClickablePopup, public virtual ReferenceCount {
     
     friend class NametagGroup;
     
@@ -53,11 +55,14 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup {
         void manage(MarginManager* manager);
         void unmanage(MarginManager* manager);
         void set_visible(bool flag);
+        
+        static void init_type();
 
         uint8_t get_draw_order();
         unsigned int get_contents();
         bool get_active();
         bool has_group();
+        bool is_of_type(TypeHandle handle) const;
         uint16_t get_chat_wordwrap();
         NametagGroup *get_group();
         NodePath *get_avatar();
@@ -132,6 +137,6 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup {
     private:
         static unsigned int Nametag_serial;
         //PandaNode m_pandaNode;
-
-    TYPE_HANDLE(Nametag, ClickablePopup);
+        
+    TYPE_HANDLE_U(Nametag, ReferenceCount);
 };
