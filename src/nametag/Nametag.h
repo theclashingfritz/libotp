@@ -23,7 +23,7 @@ class NametagGroup;
 class MarginManager;
 class PopupMouseWatcherRegion;
 
-class EXPCL_LIBOTP Nametag : public virtual ClickablePopup, public virtual ReferenceCount {
+class EXPCL_LIBOTP Nametag : public virtual ClickablePopup, public ReferenceCount {
     
     friend class NametagGroup;
     
@@ -140,3 +140,4 @@ class EXPCL_LIBOTP Nametag : public virtual ClickablePopup, public virtual Refer
         
     TYPE_HANDLE_U(Nametag, ReferenceCount);
 };
+#endif

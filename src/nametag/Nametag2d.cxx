@@ -2,11 +2,6 @@
 #include <textFont.h>
 #include <math.h>
 
-const float Nametag2d::scale_2d = .25;
-const float Nametag2d::chat_alpha = .5;
-const float Nametag2d::arrow_offset = -1;
-const float Nametag2d::arrow_scale = 1.5;
-
 NotifyCategoryDef(Nametag2d, "");
 
 TypeHandle Nametag2d::_type_handle;
@@ -15,12 +10,12 @@ Nametag2d::Nametag2d() : Nametag(), MarginPopup(), PandaNode("popup"), m_arrow(n
     Nametag2d_cat.debug() << "__init__()" << std::endl;
     m_contents = Nametag::CName | Nametag::CSpeech;
     m_chat_wordwrap = 7.5;
-    m_inner_np.set_scale(scale_2d);
+    m_inner_np.set_scale(NametagGlobals::_global_nametag_scale);
 };
 
 Nametag2d::Nametag2d(const Nametag2d& tag) : Nametag(), MarginPopup(), PandaNode("popup"), m_arrow(nullptr) {
     Nametag2d_cat.debug() << "__init__(Nametag2d)" << std::endl;
-    m_inner_np.set_scale(scale_2d);
+    m_inner_np.set_scale(NametagGlobals::_global_nametag_scale);
     m_contents = tag.m_contents;
     m_chat_flags = tag.m_chat_flags;
     m_color_code = tag.m_color_code;
@@ -127,8 +122,8 @@ void Nametag2d::show_name() {
     set_priority(0);
 
     m_arrow = &NametagGlobals::m_arrow_nodepath->copy_to(m_inner_np);
-    m_arrow->set_z(arrow_offset + DCAST(TextNode, m_inner_np.find("**/+TextNode").node())->get_bottom());
-    m_arrow->set_scale(arrow_scale);
+    m_arrow->set_z(NametagGlobals::arrow_offset + DCAST(TextNode, m_inner_np.find("**/+TextNode").node())->get_bottom());
+    m_arrow->set_scale(NametagGlobals::arrow_scale);
     m_arrow->set_color(m_name_fg);
 };
    
@@ -178,12 +173,10 @@ void Nametag2d::margin_visibility_changed() {
 void Nametag2d::consider_update_click_region() {
     Nametag2d_cat.debug() << "consider_update_click_region()" << std::endl;
     if (is_displayed()) {
-        float x = *new float(frame.get_x() * scale_2d);
-        float y = *new float(frame.get_y() * scale_2d);
-        float z = *new float(frame.get_z() * scale_2d);
-        float w = *new float(frame.get_w() * scale_2d);
-        
-        
+        float x = *new float(frame.get_x() * NametagGlobals::_global_nametag_scale);
+        float y = *new float(frame.get_y() * NametagGlobals::_global_nametag_scale);
+        float z = *new float(frame.get_z() * NametagGlobals::_global_nametag_scale);
+        float w = *new float(frame.get_w() * NametagGlobals::_global_nametag_scale);
     } else {
         return;
     }
@@ -208,9 +201,16 @@ void Nametag2d::rotate_arrow() {
     }
     NodePath camera = *NametagGlobals::m_camera_nodepath;
     NodePath toon = NametagGlobals::m_nodepath->is_empty() ? camera : *NametagGlobals::m_nodepath;
-    LVecBase3f pos = toon.get_quat(camera).xform(m_avatar->get_pos());
-    double angle = atan(pos.get_x() / pos.get_y()) / 3.14159265 * 180;
-    m_arrow->set_r(angle - 90);
+    LVecBase3f pos1 = toon.get_pos(camera);
+    LVecBase3f pos2 = m_avatar->get_pos(camera);
+    LPoint3f distance = pos1 - pos2;
+    double angle = atan2(distance.get_x(), distance.get_y()) * (180 / 3.14159265);
+    const LVecBase3f hpr(0.0, 0.0, -angle);
+    const LVecBase3f scale(0.5, 0.5, 0.5);
+    const LVecBase3f shear(0.0, 0.0, 0.0);
+    LMatrix4f mat;
+    compose_matrix(mat, scale, shear, hpr, 0);
+    m_arrow->set_mat(mat);
 };
 
 ChatBalloon* Nametag2d::get_speech_balloon() {
@@ -238,4 +238,12 @@ INLINE TypedObject *Nametag2d::as_typed_object() {
 
 INLINE const TypedObject *Nametag2d::as_typed_object() const {
    return PandaNode::as_typed_object();
-} 
+}
+
+INLINE void Nametag2d::ref() const {
+#ifdef _DEBUG
+  nassertv(test_ref_count_integrity());
+#endif
+
+  AtomicAdjust::inc(_ref_count);
+}

@@ -107,3 +107,11 @@ MarginCell* MarginPopup::get_assigned_cell() {
     }
     return m_assigned_cell;
 }
+
+INLINE void MarginPopup::ref() const {
+#ifdef _DEBUG
+  nassertv(test_ref_count_integrity());
+#endif
+
+  AtomicAdjust::inc(_ref_count);
+}

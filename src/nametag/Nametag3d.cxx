@@ -237,3 +237,19 @@ ChatBalloon* Nametag3d::get_thought_balloon() {
     }
     return NametagGlobals::thought_balloon_3d;
 };
+
+INLINE TypedObject *Nametag3d::as_typed_object() {
+   return TypedWritable::as_typed_object();
+}
+
+INLINE const TypedObject *Nametag3d::as_typed_object() const {
+   return TypedWritable::as_typed_object();
+} 
+
+INLINE void Nametag3d::ref() const {
+#ifdef _DEBUG
+  nassertv(test_ref_count_integrity());
+#endif
+
+  AtomicAdjust::inc(_ref_count);
+}

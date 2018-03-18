@@ -2,8 +2,10 @@
 
 #include "util.h"
 #include "Nametag.h"
+#include "NametagGlobals.h"
 #include "MarginPopup.h"
 #include <pandabase.h>
+#include <compose_matrix.h>
 #include <typedWritable.h>
 #include <notifyCategoryProxy.h>
 
@@ -19,6 +21,8 @@ class EXPCL_LIBOTP Nametag2d : public virtual Nametag, public virtual MarginPopu
         ~Nametag2d();
         Nametag2d& operator=(const Nametag2d& tag);
         
+        INLINE void ref() const;
+        
     public:
         virtual void tick();
         virtual void margin_visibility_changed();
@@ -29,11 +33,6 @@ class EXPCL_LIBOTP Nametag2d : public virtual Nametag, public virtual MarginPopu
          // To disambiguate the multiple inheritance from TypedObject. 
         INLINE TypedObject *as_typed_object();
         INLINE const TypedObject *as_typed_object() const; 
-        
-        static const float scale_2d;
-        static const float chat_alpha;
-        static const float arrow_offset;
-        static const float arrow_scale;
         
     protected:
         virtual void update();
@@ -49,6 +48,8 @@ class EXPCL_LIBOTP Nametag2d : public virtual Nametag, public virtual MarginPopu
         NodePath* m_arrow;
         
     private:
+        mutable AtomicAdjust::Integer _ref_count;
+        
         static unsigned int Nametag_serial;
         void cull_callback(CullTraverser *traverser, CullTraverserData *traverser_data);
         void rotate_arrow();

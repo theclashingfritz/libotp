@@ -194,16 +194,6 @@ else()
     message(STATUS "Themdia (Optional) was NOT found!")
 endif()
 
-add_library(libotp SHARED
-    ${BASE_FILES}
-    ${COMPONENTS_FILES}
-    ${NAMETAG_FILES}
-    ${MARGINS_FILES}
-    ${SETTINGS_FILES}
-    ${SECURE_FILES}
-    ${IGATE_FILES}
-)
-
 # Add p3framework, if it exists
 find_library(HAVE_P3FRAMEWORK
              ${LIBPFX}p3framework

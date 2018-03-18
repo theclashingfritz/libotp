@@ -12,7 +12,7 @@ NotifyCategoryDecl(MarginPopup, EXPCL_LIBOTP, EXPTP_LIBOTP);
 
 class MarginCell; 
 
-class MarginPopup : public virtual TypedWritable {
+class MarginPopup : public virtual PandaNode {
   
     PUBLISHED:
         MarginPopup();
@@ -31,6 +31,8 @@ class MarginPopup : public virtual TypedWritable {
         virtual void manage(MarginManager* manager);
         virtual void unmanage(MarginManager* manager);
         
+        INLINE void ref() const;
+        
     public:    
         void set_last_cell(MarginCell* cell);
         MarginCell* get_last_cell();
@@ -46,5 +48,8 @@ class MarginPopup : public virtual TypedWritable {
         int m_priority;
         bool m_visible;
         
-   TYPE_HANDLE(MarginPopup, TypedWritable);
+    private:
+        mutable AtomicAdjust::Integer _ref_count;
+        
+   TYPE_HANDLE(MarginPopup, PandaNode);
 };
