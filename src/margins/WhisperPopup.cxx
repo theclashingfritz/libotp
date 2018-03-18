@@ -9,9 +9,9 @@ NotifyCategoryDef(WhisperPopup, "");
 
 TypeHandle WhisperPopup::_type_handle;
 
-WhisperPopup::WhisperPopup(const std::wstring& text, PT(TextFont) font, const unsigned int whisper_type, const float timeout): ClickablePopup(), MarginPopup(), m_text(text), m_font(font), m_whisper_type(whisper_type), m_timeout(timeout) {
+WhisperPopup::WhisperPopup(const std::wstring& text, PT(TextFont) font, const unsigned int whisper_type, const float timeout): ClickablePopup(), MarginPopup(), PandaNode("popup"), m_text(text), m_font(font), m_whisper_type(whisper_type), m_timeout(timeout) {
     WhisperPopup_cat.debug() << "__init__(" << text << " " << "TextFont font" << " " << "NametagGlobals::WhisperType whisper_type" << " " << timeout << ")" << std::endl;
-    m_inner_np = this->attach_new_node("inner_np");
+    m_inner_np = NodePath::any_path(this).attach_new_node("inner_np");
     m_inner_np.set_scale(.25);
     m_from_id = 0;
     m_active = false;
@@ -52,7 +52,7 @@ void WhisperPopup::update_contents() {
     balloon.set_pos(balloon, -center);
     
     if (m_active != false && m_from_id != 0) {
-        set_click_region_event("clickedWhisper", m_from_id);
+        //set_click_region_event("clickedWhisper", m_from_id);
     }
 }
 
@@ -61,7 +61,6 @@ void WhisperPopup::set_clickable(const std::wstring& sender_name, unsigned int f
     m_active = true;
     m_from_id = from_id;
     update_contents();
-    __update_click_region();
 }
 
 void WhisperPopup::__update_click_region() {
@@ -85,9 +84,8 @@ void WhisperPopup::__update_click_region() {
         if (w != w) {
             w = 1.00;
         }
-        update_click_region(-1, 1, z, w);
     } else {
-        disable_click_region();
+        return;
     }
 }
 

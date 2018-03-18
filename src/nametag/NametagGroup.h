@@ -67,6 +67,7 @@ class EXPCL_LIBOTP NametagGroup : public virtual TypedObject {
         void set_qt_color(LVecBase4f color);
         void set_color_code(unsigned int cc);
         void set_active(bool active);
+        void click();
         void manage(MarginManager* manager);
         void unmanage(MarginManager* manager);
         void clear_shadow();
@@ -121,6 +122,7 @@ class EXPCL_LIBOTP NametagGroup : public virtual TypedObject {
         PT(AsyncTask) m_stomp_task;
         
         PT(TextFont) m_font;
+        
         
         LVecBase4f m_qt_color;
         

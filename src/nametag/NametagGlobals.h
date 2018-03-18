@@ -150,10 +150,16 @@ class EXPCL_LIBOTP NametagGlobals : public virtual ReferenceCount {
         static bool m_force_onscreen_chat;
         static bool m_force_2d_nametags;
         
+        static bool _master_arrows_on;
+        static bool _master_nametags_active;
+        static bool _master_nametags_visible;
+        
         static const double whisper_total_time;
         static const double whisper_priority_time;
         static const double cell_memory_time;
         static const double button_delay_time;
+        
+        static float _global_nametag_scale;
 
         static const float billboard_offset;
         static const float building_nametag_distance;
@@ -179,13 +185,8 @@ class EXPCL_LIBOTP NametagGlobals : public virtual ReferenceCount {
     private:
         static NametagGlobals* _global_ptr;
         
-        static bool _master_arrows_on;
-        static bool _master_nametags_active;
-        static bool _master_nametags_visible;
-        
         static float _max_2d_alpha;
         static float _min_2d_alpha;
-        static float _global_nametag_scale;
         
         static AtomicAdjust::Integer n_seq;
         static AtomicAdjust::Integer *seq;

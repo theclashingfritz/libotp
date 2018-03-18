@@ -19,9 +19,19 @@ class PopupMouseWatcherRegion;
 
 class PopupMouseWatcherRegion : public virtual MouseWatcherRegion {
     public:
-        PopupMouseWatcherRegion(ClickablePopup *popup, const string &name, const LVecBase4 &frame);
+        PopupMouseWatcherRegion(ClickablePopup *popup, const std::string &name, const LVecBase4f &frame);
         PopupMouseWatcherRegion(const PopupMouseWatcherRegion& region);
         ~PopupMouseWatcherRegion();
         
-    TYPE_HANDLE(PopupMouseWatcherRegion, TypedObject);
+        virtual void enter_region(MouseWatcherParameter param);
+        virtual void exit_region(MouseWatcherParameter param);
+        virtual void press(MouseWatcherParameter param);
+        virtual void release(MouseWatcherParameter param);
+        
+    private:
+        std::string _name;
+        ClickablePopup *_popup;
+        LVecBase4f _frame;
+        
+    TYPE_HANDLE(PopupMouseWatcherRegion, MouseWatcherRegion);
 };

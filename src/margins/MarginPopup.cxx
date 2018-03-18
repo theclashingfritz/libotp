@@ -5,7 +5,7 @@ NotifyCategoryDef(MarginPopup, "");
 
 TypeHandle MarginPopup::_type_handle;
 
-MarginPopup::MarginPopup() : m_manager(nullptr), m_visible(false), m_priority(0) {
+MarginPopup::MarginPopup() : PandaNode("popup"), m_manager(nullptr), m_visible(false), m_priority(0) {
     MarginPopup_cat.debug() << "__init__()" << std::endl;
     m_last_cell = nullptr;
     m_assigned_cell = nullptr;

@@ -11,14 +11,14 @@ NotifyCategoryDef(Nametag2d, "");
 
 TypeHandle Nametag2d::_type_handle;
 
-Nametag2d::Nametag2d() : Nametag(), MarginPopup(), m_arrow(nullptr) {
+Nametag2d::Nametag2d() : Nametag(), MarginPopup(), PandaNode("popup"), m_arrow(nullptr) {
     Nametag2d_cat.debug() << "__init__()" << std::endl;
     m_contents = Nametag::CName | Nametag::CSpeech;
     m_chat_wordwrap = 7.5;
     m_inner_np.set_scale(scale_2d);
 };
 
-Nametag2d::Nametag2d(const Nametag2d& tag) : Nametag(), MarginPopup(), m_arrow(nullptr) {
+Nametag2d::Nametag2d(const Nametag2d& tag) : Nametag(), MarginPopup(), PandaNode("popup"), m_arrow(nullptr) {
     Nametag2d_cat.debug() << "__init__(Nametag2d)" << std::endl;
     m_inner_np.set_scale(scale_2d);
     m_contents = tag.m_contents;
@@ -74,7 +74,7 @@ void Nametag2d::show_balloon(ChatBalloon* balloon, const std::wstring& text) {
     Nametag::show_balloon(balloon, ss.str());
     
     NodePath balloon_np, text_np;
-    balloon_np = this->find("*/balloon");
+    balloon_np = NodePath::any_path(this).find("*/balloon");
     text_np = balloon_np.find("**/+TextNode");
     
     PT(TextNode) tn = DCAST(TextNode, text_np.node());
@@ -146,7 +146,7 @@ void Nametag2d::update_contents() {
     }
     
     Nametag2d_cat.spam() << "Getting Colors from Nametag Globals!" << std::endl;
-    color_tuple_tuple_t colors = NametagGlobals::nametag_colors[code][get_click_state()];
+    color_tuple_tuple_t colors = NametagGlobals::nametag_colors[code][int(m_click_state)];
     
     Nametag2d_cat.spam() << "Setting Name and Chat Colors!" << std::endl;
     color_tuple_t name_colors = colors[0];
@@ -183,9 +183,9 @@ void Nametag2d::consider_update_click_region() {
         float z = *new float(frame.get_z() * scale_2d);
         float w = *new float(frame.get_w() * scale_2d);
         
-        update_click_region(x, y, z, w);
+        
     } else {
-        disable_click_region();
+        return;
     }
 };
 
@@ -231,3 +231,11 @@ bool Nametag2d::is_displayed() {
 
     return m_chat_flags & NametagGlobals::CFSpeech;
 };
+
+INLINE TypedObject *Nametag2d::as_typed_object() {
+   return PandaNode::as_typed_object();
+} 
+
+INLINE const TypedObject *Nametag2d::as_typed_object() const {
+   return PandaNode::as_typed_object();
+} 

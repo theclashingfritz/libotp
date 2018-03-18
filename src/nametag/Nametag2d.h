@@ -11,8 +11,8 @@ NotifyCategoryDecl(Nametag2d, EXPCL_LIBOTP, EXPTP_LIBOTP);
 
 class Nametag2d;
 
-class EXPCL_LIBOTP Nametag2d : public virtual Nametag, public MarginPopup {
-    
+class EXPCL_LIBOTP Nametag2d : public virtual Nametag, public virtual MarginPopup {
+
     PUBLISHED:
         Nametag2d();
         Nametag2d(const Nametag2d& tag);
@@ -25,6 +25,10 @@ class EXPCL_LIBOTP Nametag2d : public virtual Nametag, public MarginPopup {
         virtual bool is_displayed();
         
         virtual void update_contents();
+        
+         // To disambiguate the multiple inheritance from TypedObject. 
+        INLINE TypedObject *as_typed_object();
+        INLINE const TypedObject *as_typed_object() const; 
         
         static const float scale_2d;
         static const float chat_alpha;
@@ -49,5 +53,5 @@ class EXPCL_LIBOTP Nametag2d : public virtual Nametag, public MarginPopup {
         void cull_callback(CullTraverser *traverser, CullTraverserData *traverser_data);
         void rotate_arrow();
         
-    TYPE_HANDLE(Nametag2d, MarginPopup);
+    TYPE_HANDLE(Nametag2d, Nametag);
 };

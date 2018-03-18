@@ -13,6 +13,7 @@ NotifyCategoryDecl(MarginPopup, EXPCL_LIBOTP, EXPTP_LIBOTP);
 class MarginCell; 
 
 class MarginPopup : public virtual TypedWritable {
+  
     PUBLISHED:
         MarginPopup();
         virtual ~MarginPopup();

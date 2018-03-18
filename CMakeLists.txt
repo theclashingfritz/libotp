@@ -179,6 +179,31 @@ else()
     message(STATUS "libp3interrogatedb not found")
 endif()
 
+# Add Themdia, if it exists
+find_library(HAVE_THEMDIA
+             SecureEngineSDK32
+             HINTS ${THEMDIA_DIR}/ThemidaSDK/Lib/COFF)
+             
+if (HAVE_THEMDIA)
+    message(STATUS "Themdia found!")
+    LIST(APPEND THEMDIA_LIBS SecureEngineSDK32)
+    add_definitions(-DHAVE_THEMDIA)
+    include_directories(${THEMDIA_DIR}/ThemidaSDK/Include/C)
+    link_directories(${THEMDIA_DIR}/ThemidaSDK/Lib/COFF)
+else()
+    message(STATUS "Themdia (Optional) was NOT found!")
+endif()
+
+add_library(libotp SHARED
+    ${BASE_FILES}
+    ${COMPONENTS_FILES}
+    ${NAMETAG_FILES}
+    ${MARGINS_FILES}
+    ${SETTINGS_FILES}
+    ${SECURE_FILES}
+    ${IGATE_FILES}
+)
+
 # Add p3framework, if it exists
 find_library(HAVE_P3FRAMEWORK
              ${LIBPFX}p3framework
